@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent
 DIST_DIR = BASE_DIR / "dist"
 
 app = Flask(__name__, static_folder=str(DIST_DIR), static_url_path="")
+application = app
 
 @app.route("/health", methods=["GET"])
 def health_check():

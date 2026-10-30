@@ -1,4 +1,6 @@
-from server import app
+from server import app, application
+
+__all__ = ["app", "application"]
 
 if __name__ == "__main__":
     import os

@@ -79,7 +79,7 @@ Render automatically detects the repository as a Python Web Service. The reposit
 ### Render Service Settings
 - **Environment**: Python
 - **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `gunicorn app:app` (or `python server.py`)
+- **Start Command**: `gunicorn your_application.wsgi` (or `gunicorn app:app` / `python server.py`)
 - **Port**: `10000` (automatically provided by Render `$PORT`)
 
 ### Optional Build Script

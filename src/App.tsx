@@ -53,9 +53,6 @@ export function App() {
                 <span className="font-extrabold text-sm tracking-wider uppercase bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent">
                   SIM-CAT
                 </span>
-                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-950/60 text-amber-300 border border-amber-800/60">
-                  v2026.4
-                </span>
               </div>
               <p className="text-[11px] text-slate-400">
                 Gas-Solid Fixed-Bed Intrinsic Kinetics Diagnostic & Transport Assessment Suite

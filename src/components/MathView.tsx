@@ -13,12 +13,22 @@ export const MathView: React.FC<MathViewProps> = ({ math, block = false, classNa
       return katex.renderToString(math, {
         displayMode: block,
         throwOnError: false,
-        output: 'html',
+        output: 'htmlAndMathml',
+        strict: false,
       });
     } catch (e) {
       return `<span class="text-rose-400 font-mono text-xs">${math}</span>`;
     }
   }, [math, block]);
+
+  if (block) {
+    return (
+      <div
+        className={`w-full overflow-x-auto py-1 text-center select-text ${className}`}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  }
 
   return (
     <span

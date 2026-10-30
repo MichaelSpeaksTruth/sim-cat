@@ -1,9 +1,11 @@
-# EUROKIN Catalyst Simulator
-### Professional Gas-Solid Fixed-Bed Intrinsic Kinetics Diagnostic Suite
+# Sim-Cat
+### Gas-Solid Fixed-Bed Diagnostic Suite for Reaction Kinetics
 
-A chemical engineering simulation and diagnostics platform built upon the **EUROKIN Consortium Guidelines** (Rob Berger, Delft University of Technology / Anaproc) for packed-bed catalytic reactors.
+Sim-Cat is an industrial and laboratory simulation platform for assessing transport limitations in catalytic fixed-bed reactors. 
 
-Designed with rigorous engineering standards: **bold, serious, intuitive, zero-AI-slop**, and with live mathematical formula derivations and parameter sensitivity sweeps.
+> *Eurokin's documentations have been used to develop this prototype.*
+
+Designed with rigorous engineering standards: **bold, serious, intuitive, zero-AI-slop**, featuring interactive 2D bed cross-section graphics, live mathematical formula derivations, and parametric sensitivity sweeps.
 
 ---
 
@@ -18,11 +20,11 @@ When measuring catalytic reaction rates in laboratory and pilot fixed beds, obse
 - Excessive inert bed dilution causing conversion maldistribution (Berger criterion)
 - Excessive bed pressure drop violating isobaric operation (Ergun equation)
 
-The **EUROKIN Catalyst Simulator** tests all 9 core criteria simultaneously, requiring all transport perturbations to cause less than **5% error** on the reaction rate ($< 5\%$ tolerance threshold) for true intrinsic kinetic validity.
+**Sim-Cat** assesses all 9 core criteria simultaneously, requiring all transport perturbations to cause less than **5% error** on the reaction rate ($< 5\%$ tolerance threshold) for true intrinsic kinetic validity.
 
 ---
 
-## 🔬 The 9 EUROKIN Diagnostic Criteria
+## 🔬 The 9 Diagnostic Criteria
 
 | # | Diagnostic Criterion | Category | Governing Formula | Literature Reference |
 |---|----------------------|----------|-------------------|----------------------|
@@ -52,16 +54,16 @@ npm run dev
 http://localhost:5173
 ```
 
-### 2. Standalone Python Calculation Engine (`eurokin_engine.py`)
+### 2. Standalone Python Calculation Engine (`simcat_engine.py`)
 ```bash
 # Run terminal benchmark test directly
-python eurokin_engine.py
+python simcat_engine.py
 ```
 
 ---
 
 ## 🧪 Built-in Reaction Presets Library
-1. **EUROKIN Default**: $N_2O$ decomposition over $Rh/Co_3O_4-Al_2O_3$ diluted with $SiC$ particles (Official 2012 benchmark).
+1. **Standard Benchmark**: $N_2O$ decomposition over $Rh/Co_3O_4-Al_2O_3$ diluted with $SiC$ particles.
 2. **CO Methanation (Sabatier Process)**: Highly exothermic test case over $Ni/Al_2O_3$ testing extreme thermal dissipation limits.
 3. **Ammonia Synthesis**: High-pressure (100 bar) Haber-Bosch synthesis over promoted iron catalyst.
 4. **Ethylene Epoxidation**: Partial selective oxidation over $Ag/\alpha-Al_2O_3$ carrier.
@@ -69,7 +71,7 @@ python eurokin_engine.py
 ---
 
 ## 🛠 Roadmap to Advanced Features
-- [x] Full EUROKIN 9-criteria gas-solid fixed-bed diagnostic engine
+- [x] Full 9-criteria gas-solid fixed-bed diagnostic engine
 - [x] Live mathematical formula inspector with dynamic numerical variable substitution
 - [x] 2D packed bed & catalyst pellet microkinetics cross-section visualizer
 - [x] Parametric sensitivity sweep curves (Weisz-Prater, Carberry, $\Delta P$, Effectiveness $\eta$)

@@ -11,7 +11,7 @@ interface InputConsoleProps {
 
 export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, onReset }) => {
   const [activeCategory, setActiveCategory] = useState<'operating' | 'geometry' | 'catalyst' | 'kinetics'>('operating');
-  const [selectedPreset, setSelectedPreset] = useState<string>('eurokin_n2o_default');
+  const [selectedPreset, setSelectedPreset] = useState<string>('benchmark_n2o');
 
   const updateField = (field: keyof ReactorInputs, value: number) => {
     onChange({
@@ -56,7 +56,7 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
 
           <button
             onClick={onReset}
-            title="Reset parameters to EUROKIN reference benchmark"
+            title="Reset parameters to standard reference benchmark"
             className="p-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />

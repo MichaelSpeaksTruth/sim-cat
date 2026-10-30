@@ -184,7 +184,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
             <line x1={padL} y1={padT + plotH} x2={padL + plotW} y2={padT + plotH} stroke="#334155" strokeWidth="1" />
             <line x1={padL} y1={padT} x2={padL} y2={padT + plotH} stroke="#334155" strokeWidth="1" />
 
-            {/* EUROKIN Limit Line (0.080) */}
+            {/* Diagnostic Limit Line (0.080) */}
             <line
               x1={padL}
               y1={limitY}
@@ -195,7 +195,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               strokeDasharray="4 3"
             />
             <text x={padL + plotW - 6} y={limitY - 5} fill="#f43f5e" fontSize="9" textAnchor="end" fontFamily="monospace">
-              EUROKIN Threshold Φ = 0.080
+              Diagnostic Threshold Φ = 0.080
             </text>
 
             {/* Weisz-Prater curve */}

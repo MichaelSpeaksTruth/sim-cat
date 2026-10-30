@@ -115,7 +115,7 @@ export const DiagnosticCard: React.FC<DiagnosticCardProps> = ({ criterion }) => 
             </div>
           </div>
           <div>
-            <div className="text-slate-500 text-[10px] uppercase tracking-wider">EUROKIN Threshold</div>
+            <div className="text-slate-500 text-[10px] uppercase tracking-wider">Required Threshold</div>
             <div className="text-sm font-semibold text-amber-300 mt-0.5">
               {operator} {fmt(limitValue)} <span className="text-slate-400 text-xs font-normal">{unit}</span>
             </div>

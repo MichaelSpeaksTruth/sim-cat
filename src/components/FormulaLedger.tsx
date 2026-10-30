@@ -169,7 +169,7 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
         <div className="flex items-center gap-2">
           <BookOpen className="w-4 h-4 text-amber-400" />
           <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-100">
-            EUROKIN Mathematical Framework & Formula Ledger
+            Sim-Cat Mathematical Framework & Formula Ledger
           </h3>
         </div>
 

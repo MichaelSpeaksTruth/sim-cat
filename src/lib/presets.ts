@@ -2,12 +2,12 @@ import { PresetScenario } from '../types/eurokin';
 
 export const PRESET_SCENARIOS: PresetScenario[] = [
   {
-    id: 'eurokin_n2o_default',
-    name: 'EUROKIN Default: N₂O Decomposition',
+    id: 'benchmark_n2o',
+    name: 'Standard Benchmark: N₂O Decomposition',
     catalyst: 'Rh / Co₃O₄-Al₂O₃ (diluted with SiC)',
     reactionEquation: 'N₂O → N₂ + 0.5 O₂',
-    description: 'Official Eurokin fixed-bed benchmark test case (Berger et al., 2012). Tests intrinsic kinetics measurement requirements with inert SiC dilution in helium carrier gas.',
-    notes: 'Reference benchmark operating at 550 K and 250 kPa in diluted helium. Fulfils all intrinsic requirements under base operating conditions.',
+    description: 'Reference fixed-bed benchmark test case (550 K, 250 kPa in diluted He). Evaluates transport limitations and intrinsic kinetics with inert SiC dilution.',
+    notes: 'Operating at 550 K and 250 kPa in helium carrier gas. Fulfills all diagnostic criteria under base operating conditions.',
     inputs: {
       temperature: 550.0,
       totalPressure: 250000.0,

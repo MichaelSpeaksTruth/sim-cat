@@ -51,7 +51,7 @@ export function App() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-sm tracking-wider uppercase bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500 bg-clip-text text-transparent">
-                  EUROKIN CATALYST SIMULATOR
+                  SIM-CAT
                 </span>
                 <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-950/60 text-amber-300 border border-amber-800/60">
                   v2026.4
@@ -168,7 +168,7 @@ export function App() {
             <p className="text-xs text-slate-300 leading-relaxed max-w-4xl">
               {simulation.overallStatus === 'VALID_INTRINSIC'
                 ? 'All transport-limiting phenomena (axial/radial dispersion, external film gradients, pore diffusion, and bed dilution) are negligible (< 5% conversion rate impact). Measured kinetics are purely intrinsic.'
-                : 'One or more transport gradients exceed the EUROKIN 5% perturbation tolerance limit. Apparent activation energies and reaction orders will be masked unless bed or particle geometry is adjusted.'}
+                : 'One or more transport gradients exceed the 5% perturbation tolerance limit. Apparent activation energies and reaction orders will be masked unless bed or particle geometry is adjusted.'}
             </p>
           </div>
 
@@ -204,7 +204,7 @@ export function App() {
                 <div className="flex items-center gap-2">
                   <Activity className="w-4 h-4 text-amber-400" />
                   <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-200">
-                    EUROKIN Intrinsic Kinetic Criteria (9 Core Checks)
+                    Intrinsic Kinetic Diagnostic Criteria (9 Core Checks)
                   </h3>
                 </div>
                 <span className="text-xs font-mono text-slate-500">
@@ -234,19 +234,10 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-slate-800/80 bg-[#090b12] py-4 text-xs font-mono text-slate-500 text-center">
         <div className="max-w-[1720px] mx-auto px-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            EUROKIN Consortium Standard for Gas-Solid Fixed-Bed Reactors (Delft University of Technology / Anaproc).
+          <div className="text-slate-400">
+            Eurokin's documentations have been used to develop this prototype.
           </div>
           <div className="flex items-center gap-4 text-slate-400">
-            <a
-              href="https://eurokin.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-amber-400 flex items-center gap-1 transition-colors"
-            >
-              <span>eurokin.org</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
             <span>Python & Web Native</span>
             <span className="text-emerald-400 font-semibold">Ready for Advanced Multiphase / Fluidized Upgrades</span>
           </div>

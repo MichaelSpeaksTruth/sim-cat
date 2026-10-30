@@ -1,0 +1,25 @@
+# ==============================================================================
+# Render Deployment Blueprint for Sim-Cat
+# Documentation: https://render.com/docs/blueprint-spec
+# ==============================================================================
+
+services:
+  # Deploy Sim-Cat as a high-performance static web application
+  - type: web
+    name: sim-cat
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: VITE_APP_NAME
+        value: Sim-Cat
+      - key: VITE_DEFAULT_PRESET
+        value: benchmark_n2o

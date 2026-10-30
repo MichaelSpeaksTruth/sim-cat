@@ -176,8 +176,8 @@ export function App() {
             <span className="text-[11px] uppercase tracking-wider text-slate-500">Reactor Hydraulic Suggestion:</span>
             <span className="font-semibold text-slate-200 mt-0.5">
               {simulation.reactorSuitability.packedBedFeasible
-                ? '✓ Packed-Bed Fixed Reactor Viable'
-                : '⚠ High ΔP: Consider Fluidized Bed'}
+                ? 'Packed-Bed Fixed Reactor Viable'
+                : 'High Pressure Drop: Consider Fluidized Bed'}
             </span>
           </div>
         </section>

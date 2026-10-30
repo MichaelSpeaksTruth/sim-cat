@@ -172,6 +172,14 @@ def run_industrial_assessment():
     total_count = len(checks)
     is_valid = passed_count == total_count
 
+    # Dyson & Baddour (1968) / Temkin-Pyzhev Kinetics Telemetry
+    P_atm = P / 101325.0
+    k1 = 1.79e4 * math.exp(-87090.0 / (R_GAS * T))
+    k2 = 2.57e16 * math.exp(-198300.0 / (R_GAS * T))
+    log10_Kp = -2.691122 * math.log10(T) - (5.519265e-5 * T) + (1.848863e-7 * (T ** 2)) + (2001.6 / T) + 2.6899
+    Kp = 10.0 ** log10_Kp
+    X_eq = (Kp * P_atm) / (1.0 + (Kp * P_atm))
+
     print("\n" + "=" * 88)
     print("SIM-CAT INDUSTRIAL ASSESSMENT: FLUID, THERMAL & KINETIC TELEMETRY")
     print("=" * 88)
@@ -181,6 +189,8 @@ def run_industrial_assessment():
     print(f"Bulk Reactant Conc. (C_A_b):   {C_A_b:.2f} mol/m3")
     print(f"Volumetric Reaction Rate (Rv): {R_v_A:.2e} mol/(m3_cat·s)")
     print(f"Inert Dilution Fraction (b):   {b_dil:.3f} ({(b_dil*100):.1f}% inert SiC by volume)")
+    print(f"NIST Equilibrium Const (K_p):  {Kp:.3e} atm^-1 (Max Equilibrium X_eq = {(X_eq*100):.1f}%)")
+    print(f"Dyson-Baddour Rate Constants:  k1 = {k1:.3e}, k2 = {k2:.3e} mol/(kg·s·atm)")
     print("-" * 88)
     print(f"{'Criterion Name':<38} | {'Evaluated':<12} | {'Req':<3} | {'Threshold':<12} | {'Status'}")
     print("-" * 88)

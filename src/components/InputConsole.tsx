@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ReactorInputs } from '../types/eurokin';
 import { PRESET_SCENARIOS } from '../lib/presets';
-import { BULK_GAS_CONFIGS, BulkGasType, computeAuditedNistAmmoniaProperties } from '../lib/nistAmmoniaData';
+import { BULK_GAS_CONFIGS, BulkGasType, computeAuditedNistAmmoniaProperties, computeNistAmmoniaKinetics } from '../lib/nistAmmoniaData';
 import {
   Sliders,
   RotateCcw,
@@ -67,6 +67,27 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
 
     setSyncNotice(true);
     setTimeout(() => setSyncNotice(false), 2000);
+  };
+
+  const [kineticsNotice, setKineticsNotice] = useState(false);
+
+  const handleKineticsSync = () => {
+    const kin = computeNistAmmoniaKinetics(
+      inputs.temperature,
+      inputs.totalPressure,
+      inputs.bulkGasType || 'syngas_stoichiometric',
+      inputs.reactantMoleFraction
+    );
+
+    onChange({
+      ...inputs,
+      reactionRate: kin.reactionRate,
+      reactionOrder: kin.reactionOrder,
+      activationEnergy: kin.activationEnergy,
+    });
+
+    setKineticsNotice(true);
+    setTimeout(() => setKineticsNotice(false), 2000);
   };
 
   // Validation warnings
@@ -387,9 +408,19 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
         {/* CATEGORY 2: REACTION AND KINETIC PARAMETERS (6 inputs) */}
         {(activeCategory === 'kinetics' || activeCategory === 'all') && (
           <div className="space-y-3 pt-2">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-800 border-b border-slate-200 pb-1">
-              <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-[11px]">2</span>
-              <span>2. Reaction & Kinetic Parameters (Inputs 9 to 14)</span>
+            <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-1">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-800">
+                <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-[11px]">2</span>
+                <span>2. Reaction & Kinetic Parameters (Inputs 9 to 14)</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleKineticsSync}
+                title="Auto-estimate r_m, n, and E_a using Dyson & Baddour (1968) / Temkin-Pyzhev rate law"
+                className="px-2 py-0.5 rounded bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-mono font-bold border border-blue-200 transition-colors"
+              >
+                {kineticsNotice ? 'Kinetics Evaluated!' : 'Auto-Fit via Dyson-Baddour'}
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

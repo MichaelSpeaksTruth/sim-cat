@@ -59,7 +59,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
         <div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-200">
-              NIST CHEMISTRY WEBBOOK (SRD 69) & KINETICS REGISTRY
+              NIST REFERENCE THERMOPHYSICS & KINETICS
             </span>
             <span className="text-xs text-slate-500 font-mono">
               Primary System: Ammonia Synthesis & Cracking (0.5 N₂ + 1.5 H₂ ⇌ NH₃)

@@ -62,7 +62,7 @@ export const ReactorSuggestionCard: React.FC<ReactorSuggestionCardProps> = ({ su
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold tracking-wider uppercase text-slate-500">
-                Front-Page Architecture & Hydraulic Decision Engine
+                Reactor Architecture & Hydrodynamics
               </span>
               <span className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold border ${feasibilityStyles.badgeBg}`}>
                 {feasibilityStyles.label}
@@ -76,7 +76,7 @@ export const ReactorSuggestionCard: React.FC<ReactorSuggestionCardProps> = ({ su
 
         {/* Primary Recommended Configuration */}
         <div className="flex flex-col md:items-end bg-white px-3.5 py-2 rounded-lg border border-slate-200 shadow-xs">
-          <span className="text-[11px] font-mono uppercase text-slate-500 font-medium">Primary Reactor Suggestion:</span>
+          <span className="text-[11px] font-mono uppercase text-slate-500 font-medium">Recommended Architecture:</span>
           <span className="font-bold text-sm text-slate-900 flex items-center gap-1.5 mt-0.5">
             <span className="w-2 h-2 rounded-full bg-blue-600 inline-block"></span>
             {recommendedType}
@@ -132,7 +132,7 @@ export const ReactorSuggestionCard: React.FC<ReactorSuggestionCardProps> = ({ su
           </div>
           <div>
             <span className="font-bold text-slate-900 block font-mono text-xs uppercase tracking-wide">
-              Engineering Tuning Knobs for Ammonia Synthesis:
+              Engineering Tuning Guidelines:
             </span>
             <ul className="list-disc list-inside text-slate-600 mt-1 space-y-0.5 text-xs">
               {actionableEngineeringSteps.map((step, idx) => (

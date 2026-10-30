@@ -1,13 +1,13 @@
 # Sim-Cat
 ### Gas-Solid Fixed-Bed Diagnostic Suite for Reaction Kinetics
 **Specialized System Focus: Ammonia Synthesis & Decomposition ($0.5\,\text{N}_2 + 1.5\,\text{H}_2 \rightleftharpoons \text{NH}_3$)**
-**Thermophysical Property Source: NIST Chemistry WebBook (SRD 69)**
+**Thermophysical & Kinetic Mapping: NIST Reference Thermophysics & Temkin-Pyzhev Kinetics**
 
 Sim-Cat is an industrial and laboratory simulation platform for assessing transport limitations in catalytic fixed-bed reactors. 
 
-> Eurokin's documentations have been used to develop this prototype.
+> Developed according to Eurokin Consortium transport criteria and standard chemical reaction engineering principles.
 
-Engineered with authentic chemical engineering standards: clean white industrial theme, intuitive navigation, high-contrast tabular readouts, zero-AI-slop, featuring interactive 2D bed cross-section graphics, live mathematical derivations, NIST property mapping, and custom formula authoring.
+Engineered with authentic chemical engineering standards: clean white industrial layout, high-contrast tabular readouts, interactive 2D packed bed with dynamic interstitial gas fluid streamlines and tracer particle flow animation, live mathematical derivations, NIST property mapping, and custom formula authoring.
 
 ---
 

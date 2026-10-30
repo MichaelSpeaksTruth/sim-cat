@@ -64,15 +64,9 @@ export function App() {
                 <span className="font-extrabold text-sm tracking-wider uppercase text-blue-900">
                   SIM-CAT
                 </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                  AMMONIA (NH₃) SUITE
-                </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-100 text-slate-600 border border-slate-200">
-                  NIST SRD 69
-                </span>
               </div>
               <p className="text-[11px] text-slate-500 font-medium">
-                Gas-Solid Fixed-Bed Intrinsic Kinetics Diagnostic & Transport Assessment Suite
+                Gas-Solid Fixed-Bed Intrinsic Kinetics & Transport Assessment
               </p>
             </div>
           </div>
@@ -112,7 +106,7 @@ export function App() {
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              <span>NIST Data Mapping</span>
+              <span>NIST Thermophysics</span>
             </button>
 
             <button
@@ -124,7 +118,7 @@ export function App() {
               }`}
             >
               <Code2 className="w-3.5 h-3.5" />
-              <span>Formula Audit & Custom Studio</span>
+              <span>Custom Formulas</span>
               {customCriteria.length > 0 && (
                 <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold">
                   {customCriteria.length}
@@ -180,9 +174,40 @@ export function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="max-w-[1720px] mx-auto px-4 lg:px-6 py-5 flex-1 w-full space-y-5">
-        {/* FRONT PAGE REACTOR ARCHITECTURE & SUITABILITY ENGINE (Prominently placed at the top of Front Page & Assessment) */}
-        {(activeView === 'assessment' || activeView === 'reactor_suggestion') && (
+      <main className="max-w-[1720px] mx-auto px-4 lg:px-6 py-4 flex-1 w-full space-y-4">
+        {/* Sleek Front-Page Reactor Architecture Summary Bar */}
+        {activeView === 'assessment' && (
+          <div className="bg-white border border-slate-200 rounded-lg px-4 py-2.5 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2.5">
+              <Factory className="w-4 h-4 text-blue-600" />
+              <span className="font-semibold text-slate-700">Architecture Suggestion:</span>
+              <span className="font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                {simulation.reactorSuitability.recommendedType}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 text-slate-600 text-[11px]">
+              <span>L/d_p = {(inputs.bedHeight / inputs.particleDiameter).toFixed(1)} (≥ 50)</span>
+              <span>D_t/d_p = {(inputs.tubeDiameter / inputs.particleDiameter).toFixed(1)} (≥ 8)</span>
+              <span>
+                ΔP/P = {(((simulation.criteria.find(c => c.id === 'pressure_drop')?.calculatedValue || 0) / inputs.totalPressure)).toFixed(4)} (&lt; {(0.2 / inputs.reactionOrder).toFixed(3)})
+              </span>
+              <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                Fixed-Bed Viable
+              </span>
+            </div>
+
+            <button
+              onClick={() => setActiveView('reactor_suggestion')}
+              className="text-blue-600 hover:text-blue-800 font-semibold underline text-[11px]"
+            >
+              Suitability Details →
+            </button>
+          </div>
+        )}
+
+        {/* Dedicated Reactor Suitability View */}
+        {activeView === 'reactor_suggestion' && (
           <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
         )}
 

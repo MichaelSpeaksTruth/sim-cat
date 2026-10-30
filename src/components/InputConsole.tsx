@@ -101,16 +101,13 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
   return (
     <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
       {/* Console Header */}
-      <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+      <div className="p-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Sliders className="w-4 h-4 text-blue-600" />
           <div>
             <h3 className="font-bold text-xs tracking-wider uppercase text-slate-800">
-              Eurokin Industrial Parameter Console (24 Primary Inputs)
+              Reactor & Kinetic Parameters (24 Inputs)
             </h3>
-            <span className="text-[11px] text-slate-500 font-mono">
-              Full 24-parameter industrial kinetic specification with calibrated baseline defaults
-            </span>
           </div>
         </div>
 
@@ -131,7 +128,7 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
 
           <button
             onClick={onReset}
-            title="Reset parameters to industrial default"
+            title="Reset parameters to defaults"
             className="p-1.5 rounded-md bg-white hover:bg-slate-100 text-slate-600 border border-slate-300 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -140,9 +137,9 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
       </div>
 
       {/* Bulk Gas Feed Quick Control */}
-      <div className="px-4 py-2.5 bg-blue-50/50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div className="px-4 py-2.5 bg-blue-50/40 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
-          <span className="font-mono text-slate-500 font-semibold">Bulk Gas Feed:</span>
+          <span className="font-mono text-slate-500 font-semibold">Bulk Gas:</span>
           <select
             value={inputs.bulkGasType || 'syngas_stoichiometric'}
             onChange={(e) => updateField('bulkGasType', e.target.value as BulkGasType)}
@@ -159,17 +156,17 @@ export const InputConsole: React.FC<InputConsoleProps> = ({ inputs, onChange, on
         <button
           onClick={handleNistSync}
           title="Auto-calculate gas physical properties (15-20) from NIST WebBook at current T and P"
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white hover:bg-blue-100 text-blue-700 font-mono text-[11px] font-bold border border-blue-200 transition-colors shadow-2xs"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white hover:bg-blue-50 text-blue-700 font-mono text-[11px] font-bold border border-blue-200 transition-colors shadow-2xs"
         >
           {syncNotice ? (
             <>
               <Check className="w-3.5 h-3.5 text-emerald-600" />
-              <span>NIST Properties Synced!</span>
+              <span>Gas Props Synced</span>
             </>
           ) : (
             <>
               <RefreshCw className="w-3.5 h-3.5" />
-              <span>Auto-Fill Gas Props via NIST</span>
+              <span>Sync NIST Gas Props</span>
             </>
           )}
         </button>

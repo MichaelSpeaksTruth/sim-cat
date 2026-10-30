@@ -1,15 +1,17 @@
 # Sim-Cat
 ### Gas-Solid Fixed-Bed Diagnostic Suite for Reaction Kinetics
+**Specialized System Focus: Ammonia Synthesis & Decomposition ($0.5\,\text{N}_2 + 1.5\,\text{H}_2 \rightleftharpoons \text{NH}_3$)**
+**Thermophysical Property Source: NIST Chemistry WebBook (SRD 69)**
 
 Sim-Cat is an industrial and laboratory simulation platform for assessing transport limitations in catalytic fixed-bed reactors. 
 
 > Eurokin's documentations have been used to develop this prototype.
 
-Designed with rigorous engineering standards: serious, intuitive, zero-AI-slop, featuring interactive 2D bed cross-section graphics, live mathematical formula derivations, and parametric sensitivity sweeps.
+Engineered with authentic chemical engineering standards: clean white industrial theme, intuitive navigation, high-contrast tabular readouts, zero-AI-slop, featuring interactive 2D bed cross-section graphics, live mathematical derivations, NIST property mapping, and custom formula authoring.
 
 ---
 
-## 1. Purpose and Core Capabilities
+## 1. Core Engineering Capabilities
 
 When measuring catalytic reaction rates in laboratory and pilot fixed beds, observed kinetics often deviate from true intrinsic kinetics due to transport resistances:
 - Axial and radial flow dispersion (non-ideal plug flow and bypass channeling)
@@ -24,7 +26,22 @@ Sim-Cat assesses all 9 core criteria simultaneously, requiring all transport per
 
 ---
 
-## 2. The 9 Diagnostic Criteria
+## 2. NIST Chemistry WebBook (SRD 69) Thermophysical Mapping
+
+For Ammonia synthesis, all thermophysical properties are mapped directly from NIST Standard Reference Database 69:
+- **Species**: $\text{NH}_3$ (CAS 7664-41-7), $\text{N}_2$ (CAS 7727-37-9), $\text{H}_2$ (CAS 1333-74-0), and carriers $\text{He}$ (CAS 7440-59-7), $\text{Ar}$ (CAS 7440-37-1).
+- **Molar Masses**: $M(\text{NH}_3) = 17.031\,\text{g/mol}$, $M(\text{N}_2) = 28.013\,\text{g/mol}$, $M(\text{H}_2) = 2.016\,\text{g/mol}$. Stoichiometric syngas ($3:1\,\text{H}_2:\text{N}_2$): $M = 8.515\,\text{g/mol}$.
+- **Heat Capacity**: NIST 5-parameter Shomate polynomials across 298 K to 1400 K:
+  $$C_p^\circ(T) = A + B\,t + C\,t^2 + D\,t^3 + \frac{E}{t^2} \quad [t = T / 1000]$$
+- **Dynamic Viscosity**: Pure species via Chapman-Enskog / Chung collision integrals, gas mixture dynamic viscosity via Wilke's formulation.
+- **Thermal Conductivity**: Polyatomic gas mixture conductivity via Mason & Saxena formulation.
+- **Binary Diffusivity**: Fuller, Schettler & Giddings equation for $\text{NH}_3$ in syngas/carrier at process $(T, P)$.
+- **Reaction Enthalpy**: Evaluated via Kirchhoff thermochemical integration:
+  $$\Delta_r H(T) = \Delta_f H^\circ_{298}(\text{NH}_3) + \int_{298}^T \Delta C_p(T)\,dT \approx -52.5\,\text{kJ/mol-NH}_3 \text{ at } 673\,\text{K}$$
+
+---
+
+## 3. The 9 Core Diagnostic Criteria (Eurokin Protocol)
 
 | Number | Diagnostic Criterion | Category | Governing Formula | Literature Reference |
 |---|----------------------|----------|-------------------|----------------------|
@@ -40,96 +57,96 @@ Sim-Cat assesses all 9 core criteria simultaneously, requiring all transport per
 
 ---
 
-## 3. Environment Configurations
+## 4. Front-Page Reactor Architecture & Suitability Decision Engine
 
-Sim-Cat provides separate environment configuration templates for local development and cloud hosting (e.g. Render).
+Directly on the main page, Sim-Cat evaluates reactor suitability across four dimensions:
+1. **Hydraulic Permeability & Isobaric Stability**: Monitors $\Delta P / P_{\text{tot}}$ via Ergun equation.
+2. **Radial Heat Removal & Centerline Isothermality**: Monitors centerline hotspot $\Delta T_{\text{rad}}$ via Mears criterion.
+3. **Interphase Gas-Boundary Mass Transfer**: Evaluates Carberry number $Ca$.
+4. **Intraparticle Pore Diffusion**: Evaluates Weisz-Prater modulus $\Phi$ and pellet effectiveness factor $\eta$.
 
-### Environment Files
-- `.env.template`: Production and cloud deployment blueprint template.
-- `.env.example`: Reference copy for developers setting up alternative environments.
-- `.env.local`: Local developer overrides (strictly git-ignored).
-
-### Key Variables
-```ini
-# Application Metadata
-VITE_APP_NAME="Sim-Cat"
-VITE_APP_VERSION="1.0.0"
-
-# Server and Port (Render uses 10000 by default, local dev uses 5173)
-PORT=10000
-HOST="0.0.0.0"
-
-# Simulation Parameters
-VITE_DEFAULT_PRESET="benchmark_n2o"
-VITE_ENABLE_ANALYTICS="false"
-VITE_MAX_SWEEP_STEPS="50"
-```
-
-### Git Security Policy
-The project `.gitignore` file enforces that:
-- `.env`, `.env.local`, and `.env.*.local` are never tracked by version control.
-- `.env.template` and `.env.example` are tracked to maintain clear configuration schemas.
+### Recommendation Matrix:
+- **Packed-Bed Micro-Tubular Reactor**: Viable when all hydraulic and radial thermal criteria are satisfied.
+- **Multi-Tubular Fixed-Bed (with Salt Bath cooling)**: Recommended when high exothermicity demands $d_t < 6\,\text{mm}$.
+- **Fluidized Bed Reactor (Catalytic BFB)**: Recommended if $\Delta P$ exceeds the 20% isobaric limit.
+- **Berty / Carberry Stationary-Basket Internal Recycle Reactor**: Recommended for laboratory intrinsic kinetics when film or pore gradients cannot be completely suppressed in packed beds.
 
 ---
 
-## 4. Deployment on Render
+## 5. The 24 Required Industrial Inputs (Audited)
 
-Render automatically detects the repository as a Python Web Service. The repository includes `requirements.txt`, `app.py`, `server.py`, and pre-compiled frontend assets in `dist/`.
+All 24 primary parameters are organized into 4 logical industrial categories, each with pre-calibrated baseline defaults:
 
-### Render Service Settings
-- **Environment**: Python
-- **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `gunicorn your_application.wsgi` (or `gunicorn app:app` / `python server.py`)
-- **Port**: `10000` (automatically provided by Render `$PORT`)
+| # | Category | Parameter | Variable | Default Value | SI Unit |
+|---|---|---|:---:|:---:|:---:|
+| 1 | Operating & Reactor | Bed Temperature | $T$ | 673.15 | K |
+| 2 | Operating & Reactor | Total Pressure | $P$ | 10000000.0 | Pa |
+| 3 | Operating & Reactor | Gas Mass Flow Rate | $\dot{m}$ | 1.5e-5 | kg/s |
+| 4 | Operating & Reactor | Bed Length | $L$ | 0.040 | m |
+| 5 | Operating & Reactor | Tube Inner Diameter | $D_t$ | 0.008 | m |
+| 6 | Operating & Reactor | Pellet Diameter | $d_p$ | 0.00035 | m |
+| 7 | Operating & Reactor | Bed Void Fraction | $\varepsilon_b$ | 0.40 | [-] |
+| 8 | Operating & Reactor | Catalyst Density | $\rho_{\text{cat}}$ | 2750.0 | kg/m³ |
+| 9 | Reaction & Kinetics | Measured Reaction Rate | $r_m$ | 1.6e-4 | mol/(kg-cat·s) |
+| 10 | Reaction & Kinetics | Reaction Order | $n$ | 1.1 | [-] |
+| 11 | Reaction & Kinetics | Activation Energy | $E_a$ | 92000.0 | J/mol |
+| 12 | Reaction & Kinetics | Reaction Enthalpy | $|\Delta H_r|$ | 52500.0 | J/mol |
+| 13 | Reaction & Kinetics | Feed Reactant Mole Fraction | $y_A$ | 0.06 | [-] |
+| 14 | Reaction & Kinetics | Reactant Conversion | $X$ | 0.16 | [-] |
+| 15 | Gas Properties (NIST) | Gas Molar Mass | $M_g$ | 0.008515 | kg/mol |
+| 16 | Gas Properties (NIST) | Dynamic Viscosity | $\mu_g$ | 2.24e-5 | kg/(m·s) |
+| 17 | Gas Properties (NIST) | Specific Heat Capacity | $C_{p,g}$ | 3950.0 | J/(kg·K) |
+| 18 | Gas Properties (NIST) | Thermal Conductivity | $k_g$ | 0.235 | W/(m·K) |
+| 19 | Gas Properties (NIST) | Molecular Diffusivity | $D_{AB}$ | 2.1e-6 | m²/s |
+| 20 | Gas Properties (NIST) | Pore Effective Diffusivity | $D_{\text{eff}}$ | 2.4e-7 | m²/s |
+| 21 | Inert Dilution | Catalyst Bed Mass | $W_{\text{cat}}$ | 0.00025 | kg |
+| 22 | Inert Dilution | Inert Diluent Mass | $W_{\text{dil}}$ | 0.00035 | kg |
+| 23 | Inert Dilution | Inert Particle Density | $\rho_{\text{dil}}$ | 3200.0 | kg/m³ |
+| 24 | Inert Dilution | Diluted Bed Conversion | $X_{\text{dil}}$ | 0.16 | [-] |
 
-### Optional Build Script
-If you wish to rebuild the frontend assets on Render directly, you can set the Build Command to:
-```bash
-./render-build.sh
-```
-This executes `pip install -r requirements.txt` followed by `npm install && npm run build`.
+*All secondary quantities ($C_{A,b}$, $\rho_G$, $u_0$, $Re$, $Sc$, $Pr$, $Sh$, $Nu$, $Ca$, $\Phi$, $\Delta P$, etc.) are computed autonomously.*
 
 ---
 
-## 5. Local Development
+## 6. Custom Formula Studio
 
-### 1. Web Interactive Platform
+Users can define custom algebraic diagnostic rules:
+- Custom JavaScript expression evaluated against live reactor state (`T`, `P`, `feedFlow`, `dp`, `dt`, `L`, `epsB`, `rVobs`, `Deff`, `Re`, `Pr`, `Sc`, `Bo`, `Ca`, `weiszPrater`, `deltaTfilm`, `deltaTrad`, `pressureDrop`, etc.)
+- User-specified operator (`<`, `<=`, `>`, `>=`), numerical limit, unit, and LaTeX symbol.
+- Evaluated in real-time and injected directly into the main Diagnostic Matrix cards and audit export report.
+
+---
+
+## 7. Local Development & Deployment
+
+### Web Interactive Platform (Vite + React + Tailwind v4 + KaTeX)
 ```bash
 # Install dependencies
 npm install
 
-# Start local development server
+# Run local development server
 npm run dev
 
-# Access the interface
-http://localhost:5173
+# Build production bundle
+npm run build
 ```
 
-### 2. Standalone Python Engine and Server
+### Python Industrial CLI Assessment Tool
 ```bash
-# Execute terminal benchmark calculation
+# Run standalone CLI assessment (prompts for all 24 inputs; press Enter for defaults)
+python simcat_industrial_assessment.py
+```
+
+### Python Diagnostic Server (Flask + Gunicorn)
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run Python diagnostic engine
 python simcat_engine.py
 
-# Or start the local production server
+# Start production web server
 python server.py
+# Or with Gunicorn
+gunicorn your_application.wsgi
 ```
-
----
-
-## 6. Built-in Reaction Presets
-1. **Standard Benchmark**: $N_2O$ decomposition over $Rh/Co_3O_4-Al_2O_3$ diluted with $SiC$ particles.
-2. **CO Methanation (Sabatier Process)**: Highly exothermic test case over $Ni/Al_2O_3$ testing extreme thermal dissipation limits.
-3. **Ammonia Synthesis**: High-pressure (100 bar) Haber-Bosch synthesis over promoted iron catalyst.
-4. **Ethylene Epoxidation**: Partial selective oxidation over $Ag/\alpha-Al_2O_3$ carrier.
-
----
-
-## 7. Development Roadmap
-- Full 9-criteria gas-solid fixed-bed diagnostic engine
-- Live mathematical formula inspector with dynamic numerical variable substitution
-- 2D packed bed and catalyst pellet microkinetics cross-section visualizer
-- Parametric sensitivity sweep curves (Weisz-Prater, Carberry, pressure drop, effectiveness)
-- Executive audit certificate generator (Markdown, CSV, JSON export)
-- Multiphase trickle-bed and slurry reactor extensions
-- Axial temperature and concentration dynamic ODE numerical integrator (Runge-Kutta 4th order)
-- Multi-component Stefan-Maxwell matrix solver

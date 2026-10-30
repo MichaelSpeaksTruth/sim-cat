@@ -16,7 +16,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
 
   const sweepConfigs = {
     particleDiameter: {
-      label: 'Pellet Diameter (dp)',
+      label: 'Catalyst Pellet Diameter (dp)',
       unit: 'mm',
       scale: 1e3,
       min: 0.0001, // 0.1 mm
@@ -24,27 +24,27 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
       defaultTarget: baseInputs.particleDiameter,
     },
     temperature: {
-      label: 'Bed Temperature (T)',
+      label: 'Bed Operating Temperature (T)',
       unit: 'K',
       scale: 1,
-      min: 450,
+      min: 550,
       max: 750,
       defaultTarget: baseInputs.temperature,
     },
     feedFlow: {
-      label: 'Feed Mass Flow (ṁ)',
+      label: 'Feed Mass Flow Rate (ṁ)',
       unit: 'mg/s',
       scale: 1e6,
-      min: baseInputs.feedFlow * 0.2,
-      max: baseInputs.feedFlow * 4.0,
+      min: Math.max(1e-6, baseInputs.feedFlow * 0.2),
+      max: baseInputs.feedFlow * 3.5,
       defaultTarget: baseInputs.feedFlow,
     },
     inertMass: {
-      label: 'Inert Diluent Mass (W_inert)',
+      label: 'Inert SiC Diluent Mass (W_inert)',
       unit: 'mg',
       scale: 1e6,
       min: 0.0,
-      max: baseInputs.catalystMass * 10,
+      max: Math.max(1e-4, baseInputs.catalystMass * 6),
       defaultTarget: baseInputs.inertMass,
     },
   };
@@ -68,22 +68,23 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
       const weisz = result.criteria.find(c => c.id === 'internal_diffusion')!;
       const carberry = result.criteria.find(c => c.id === 'external_mass_transfer')!;
       const deltaP = result.criteria.find(c => c.id === 'pressure_drop')!;
-      const deltaTfilm = result.criteria.find(c => c.id === 'external_heat_transfer')!;
+      const deltaTrad = result.criteria.find(c => c.id === 'radial_heat_transfer')!;
 
       points.push({
-        varVal,
-        dispVal: varVal * currentCfg.scale,
-        allPassed: result.overallStatus === 'VALID_INTRINSIC',
+        rawVal: varVal,
+        scaledVal: varVal * currentCfg.scale,
+        overallStatus: result.overallStatus,
+        passedCount: result.passedCount,
+        totalCount: result.totalCount,
         weiszVal: weisz.calculatedValue,
-        weiszLimit: weisz.limitValue,
+        weiszPass: weisz.passed,
         carberryVal: carberry.calculatedValue,
-        carberryLimit: carberry.limitValue,
-        pressureDrop: deltaP.calculatedValue,
-        pressureLimit: deltaP.limitValue,
-        deltaTfilm: deltaTfilm.calculatedValue,
-        deltaTfilmLimit: deltaTfilm.limitValue,
-        reynolds: result.hydrodynamics.reynoldsNumber,
-        effectiveness: result.transport.effectivenessFactor,
+        carberryPass: carberry.passed,
+        deltaPVal: deltaP.calculatedValue,
+        deltaPPass: deltaP.passed,
+        deltaTradVal: deltaTrad.calculatedValue,
+        deltaTradPass: deltaTrad.passed,
+        eta: result.transport.effectivenessFactor,
       });
     }
 
@@ -92,219 +93,189 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
 
   const activePoint = hoverIndex !== null ? sweepData[hoverIndex] : sweepData[Math.floor(sweepData.length / 2)];
 
-  // SVG Chart Dimensions
-  const svgWidth = 560;
-  const svgHeight = 220;
-  const padL = 50;
-  const padR = 20;
-  const padT = 25;
-  const padB = 40;
-  const plotW = svgWidth - padL - padR;
-  const plotH = svgHeight - padT - padB;
-
-  // Weisz-Prater curve scaling
-  const maxWeisz = Math.max(0.2, ...sweepData.map(d => d.weiszVal));
-  const getX = (i: number) => padL + (i / (sweepData.length - 1)) * plotW;
-  const getYWeisz = (val: number) => padT + plotH - (Math.min(val, maxWeisz) / maxWeisz) * plotH;
-
-  const weiszPath = sweepData.reduce(
-    (acc, d, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${getX(i)} ${getYWeisz(d.weiszVal)}`,
-    ''
-  );
-  const limitY = getYWeisz(0.08);
-
   return (
-    <div className="bg-[#0f141d] border border-slate-800/80 rounded-xl overflow-hidden shadow-2xl p-5 space-y-4">
-      {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-amber-400" />
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-100">
-            Parametric Sensitivity & Intrinsic Operating Window
-          </h3>
+    <div className="space-y-6">
+      {/* Top Banner */}
+      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-200">
+              PARAMETRIC SENSITIVITY SWEEPS
+            </span>
+          </div>
+          <h2 className="text-lg font-bold text-slate-900 mt-1">
+            Transport Limit Transition Boundaries & Safe Operating Windows
+          </h2>
+          <p className="text-xs text-slate-600 mt-1 max-w-4xl leading-relaxed">
+            Examine how catalyst pellet diameter, operating temperature, mass flow velocity, and inert bed dilution trigger transitions between intrinsic kinetics and transport-limited regimes.
+          </p>
         </div>
 
-        {/* Sweep Variable Buttons */}
-        <div className="flex bg-[#0b0e14] p-1 rounded-lg border border-slate-800 text-xs font-mono">
-          {(Object.keys(sweepConfigs) as SweepVar[]).map((v) => (
+        {/* Sweep Variable Selector Buttons */}
+        <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-mono">
+          {(Object.keys(sweepConfigs) as SweepVar[]).map((vKey) => (
             <button
-              key={v}
-              onClick={() => setSweepVar(v)}
-              className={`px-2.5 py-1 rounded transition-colors ${
-                sweepVar === v
-                  ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30'
-                  : 'text-slate-400 hover:text-slate-200'
+              key={vKey}
+              onClick={() => {
+                setSweepVar(vKey);
+                setHoverIndex(null);
+              }}
+              className={`px-3 py-1.5 rounded-md font-bold transition-all ${
+                sweepVar === vKey
+                  ? 'bg-white text-blue-700 shadow-2xs border border-slate-200'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              {v === 'particleDiameter' ? 'dp (Pellet)' : v === 'temperature' ? 'T (Bed)' : v === 'feedFlow' ? 'ṁ (Flow)' : 'W_inert (Dilution)'}
+              {sweepConfigs[vKey].label.split(' ')[0]}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Main Interactive Chart Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-        {/* SVG Curve Viewport */}
-        <div className="lg:col-span-8 bg-[#080b11] p-3 rounded-lg border border-slate-800 relative">
-          <div className="flex items-center justify-between text-xs font-mono px-2 mb-1 text-slate-400">
-            <span className="flex items-center gap-1.5 text-amber-300 font-medium font-sans">
-              <BarChart2 className="w-3.5 h-3.5" />
-              Weisz-Prater Modulus (Φ) vs {currentCfg.label}
-            </span>
-            <span className="text-[11px] text-slate-500">
-              Safe Intrinsic Region: Φ &lt; 0.080
+      {/* Main Graph & Metric Readout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Interactive SVG Chart */}
+        <div className="lg:col-span-8 bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              <h3 className="font-bold text-sm text-slate-900">
+                Pore Diffusion (Weisz-Prater Φ) & Pellet Effectiveness (η) vs {currentCfg.label}
+              </h3>
+            </div>
+            <span className="text-xs font-mono text-slate-500">
+              Safe limit: Φ &lt; 0.08 (η &gt; 95%)
             </span>
           </div>
 
-          <svg
-            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            className="w-full select-none"
-            onMouseLeave={() => setHoverIndex(null)}
-          >
-            {/* Safe Zone Background Fill */}
-            <rect
-              x={padL}
-              y={limitY}
-              width={plotW}
-              height={padT + plotH - limitY}
-              fill="#10b981"
-              fillOpacity="0.08"
-            />
-            {/* Danger Zone Background Fill */}
-            <rect
-              x={padL}
-              y={padT}
-              width={plotW}
-              height={limitY - padT}
-              fill="#f43f5e"
-              fillOpacity="0.06"
-            />
+          {/* SVG Plot */}
+          <div className="relative h-64 w-full pt-2">
+            <svg
+              className="w-full h-full overflow-visible"
+              viewBox="0 0 500 200"
+              preserveAspectRatio="none"
+            >
+              {/* Grid Lines */}
+              <line x1="40" y1="20" x2="480" y2="20" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="40" y1="60" x2="480" y2="60" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="40" y1="100" x2="480" y2="100" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="40" y1="140" x2="480" y2="140" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="40" y1="180" x2="480" y2="180" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="40" y1="20" x2="40" y2="180" stroke="#cbd5e1" strokeWidth="1" />
 
-            {/* Grid lines */}
-            <line x1={padL} y1={padT + plotH} x2={padL + plotW} y2={padT + plotH} stroke="#334155" strokeWidth="1" />
-            <line x1={padL} y1={padT} x2={padL} y2={padT + plotH} stroke="#334155" strokeWidth="1" />
+              {/* 0.08 Threshold Line (Weisz-Prater limit) */}
+              <line
+                x1="40"
+                y1="120"
+                x2="480"
+                y2="120"
+                stroke="#f43f5e"
+                strokeWidth="1.5"
+                strokeDasharray="4 3"
+              />
+              <text x="485" y="124" fill="#e11d48" fontSize="10" fontFamily="monospace">
+                Φ = 0.08 Limit
+              </text>
 
-            {/* Diagnostic Limit Line (0.080) */}
-            <line
-              x1={padL}
-              y1={limitY}
-              x2={padL + plotW}
-              y2={limitY}
-              stroke="#f43f5e"
-              strokeWidth="1.5"
-              strokeDasharray="4 3"
-            />
-            <text x={padL + plotW - 6} y={limitY - 5} fill="#f43f5e" fontSize="9" textAnchor="end" fontFamily="monospace">
-              Diagnostic Threshold Φ = 0.080
-            </text>
+              {/* Data Curve: Weisz-Prater Modulus */}
+              {sweepData.map((pt, i) => {
+                if (i === 0) return null;
+                const prev = sweepData[i - 1];
+                const x1 = 40 + ((i - 1) / (sweepData.length - 1)) * 440;
+                const y1 = Math.max(20, Math.min(180, 180 - (prev.weiszVal / 0.20) * 150));
+                const x2 = 40 + (i / (sweepData.length - 1)) * 440;
+                const y2 = Math.max(20, Math.min(180, 180 - (pt.weiszVal / 0.20) * 150));
 
-            {/* Weisz-Prater curve */}
-            <path d={weiszPath} fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+                return (
+                  <line
+                    key={i}
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke="#2563eb"
+                    strokeWidth="2.5"
+                  />
+                );
+              })}
 
-            {/* Data points & hover triggers */}
-            {sweepData.map((d, i) => {
-              const cx = getX(i);
-              const cy = getYWeisz(d.weiszVal);
-              const isHovered = hoverIndex === i;
-              return (
-                <g key={i}>
+              {/* Interactive Hover Nodes */}
+              {sweepData.map((pt, i) => {
+                const x = 40 + (i / (sweepData.length - 1)) * 440;
+                const y = Math.max(20, Math.min(180, 180 - (pt.weiszVal / 0.20) * 150));
+
+                return (
                   <circle
-                    cx={cx}
-                    cy={cy}
-                    r={isHovered ? 5.5 : 3}
-                    fill={d.weiszVal < 0.08 ? '#10b981' : '#f43f5e'}
-                    stroke="#0f141d"
+                    key={i}
+                    cx={x}
+                    cy={y}
+                    r={hoverIndex === i ? 6 : 3.5}
+                    fill={pt.weiszPass ? '#10b981' : '#f43f5e'}
+                    stroke="#ffffff"
                     strokeWidth="1.5"
-                    className="cursor-pointer"
+                    className="cursor-pointer transition-all hover:scale-150"
                     onMouseEnter={() => setHoverIndex(i)}
                   />
-                  {/* Invisible broad hover column */}
-                  <rect
-                    x={cx - (plotW / sweepData.length) / 2}
-                    y={padT}
-                    width={plotW / sweepData.length}
-                    height={plotH}
-                    fill="transparent"
-                    className="cursor-pointer"
-                    onMouseEnter={() => setHoverIndex(i)}
-                  />
-                </g>
-              );
-            })}
+                );
+              })}
+            </svg>
+          </div>
 
-            {/* Axis labels */}
-            <text x={padL} y={padT + plotH + 16} fill="#64748b" fontSize="9" fontFamily="monospace">
-              {sweepData[0].dispVal.toFixed(2)} {currentCfg.unit}
-            </text>
-            <text x={padL + plotW} y={padT + plotH + 16} fill="#64748b" fontSize="9" textAnchor="end" fontFamily="monospace">
-              {sweepData[sweepData.length - 1].dispVal.toFixed(2)} {currentCfg.unit}
-            </text>
-            <text x={padL + plotW / 2} y={padT + plotH + 28} fill="#94a3b8" fontSize="10" textAnchor="middle" fontFamily="sans-serif">
-              {currentCfg.label} [{currentCfg.unit}]
-            </text>
-
-            {/* Y axis tick labels */}
-            <text x={padL - 6} y={padT + plotH} fill="#64748b" fontSize="8" textAnchor="end" fontFamily="monospace">0.0</text>
-            <text x={padL - 6} y={limitY + 3} fill="#f43f5e" fontSize="8" textAnchor="end" fontFamily="monospace">0.08</text>
-            <text x={padL - 6} y={padT + 8} fill="#64748b" fontSize="8" textAnchor="end" fontFamily="monospace">{maxWeisz.toFixed(2)}</text>
-          </svg>
+          {/* X Axis Labels */}
+          <div className="flex justify-between px-10 text-xs font-mono text-slate-500 border-t border-slate-200 pt-2">
+            <span>Min: {currentCfg.min * currentCfg.scale} {currentCfg.unit}</span>
+            <span>Target: {(currentCfg.defaultTarget * currentCfg.scale).toFixed(2)} {currentCfg.unit}</span>
+            <span>Max: {currentCfg.max * currentCfg.scale} {currentCfg.unit}</span>
+          </div>
         </div>
 
-        {/* Telemetry Inspection Box */}
-        <div className="lg:col-span-4 bg-[#0a0e16] border border-slate-800 p-4 rounded-lg text-xs font-mono space-y-3">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-            <span className="flex items-center gap-1.5 font-sans font-semibold text-slate-200">
-              <Crosshair className="w-3.5 h-3.5 text-amber-400" /> Inspected State
-            </span>
-            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-              activePoint.allPassed
-                ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
-                : 'bg-rose-950 text-rose-300 border border-rose-800'
-            }`}>
-              {activePoint.allPassed ? 'ALL CRITERIA PASS' : 'TRANSPORT LIMITED'}
-            </span>
-          </div>
-
-          <div className="space-y-2 text-[11px]">
-            <div className="flex justify-between items-center bg-[#07090e] p-2 rounded border border-slate-800/80">
-              <span className="text-slate-400">{currentCfg.label}:</span>
-              <span className="text-amber-300 font-bold text-sm">
-                {activePoint.dispVal.toFixed(3)} {currentCfg.unit}
+        {/* Selected Evaluation Point Telemetry */}
+        <div className="lg:col-span-4 bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <span className="text-xs font-mono uppercase text-slate-500 font-semibold">Hovered State:</span>
+              <span className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold border ${
+                activePoint.overallStatus === 'VALID_INTRINSIC'
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-rose-50 text-rose-800 border-rose-300'
+              }`}>
+                {activePoint.passedCount} / {activePoint.totalCount} Criteria Satisfied
               </span>
             </div>
 
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Weisz-Prater Modulus:</span>
-              <span className={`font-bold ${activePoint.weiszVal < 0.08 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                Φ = {activePoint.weiszVal.toFixed(4)}
-              </span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Pellet Effectiveness (η):</span>
-              <span className="text-slate-200">{(activePoint.effectiveness * 100).toFixed(1)}%</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Carberry Number (Ca):</span>
-              <span className="text-slate-200">{activePoint.carberryVal.toFixed(4)}</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Bed Pressure Drop (ΔP):</span>
-              <span className="text-slate-200">{activePoint.pressureDrop.toFixed(0)} Pa</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Film Temp Rise (ΔTfilm):</span>
-              <span className="text-slate-200">{activePoint.deltaTfilm.toFixed(3)} K</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400">Reynolds Number (Re):</span>
-              <span className="text-slate-200">{activePoint.reynolds.toFixed(2)}</span>
+            <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 text-xs font-mono">
+              <div className="flex justify-between">
+                <span className="text-slate-600">{currentCfg.label}:</span>
+                <span className="font-bold text-slate-900">{activePoint.scaledVal.toFixed(3)} {currentCfg.unit}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Weisz-Prater Modulus (Φ):</span>
+                <span className={`font-bold ${activePoint.weiszPass ? 'text-emerald-700' : 'text-rose-700'}`}>
+                  {activePoint.weiszVal.toExponential(3)}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Pellet Effectiveness (η):</span>
+                <span className="font-bold text-blue-700">{(activePoint.eta * 100).toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Ergun ΔP (Pressure Drop):</span>
+                <span className={`font-bold ${activePoint.deltaPPass ? 'text-slate-900' : 'text-rose-700'}`}>
+                  {activePoint.deltaPVal.toFixed(0)} Pa
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-600">Radial Centerline ΔT:</span>
+                <span className={`font-bold ${activePoint.deltaTradPass ? 'text-slate-900' : 'text-rose-700'}`}>
+                  {activePoint.deltaTradVal.toFixed(3)} K
+                </span>
+              </div>
             </div>
           </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200">
+            Hover along the chart points to inspect the critical bifurcation point where transport gradients exceed the 5% error tolerance threshold.
+          </p>
         </div>
       </div>
     </div>

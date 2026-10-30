@@ -4,24 +4,32 @@ import katex from 'katex';
 interface MathViewProps {
   math: string;
   block?: boolean;
+  displayMode?: boolean;
   className?: string;
 }
 
-export const MathView: React.FC<MathViewProps> = ({ math, block = false, className = '' }) => {
+export const MathView: React.FC<MathViewProps> = ({
+  math,
+  block = false,
+  displayMode = false,
+  className = '',
+}) => {
+  const isBlock = block || displayMode;
+
   const html = useMemo(() => {
     try {
       return katex.renderToString(math, {
-        displayMode: block,
+        displayMode: isBlock,
         throwOnError: false,
         output: 'htmlAndMathml',
         strict: false,
       });
-    } catch (e) {
-      return `<span class="text-rose-400 font-mono text-xs">${math}</span>`;
+    } catch {
+      return `<span class="text-rose-600 font-mono text-xs">${math}</span>`;
     }
-  }, [math, block]);
+  }, [math, isBlock]);
 
-  if (block) {
+  if (isBlock) {
     return (
       <div
         className={`w-full overflow-x-auto py-1 text-center select-text ${className}`}

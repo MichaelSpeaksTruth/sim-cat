@@ -58,7 +58,6 @@ VITE_APP_VERSION="1.0.0"
 # Server and Port (Render uses 10000 by default, local dev uses 5173)
 PORT=10000
 HOST="0.0.0.0"
-NODE_VERSION="22.16.0"
 
 # Simulation Parameters
 VITE_DEFAULT_PRESET="benchmark_n2o"
@@ -75,22 +74,20 @@ The project `.gitignore` file enforces that:
 
 ## 4. Deployment on Render
 
-A `render.yaml` blueprint is included in the project root for automated deployment as a static site.
+Render automatically detects the repository as a Python Web Service. The repository includes `requirements.txt`, `app.py`, `server.py`, and pre-compiled frontend assets in `dist/`.
 
-### Render Blueprint Specifications
-- **Service Type**: Web / Static Site
-- **Build Command**: `npm install && npm run build`
-- **Publish Directory**: `./dist`
-- **Routing**: Single Page Application rewrite (`/*` to `/index.html`)
-- **Node Version**: `22.16.0`
+### Render Service Settings
+- **Environment**: Python
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `gunicorn app:app` (or `python server.py`)
+- **Port**: `10000` (automatically provided by Render `$PORT`)
 
-### Deployment Steps on Render
-1. Connect your repository to Render.
-2. Select **Blueprint** and Render will automatically parse `render.yaml`.
-3. Alternatively, create a **Static Site** manual service with:
-   - Build Command: `npm install && npm run build`
-   - Publish Directory: `dist`
-4. Deploy the service.
+### Optional Build Script
+If you wish to rebuild the frontend assets on Render directly, you can set the Build Command to:
+```bash
+./render-build.sh
+```
+This executes `pip install -r requirements.txt` followed by `npm install && npm run build`.
 
 ---
 
@@ -108,10 +105,13 @@ npm run dev
 http://localhost:5173
 ```
 
-### 2. Standalone Python Engine
+### 2. Standalone Python Engine and Server
 ```bash
 # Execute terminal benchmark calculation
 python simcat_engine.py
+
+# Or start the local production server
+python server.py
 ```
 
 ---

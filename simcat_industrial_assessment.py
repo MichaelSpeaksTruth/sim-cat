@@ -45,8 +45,8 @@ def get_input(prompt_text: str, default_val: float, val_min=None, val_max=None) 
 def run_industrial_assessment():
     print("=" * 88)
     print("SIM-CAT INDUSTRIAL FIXED-BED INTRINSIC KINETICS DIAGNOSTIC SUITE")
-    print("Primary Chemical System: Industrial Ammonia Synthesis (0.5 N2 + 1.5 H2 <=> NH3)")
-    print("Thermophysical Data Source: NIST Chemistry WebBook (SRD 69) & Eurokin Protocol")
+    print("Primary Chemical System: Industrial Haber-Bosch Ammonia Synthesis (0.5 N2 + 1.5 H2 <=> NH3)")
+    print("Thermophysical Data Source: NIST Reference Thermophysics & Eurokin Diagnostic Protocol")
     print("Note: Press Enter at any parameter prompt to retain calibrated industrial default.")
     print("=" * 88)
 

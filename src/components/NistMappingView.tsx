@@ -193,11 +193,13 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               onChange={(e) => setTestBulkGas(e.target.value as BulkGasType)}
               className="w-full bg-white border border-slate-300 rounded-md px-2.5 py-1.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
             >
-              {Object.values(BULK_GAS_CONFIGS).map((cfg) => (
-                <option key={cfg.id} value={cfg.id}>
-                  {cfg.name}
-                </option>
-              ))}
+              {Object.values(BULK_GAS_CONFIGS)
+                .filter(cfg => cfg.id.startsWith('syngas'))
+                .map((cfg) => (
+                  <option key={cfg.id} value={cfg.id}>
+                    {cfg.name}
+                  </option>
+                ))}
             </select>
             <span className="text-[11px] text-slate-500 block leading-tight">
               {BULK_GAS_CONFIGS[testBulkGas]?.description}
@@ -288,7 +290,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 text-slate-800 font-mono">
-                  {[NIST_AMMONIA, NIST_NITROGEN, NIST_HYDROGEN, NIST_HELIUM, NIST_ARGON].map((sub) => (
+                  {[NIST_AMMONIA, NIST_NITROGEN, NIST_HYDROGEN].map((sub) => (
                     <tr key={sub.casNumber} className="hover:bg-slate-50/80">
                       <td className="py-2.5 px-4 font-semibold text-slate-900 font-sans">
                         {sub.name}

@@ -14,9 +14,9 @@ export const ReportExportModal: React.FC<ReportExportModalProps> = ({ simulation
   const { inputs, hydrodynamics, transport, criteria, overallStatus, passedCount, totalCount, reactorSuitability } = simulation;
 
   const markdownReport = `
-# SIM-CAT INTRINSIC KINETICS DIAGNOSTIC & TRANSPORT AUDIT REPORT
-**System**: Ammonia Synthesis & Decomposition ($0.5\\,\\text{N}_2 + 1.5\\,\\text{H}_2 \\rightleftharpoons \\text{NH}_3$)
-**Thermophysical Source**: NIST Chemistry WebBook (SRD 69)
+# SIM-CAT INDUSTRIAL AMMONIA REACTOR DIAGNOSTIC & TRANSPORT AUDIT
+**System**: Industrial Haber-Bosch Ammonia Synthesis ($0.5\,\text{N}_2 + 1.5\,\text{H}_2 \rightleftharpoons \text{NH}_3$)
+**Thermophysical Source**: NIST Reference Thermophysics (Shomate & Wilke Formulations)
 **Consortium Guideline**: Eurokin Intrinsic Kinetics Protocol
 **Overall Evaluation Status**: ${overallStatus} (${passedCount}/${totalCount} Criteria Satisfied)
 **Reactor Suggestion**: ${reactorSuitability.recommendedType}

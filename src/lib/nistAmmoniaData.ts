@@ -271,7 +271,8 @@ export function calculatePureViscosity(substance: NistSubstanceData, temperature
                  (0.52487 / Math.exp(0.7732 * T_star)) + 
                  (2.16178 / Math.exp(2.43787 * T_star));
   
-  const mu_microPa_s = (26.69 * Math.sqrt(M_gmol * T)) / (Math.pow(substance.lennardJonesSigma, 2) * omegaV);
+  // Chapman-Enskog: mu [uPa*s] = 2.6693 * sqrt(M * T) / (sigma^2 * omegaV)
+  const mu_microPa_s = (2.6693 * Math.sqrt(M_gmol * T)) / (Math.pow(substance.lennardJonesSigma, 2) * omegaV);
   return mu_microPa_s * 1e-6;
 }
 
@@ -316,8 +317,8 @@ export interface NistKineticsOutput {
   reactionRate: number;              // Intrinsic measured rate r_m [mol/(kg-cat·s)]
   activationEnergy: number;          // Apparent Arrhenius activation energy E_a [J/mol]
   reactionOrder: number;             // Apparent pseudo-reaction order n [-]
-  rateConstantK1: number;            // Forward synthesis rate constant [mol/(kg·s·atm)]
-  rateConstantK2: number;            // Reverse decomposition rate constant [mol/(kg·s·atm)]
+  rateConstantK1: number;            // Forward synthesis rate constant [mol/(kg-cat·s·atm^1.5)]
+  rateConstantK2: number;            // Reverse decomposition rate constant [mol·atm^0.5/(kg-cat·s)]
   equilibriumConstantKp: number;     // Thermodynamic equilibrium constant K_p [atm^-1]
   equilibriumConversionXeq: number;  // Maximum theoretical equilibrium conversion X_eq [-]
   rateEquationLatex: string;
@@ -352,8 +353,8 @@ export function computeNistAmmoniaKinetics(
   const pNH3 = Math.max(yNH3 * P_atm, 1e-4);
 
   // 1. Dyson & Baddour (1968) Industrial Arrhenius Rate Constants
-  // k1 = 1.79e4 * exp(-87090 / (R * T)) [mol/(kg-cat · s · atm)]
-  // k2 = 2.57e16 * exp(-198300 / (R * T)) [mol/(kg-cat · s · atm)]
+  // k1 = 1.79e4 * exp(-87090 / (R * T)) [mol/(kg-cat · s · atm^1.5)]
+  // k2 = 2.57e16 * exp(-198300 / (R * T)) [mol · atm^0.5 / (kg-cat · s)]
   const Ea1 = 87090.0;  // J/mol (87.09 kJ/mol) - synthesis direction
   const Ea2 = 198300.0; // J/mol (198.3 kJ/mol) - decomposition direction
   const k1 = 1.79e4 * Math.exp(-Ea1 / (R * T));
@@ -366,16 +367,14 @@ export function computeNistAmmoniaKinetics(
   const Kp = Math.pow(10.0, log10Kp);
 
   // 3. Dyson & Baddour Net Formation Rate of Ammonia:
-  // r_NH3 = 2 * [ k1 * (p_N2 * p_H2^1.5 / p_NH3) - k2 * (p_NH3 / p_H2^1.5) ]
-  // Note: factor 2 accounts for per kg catalyst basis
+  // r_NH3 = 2 * [ k1 * (p_N2 * p_H2^1.5 / p_NH3) - k2 * (p_NH3 / p_H2^1.5) ] [kmol/(m³_cat · h)]
+  // Converted to SI basis: mol/(kg-cat · s) via (rate * 1000) / (3600 * rhoCat)
   const termSynthesis = k1 * (pN2 * Math.pow(pH2, 1.5) / pNH3);
   const termDecomposition = k2 * (pNH3 / Math.pow(pH2, 1.5));
-  let netRateNH3 = 2.0 * (termSynthesis - termDecomposition);
-
-  // Guard against near-equilibrium zero or negative cracking at very high conversions
-  if (netRateNH3 < 1e-7) {
-    netRateNH3 = Math.max(netRateNH3, 5e-6);
-  }
+  const rateKmolM3H = 2.0 * (termSynthesis - termDecomposition);
+  const rhoCatIron = 2750.0; // kg/m³
+  const bedVoidFraction = 0.40;
+  const netRateNH3 = (rateKmolM3H * 1000.0) / (3600.0 * rhoCatIron * (1.0 - bedVoidFraction));
 
   // 4. Equilibrium Conversion X_eq calculation for stoichiometric syngas
   // At equilibrium: (X_eq * P_atm / (1 - X_eq)) ~ Kp(T, P)
@@ -402,8 +401,8 @@ export function computeNistAmmoniaKinetics(
     rateEquationLatex: String.raw`r_{\text{NH}_3} = 2 \left[ k_1 \frac{p_{\text{N}_2} p_{\text{H}_2}^{1.5}}{p_{\text{NH}_3}} - k_2 \frac{p_{\text{NH}_3}}{p_{\text{H}_2}^{1.5}} \right]`,
     kineticModelName: 'Dyson & Baddour (1968) / Temkin-Pyzhev Industrial Rate Law',
     notes: [
-      `Forward synthesis rate constant: k1 = 1.79e4 * exp(-87.09 kJ/mol / RT) = ${k1.toExponential(3)} mol/(kg·s·atm)`,
-      `Reverse decomposition rate constant: k2 = 2.57e16 * exp(-198.3 kJ/mol / RT) = ${k2.toExponential(3)} mol/(kg·s·atm)`,
+      `Forward synthesis rate constant: k1 = 1.79e4 * exp(-87.09 kJ/mol / RT) = ${k1.toExponential(3)} mol/(kg·s·atm^1.5)`,
+      `Reverse decomposition rate constant: k2 = 2.57e16 * exp(-198.3 kJ/mol / RT) = ${k2.toExponential(3)} mol·atm^0.5/(kg·s)`,
       `NIST thermodynamic equilibrium constant: Kp = ${Kp.toExponential(3)} atm⁻¹ at ${T.toFixed(1)} K`,
       `Maximum theoretical equilibrium conversion at ${(pressurePa / 1e5).toFixed(1)} bar: X_eq = ${(Xeq * 100).toFixed(1)}%`,
       `Apparent activation energy: Ea = ${(apparentEa / 1000).toFixed(1)} kJ/mol (Promoted Wüstite/Magnetite Iron Catalyst)`,

@@ -2,47 +2,87 @@
 
 @layer base {
   :root {
-    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', ui-monospace, monospace;
+    --font-sans: 'Inter', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    /* Dark Industrial Scientific Palette */
+    --color-bg-base: #080A0D;
+    --color-bg-surface: #0E1218;
+    --color-bg-panel: #141922;
+    --color-bg-panel-elevated: #1B222E;
+    --color-border-subtle: #1F2735;
+    --color-border-primary: #283244;
+    --color-border-accent: #00D8F6;
+    
+    --color-text-primary: #E2E8F0;
+    --color-text-secondary: #8B949E;
+    --color-text-muted: #57606A;
+    
+    --color-accent-cyan: #00D8F6;
+    --color-accent-blue: #38BDF8;
+    --color-accent-amber: #F59E0B;
+    --color-accent-orange: #F97316;
+    --color-accent-red: #EF4444;
+    --color-accent-green: #10B981;
   }
   
+  * {
+    /* Strict Non-Negotiable: Zero rounded UI */
+    border-radius: 0px !important;
+  }
+
   body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: var(--color-bg-base);
+    color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   code, pre, .font-mono {
     font-family: var(--font-mono);
+    font-feature-settings: "tnum" on, "zero" on;
   }
 }
 
-/* Custom engineering scrollbars (clean light theme) */
+/* Custom Industrial Engineering Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #0B0E13;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: #222B3A;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #334055;
 }
 
-/* KaTeX custom sizing tweaks for high technical clarity in light theme */
+/* KaTeX Dark Theme Engineering Display */
 .katex {
-  font-size: 1.05em;
-  color: #0f172a;
+  font-size: 1.02em;
+  color: #E2E8F0;
 }
 .katex-display {
-  margin: 0.5em 0 !important;
+  margin: 0.4em 0 !important;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.35rem 0;
+  padding: 0.25rem 0;
+  color: #E2E8F0;
+}
+
+/* Subtle Technical Grid Overlay */
+.tech-grid-pattern {
+  background-image: linear-gradient(to right, rgba(31, 39, 53, 0.3) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(31, 39, 53, 0.3) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Sharp focus indicators */
+input:focus, select:focus, textarea:focus, button:focus {
+  outline: 1px solid var(--color-accent-cyan) !important;
+  outline-offset: 0px !important;
 }

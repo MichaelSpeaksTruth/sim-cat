@@ -59,7 +59,7 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
   }, []);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm flex flex-col">
+    <div className="bg-[#0A0D12] border border-[#1E2533] overflow-hidden flex flex-col">
       <style>{`
         @keyframes streamlineFlow {
           from {
@@ -132,13 +132,13 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
       `}</style>
 
       {/* Top Header Bar */}
-      <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-4 py-2.5 bg-[#141922] border-b border-[#1E2533] flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-blue-600" />
-          <span className="font-bold text-xs tracking-wider uppercase text-slate-800">
+          <Layers className="w-4 h-4 text-[#00D8F6]" />
+          <span className="font-mono font-bold text-xs tracking-wider uppercase text-slate-100">
             Reactor Cross-Section & Microkinetics
           </span>
-          <span className="text-[11px] px-2 py-0.5 rounded bg-white text-slate-600 border border-slate-200 font-mono">
+          <span className="text-[11px] px-2 py-0.5 bg-[#0A0D12] text-slate-300 border border-[#1E2533] font-mono">
             d_t = {(inputs.tubeDiameter * 1000).toFixed(1)} mm | L = {(inputs.bedHeight * 1000).toFixed(1)} mm
           </span>
         </div>
@@ -148,33 +148,33 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
           <button
             onClick={() => setAnimationEnabled(!animationEnabled)}
             title={animationEnabled ? 'Pause Flow Animation' : 'Start Flow Animation'}
-            className={`px-2 py-1 rounded text-[11px] font-mono flex items-center gap-1 border transition-colors ${
+            className={`px-2 py-1 text-[11px] font-mono flex items-center gap-1 border transition-colors ${
               animationEnabled
-                ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
-                : 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
+                ? 'bg-[#00D8F6]/10 text-[#00D8F6] border-[#00D8F6]/30'
+                : 'bg-[#141922] text-slate-400 border-[#1E2533]'
             }`}
           >
             {animationEnabled ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
             <span>{animationEnabled ? 'Flow: Active' : 'Flow: Paused'}</span>
           </button>
 
-          <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-medium">
+          <div className="flex bg-[#141922] p-0.5 border border-[#1E2533] text-xs font-mono">
             <button
               onClick={() => setActiveTab('bed')}
-              className={`px-3 py-1 rounded-md transition-all ${
+              className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
                 activeTab === 'bed'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#00D8F6] text-[#080A0D]'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Packed Bed 2D
             </button>
             <button
               onClick={() => setActiveTab('pellet')}
-              className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${
+              className={`px-3 py-1 font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
                 activeTab === 'pellet'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#00D8F6] text-[#080A0D]'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <ZoomIn className="w-3.5 h-3.5" />
@@ -182,10 +182,10 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
             </button>
             <button
               onClick={() => setActiveTab('profiles')}
-              className={`px-3 py-1 rounded-md transition-all ${
+              className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
                 activeTab === 'profiles'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#00D8F6] text-[#080A0D]'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               Gradients
@@ -197,7 +197,7 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
       {/* Main Viewport */}
       <div className="p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
         {/* Visual Canvas / SVG */}
-        <div className="lg:col-span-7 flex justify-center items-center bg-slate-50/70 rounded-lg p-3 border border-slate-200 min-h-[340px] relative overflow-hidden">
+        <div className="lg:col-span-7 flex justify-center items-center bg-[#080A0D] p-3 border border-[#1E2533] min-h-[340px] relative overflow-hidden">
           {activeTab === 'bed' && (
             <div className="flex flex-col items-center">
               {/* Syngas Feed Inflow Vector */}
@@ -446,10 +446,10 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
 
           {activeTab === 'profiles' && (
             <div className="w-full max-w-[340px] space-y-3 font-mono text-xs">
-              <div className="p-3 bg-white rounded border border-slate-200 shadow-2xs space-y-1">
+              <div className="p-3 bg-[#141922] border border-[#1E2533] space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600 font-semibold">Centerline Hotspot (ΔT_rad):</span>
-                  <span className="font-bold text-slate-900">
+                  <span className="text-slate-400 font-semibold">Centerline Hotspot (ΔT_rad):</span>
+                  <span className="font-bold text-slate-100">
                     {simulation.transport.observedVolumetricRate > 0
                       ? (simulation.criteria.find(c => c.id === 'radial_heat_transfer')?.calculatedValue || 0).toFixed(3)
                       : 0}{' '}
@@ -462,10 +462,10 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
                 </div>
               </div>
 
-              <div className="p-3 bg-white rounded border border-slate-200 shadow-2xs space-y-1">
+              <div className="p-3 bg-[#141922] border border-[#1E2533] space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600 font-semibold">Boundary Film Jump (ΔT_film):</span>
-                  <span className="font-bold text-slate-900">
+                  <span className="text-slate-400 font-semibold">Boundary Film Jump (ΔT_film):</span>
+                  <span className="font-bold text-slate-100">
                     {(simulation.criteria.find(c => c.id === 'external_heat_transfer')?.calculatedValue || 0).toFixed(4)} K
                   </span>
                 </div>
@@ -475,10 +475,10 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
                 </div>
               </div>
 
-              <div className="p-3 bg-white rounded border border-slate-200 shadow-2xs space-y-1">
+              <div className="p-3 bg-[#141922] border border-[#1E2533] space-y-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-slate-600 font-semibold">Effectiveness Factor (η):</span>
-                  <span className="font-bold text-blue-700">{(simulation.transport.effectivenessFactor * 100).toFixed(1)}%</span>
+                  <span className="text-slate-400 font-semibold">Effectiveness Factor (η):</span>
+                  <span className="font-bold text-[#00D8F6]">{(simulation.transport.effectivenessFactor * 100).toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between items-center text-[11px] text-slate-500">
                   <span>Thiele Modulus (ϕ):</span>
@@ -493,41 +493,41 @@ export const ReactorVisualizer: React.FC<ReactorVisualizerProps> = ({ simulation
         <div className="lg:col-span-5 space-y-3 font-mono text-xs">
           {/* Key Flow & Transport Metrics Grid */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+            <div className="p-2.5 bg-[#141922] border border-[#1E2533]">
               <span className="text-[10px] text-slate-500 block uppercase">Reynolds Number</span>
-              <span className="text-sm font-bold text-slate-900">{hydrodynamics.reynoldsNumber.toFixed(2)}</span>
+              <span className="text-sm font-bold text-slate-200">{hydrodynamics.reynoldsNumber.toFixed(2)}</span>
               <span className="text-[10px] text-slate-500 block">Laminar (Re &lt; 2000)</span>
             </div>
 
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+            <div className="p-2.5 bg-[#141922] border border-[#1E2533]">
               <span className="text-[10px] text-slate-500 block uppercase">Superficial Velocity</span>
-              <span className="text-sm font-bold text-slate-900">{hydrodynamics.superficialVelocity.toFixed(4)}</span>
+              <span className="text-sm font-bold text-[#00D8F6]">{hydrodynamics.superficialVelocity.toFixed(4)}</span>
               <span className="text-[10px] text-slate-500 block">m/s</span>
             </div>
 
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+            <div className="p-2.5 bg-[#141922] border border-[#1E2533]">
               <span className="text-[10px] text-slate-500 block uppercase">Gas Density (ρ_G)</span>
-              <span className="text-sm font-bold text-slate-900">{hydrodynamics.gasDensity.toFixed(3)}</span>
+              <span className="text-sm font-bold text-slate-200">{hydrodynamics.gasDensity.toFixed(3)}</span>
               <span className="text-[10px] text-slate-500 block">kg/m³ (at P, T)</span>
             </div>
 
-            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg">
+            <div className="p-2.5 bg-[#141922] border border-[#1E2533]">
               <span className="text-[10px] text-slate-500 block uppercase">Bodenstein Number</span>
-              <span className="text-sm font-bold text-slate-900">{hydrodynamics.bodensteinNumber.toFixed(2)}</span>
+              <span className="text-sm font-bold text-slate-200">{hydrodynamics.bodensteinNumber.toFixed(2)}</span>
               <span className="text-[10px] text-slate-500 block">Bo (Wakao Form)</span>
             </div>
           </div>
 
           {/* Visual Legend */}
-          <div className="p-3 bg-slate-50/70 border border-slate-200 rounded-lg space-y-2">
-            <span className="text-[11px] font-bold text-slate-700 block font-sans">Visual Packing Legend:</span>
-            <div className="flex items-center gap-4 text-slate-600 text-[11px]">
+          <div className="p-3 bg-[#141922] border border-[#1E2533] space-y-2">
+            <span className="text-[11px] font-bold text-slate-300 block font-sans">Visual Packing Legend:</span>
+            <div className="flex items-center gap-4 text-slate-400 text-[11px]">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-blue-600 border border-blue-800"></span>
+                <span className="w-3 h-3 bg-[#00D8F6] border border-[#00D8F6]"></span>
                 <span>Active Catalyst ({((1 - bDilution) * 100).toFixed(0)}%)</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-slate-400 border border-slate-600"></span>
+                <span className="w-3 h-3 bg-slate-500 border border-slate-600"></span>
                 <span>Inert Diluent ({(bDilution * 100).toFixed(0)}%)</span>
               </div>
             </div>

@@ -1,309 +1,381 @@
-import React, { useState, useMemo } from 'react';
-import { ReactorInputs, CustomCriterionDefinition } from './types/eurokin';
+import React, { useState, useMemo, useCallback } from 'react';
+import {
+  ReactorInputs,
+  CustomCriterionDefinition,
+  NavigationSection,
+  SimulationStage,
+  PlaybackState,
+} from './types/eurokin';
 import { PRESET_SCENARIOS } from './lib/presets';
 import { runEurokinSimulation } from './lib/eurokinEngine';
-import { InputConsole } from './components/InputConsole';
-import { ReactorVisualizer } from './components/ReactorVisualizer';
+
+// Workstation Components
+import { NavigationRail } from './components/NavigationRail';
+import { WorkstationHeader } from './components/WorkstationHeader';
+import { EngineeringInspector } from './components/EngineeringInspector';
+import { Reactor3D } from './components/Reactor3D';
+import { CatalystMicroscopy } from './components/CatalystMicroscopy';
+import { AxialCharts } from './components/AxialCharts';
+import { SimulationWorkspace } from './components/SimulationWorkspace';
+import { CatalystComparison } from './components/CatalystComparison';
 import { DiagnosticCard } from './components/DiagnosticCard';
 import { ReactorSuggestionCard } from './components/ReactorSuggestionCard';
 import { NistMappingView } from './components/NistMappingView';
 import { CustomFormulaStudio } from './components/CustomFormulaStudio';
-import { SensitivitySweep } from './components/SensitivitySweep';
 import { ReportExportModal } from './components/ReportExportModal';
+import { InputConsole } from './components/InputConsole';
+import { TransportDiagnosticsView } from './components/TransportDiagnosticsView';
+
 import {
-  FlaskConical,
-  Activity,
-  BookOpen,
-  TrendingUp,
-  FileCheck2,
-  ShieldCheck,
-  AlertTriangle,
-  RotateCcw,
-  Sparkles,
   Layers,
-  Database,
-  Code2,
-  Factory
+  Cpu,
+  Flame,
+  Wind,
+  Gauge,
+  Activity,
+  LineChart,
+  Split,
+  FileCode2,
+  CheckCircle2,
+  AlertTriangle,
+  ZoomIn,
+  Sliders,
+  Sparkles
 } from 'lucide-react';
 
 export function App() {
-  // Default to standard Ammonia industrial baseline scenario
+  // Primary state: Inputs and Presets
   const [inputs, setInputs] = useState<ReactorInputs>(PRESET_SCENARIOS[0].inputs);
-  const [activeView, setActiveView] = useState<'assessment' | 'reactor_suggestion' | 'nist_data' | 'custom_formulas' | 'sweep'>('assessment');
-  const [customCriteria, setCustomCriteria] = useState<CustomCriterionDefinition[]>([]);
-  const [showExportModal, setShowExportModal] = useState(false);
+  const [selectedPresetId, setSelectedPresetId] = useState<string>(PRESET_SCENARIOS[0].id);
+  const [activeSection, setActiveSection] = useState<NavigationSection>('overview');
 
-  // Run simulation engine synchronously on any input or custom formula change
+  // Simulation execution & lifecycle state
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationStage, setSimulationStage] = useState<SimulationStage>('completed');
+  const [isDirty, setIsDirty] = useState(false);
+
+  // Playback & Scrubber State
+  const [playbackState, setPlaybackState] = useState<PlaybackState>({
+    isPlaying: false,
+    currentZNormalized: 0.35,
+    speed: 1.0,
+  });
+
+  // UI Panels state
+  const [isInspectorOpen, setIsInspectorOpen] = useState(true);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showMicroscopyView, setShowMicroscopyView] = useState(false);
+  const [customCriteria, setCustomCriteria] = useState<CustomCriterionDefinition[]>([]);
+
+  // Calculate simulation result
   const simulation = useMemo(() => {
     return runEurokinSimulation(inputs, customCriteria);
   }, [inputs, customCriteria]);
 
-  const handleReset = () => {
-    setInputs(PRESET_SCENARIOS[0].inputs);
+  // Handle Input Changes with dirty state tracking
+  const handleUpdateInputs = (updated: ReactorInputs) => {
+    setInputs(updated);
+    setIsDirty(true);
   };
 
-  const handleApplyNistProperties = (updatedProps: Partial<ReactorInputs>) => {
+  const handleUpdateSingleField = (field: keyof ReactorInputs, value: number) => {
     setInputs((prev) => ({
       ...prev,
-      ...updatedProps,
+      [field]: value,
     }));
+    setIsDirty(true);
+  };
+
+  const handleSelectPreset = (presetId: string) => {
+    setSelectedPresetId(presetId);
+    const found = PRESET_SCENARIOS.find((p) => p.id === presetId);
+    if (found) {
+      setInputs({ ...found.inputs });
+      setIsDirty(false);
+    }
+  };
+
+  const handleReset = () => {
+    setInputs({ ...PRESET_SCENARIOS[0].inputs });
+    setSelectedPresetId(PRESET_SCENARIOS[0].id);
+    setIsDirty(false);
+  };
+
+  // Run Simulation with staged lifecycle
+  const handleRunSimulation = useCallback(() => {
+    setIsSimulating(true);
+    setSimulationStage('validating');
+
+    setTimeout(() => {
+      setSimulationStage('initializing');
+      setTimeout(() => {
+        setSimulationStage('evaluating_properties');
+        setTimeout(() => {
+          setSimulationStage('integrating');
+          setTimeout(() => {
+            setSimulationStage('checking_convergence');
+            setTimeout(() => {
+              setSimulationStage('generating_results');
+              setTimeout(() => {
+                setSimulationStage('completed');
+                setIsSimulating(false);
+                setIsDirty(false);
+              }, 180);
+            }, 180);
+          }, 240);
+        }, 180);
+      }, 160);
+    }, 150);
+  }, []);
+
+  const handleZNormalizedChange = (zNorm: number) => {
+    setPlaybackState((prev) => ({ ...prev, currentZNormalized: zNorm }));
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-blue-600/20 selection:text-blue-900">
-      {/* Top Engineering Nav Bar */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 backdrop-blur-md bg-opacity-98 shadow-xs">
-        <div className="max-w-[1720px] mx-auto px-4 lg:px-6 py-2.5 flex flex-wrap items-center justify-between gap-4">
-          {/* Logo & Platform Info */}
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 shadow-2xs">
-              <FlaskConical className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm tracking-wider uppercase text-blue-900">
-                  SIM-CAT
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 font-medium">
-                Gas-Solid Fixed-Bed Intrinsic Kinetics & Transport Assessment
-              </p>
-            </div>
-          </div>
+    <div className="h-screen w-screen bg-[#080A0D] text-slate-100 flex flex-col font-sans overflow-hidden selection:bg-[#00D8F6]/25 selection:text-[#00D8F6]">
+      {/* 1. Top Industrial Engineering Workstation Header */}
+      <WorkstationHeader
+        simulation={simulation}
+        selectedPresetId={selectedPresetId}
+        onSelectPreset={handleSelectPreset}
+        onRunSimulation={handleRunSimulation}
+        isSimulating={isSimulating}
+        simulationStage={simulationStage}
+        isDirty={isDirty}
+        onReset={handleReset}
+        onOpenExport={() => setShowExportModal(true)}
+        onOpenInspector={() => setIsInspectorOpen(!isInspectorOpen)}
+        isInspectorOpen={isInspectorOpen}
+      />
 
-          {/* View Mode Navigation Tabs */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-mono">
-            <button
-              onClick={() => setActiveView('assessment')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activeView === 'assessment'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Activity className="w-3.5 h-3.5" />
-              <span>Diagnostic Matrix</span>
-            </button>
-
-            <button
-              onClick={() => setActiveView('reactor_suggestion')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activeView === 'reactor_suggestion'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Factory className="w-3.5 h-3.5" />
-              <span>Reactor Suitability</span>
-            </button>
-
-            <button
-              onClick={() => setActiveView('nist_data')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activeView === 'nist_data'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Database className="w-3.5 h-3.5" />
-              <span>NIST Thermophysics</span>
-            </button>
-
-            <button
-              onClick={() => setActiveView('custom_formulas')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activeView === 'custom_formulas'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Code2 className="w-3.5 h-3.5" />
-              <span>Custom Formulas</span>
-              {customCriteria.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] flex items-center justify-center font-bold">
-                  {customCriteria.length}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={() => setActiveView('sweep')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activeView === 'sweep'
-                  ? 'bg-white text-blue-700 font-bold border border-slate-200 shadow-2xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <TrendingUp className="w-3.5 h-3.5" />
-              <span>Sensitivity Sweeps</span>
-            </button>
-          </div>
-
-          {/* Action Tools */}
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={() => setShowExportModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-800 text-xs font-mono font-semibold border border-slate-300 shadow-2xs transition-colors"
-            >
-              <FileCheck2 className="w-3.5 h-3.5 text-blue-600" />
-              <span>Audit & Export</span>
-            </button>
-
-            {/* Overall Status Pill */}
-            <div
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold tracking-wide border shadow-2xs ${
-                simulation.overallStatus === 'VALID_INTRINSIC'
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                  : 'bg-rose-50 text-rose-800 border-rose-300'
-              }`}
-            >
-              {simulation.overallStatus === 'VALID_INTRINSIC' ? (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>INTRINSIC VALID ({simulation.passedCount}/{simulation.totalCount})</span>
-                </>
-              ) : (
-                <>
-                  <AlertTriangle className="w-4 h-4 text-rose-600" />
-                  <span>TRANSPORT LIMITED ({simulation.passedCount}/{simulation.totalCount})</span>
-                </>
-              )}
-            </div>
-          </div>
+      {/* Visible Research-Use Disclaimer Banner */}
+      <div className="bg-amber-950/40 border-b border-amber-500/30 px-4 py-1.5 flex items-center justify-between text-[11px] font-mono text-amber-200 select-none shrink-0 z-20">
+        <div className="flex items-center gap-2 overflow-hidden">
+          <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 uppercase tracking-wide text-[10px] shrink-0">
+            RESEARCH PREVIEW
+          </span>
+          <span className="truncate">
+            SIM-CAT v1.0 (Rev 15) — For research, educational, and exploratory engineering analysis only. Industrial readiness not established.
+          </span>
         </div>
-      </header>
+        <div className="hidden lg:flex items-center gap-3 text-[10px] text-amber-300/80 shrink-0">
+          <span>Status: Verified with operational limitations</span>
+          <span className="text-amber-500/40">•</span>
+          <span className="text-amber-300/90 font-medium">Do not use for commercial plant design or life-critical safety</span>
+        </div>
+      </div>
 
-      {/* Main Content Area */}
-      <main className="max-w-[1720px] mx-auto px-4 lg:px-6 py-4 flex-1 w-full space-y-4">
-        {/* Sleek Front-Page Reactor Architecture Summary Bar */}
-        {activeView === 'assessment' && (
-          <div className="bg-white border border-slate-200 rounded-lg px-4 py-2.5 shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-            <div className="flex items-center gap-2.5">
-              <Factory className="w-4 h-4 text-blue-600" />
-              <span className="font-semibold text-slate-700">Architecture Suggestion:</span>
-              <span className="font-bold text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
-                {simulation.reactorSuitability.recommendedType}
-              </span>
-            </div>
+      {/* 2. Main Workstation Body: Navigation Rail + Central Canvas + Right Inspector */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Vertical Navigation Rail */}
+        <NavigationRail
+          activeSection={activeSection}
+          onSelectSection={(sec) => {
+            setActiveSection(sec);
+            setShowMicroscopyView(false);
+          }}
+          isCollapsed={isNavCollapsed}
+          onToggleCollapse={() => setIsNavCollapsed(!isNavCollapsed)}
+          overallStatus={simulation.overallStatus}
+          passedCount={simulation.passedCount}
+          totalCount={simulation.totalCount}
+          isDirty={isDirty}
+        />
 
-            <div className="flex flex-wrap items-center gap-4 text-slate-600 text-[11px]">
-              <span>L/d_p = {(inputs.bedHeight / inputs.particleDiameter).toFixed(1)} (≥ 50)</span>
-              <span>D_t/d_p = {(inputs.tubeDiameter / inputs.particleDiameter).toFixed(1)} (≥ 8)</span>
-              <span>
-                ΔP/P = {(((simulation.criteria.find(c => c.id === 'pressure_drop')?.calculatedValue || 0) / inputs.totalPressure)).toFixed(4)} (&lt; {(0.2 / inputs.reactionOrder).toFixed(3)})
-              </span>
-              <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                Fixed-Bed Viable
-              </span>
-            </div>
+        {/* Central Dynamic Scientific Workspace */}
+        <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#080A0D] tech-grid-pattern">
+          {/* Modal / High-Magnification Pellet Inspection Override */}
+          {showMicroscopyView ? (
+            <CatalystMicroscopy
+              simulation={simulation}
+              onClose={() => setShowMicroscopyView(false)}
+            />
+          ) : (
+            <>
+              {/* SECTION 1: OVERVIEW & 3D REACTOR */}
+              {activeSection === 'overview' && (
+                <div className="space-y-4">
+                  {/* Centerpiece 3D WebGL Fixed-Bed Reactor */}
+                  <Reactor3D
+                    simulation={simulation}
+                    currentZNormalized={playbackState.currentZNormalized}
+                    onZNormalizedChange={handleZNormalizedChange}
+                    onSelectPellet={() => setShowMicroscopyView(true)}
+                    className="h-[460px]"
+                  />
 
-            <button
-              onClick={() => setActiveView('reactor_suggestion')}
-              className="text-blue-600 hover:text-blue-800 font-semibold underline text-[11px]"
-            >
-              Suitability Details →
-            </button>
-          </div>
-        )}
+                  {/* Synchronized 1D Axial Profile Explorer */}
+                  <AxialCharts
+                    simulation={simulation}
+                    currentZNormalized={playbackState.currentZNormalized}
+                    onZNormalizedChange={handleZNormalizedChange}
+                  />
 
-        {/* Dedicated Reactor Suitability View */}
-        {activeView === 'reactor_suggestion' && (
-          <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
-        )}
-
-        {/* View 1: Main Diagnostic Matrix */}
-        {activeView === 'assessment' && (
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
-            {/* Left Column: Parameter Control Console */}
-            <div className="xl:col-span-4 space-y-5">
-              <InputConsole
-                inputs={inputs}
-                onChange={setInputs}
-                onReset={handleReset}
-              />
-            </div>
-
-            {/* Right Column: Visualization & Diagnostic Matrix */}
-            <div className="xl:col-span-8 space-y-5">
-              {/* Reactor 2D / Pellet Microkinetics Visualizer */}
-              <ReactorVisualizer simulation={simulation} />
-
-              {/* Diagnostic Criteria Header */}
-              <div className="flex items-center justify-between pt-1">
-                <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-blue-600" />
-                  <h3 className="font-bold text-xs tracking-wider uppercase text-slate-800">
-                    Intrinsic Kinetic Diagnostic Criteria ({simulation.criteria.length} Active Checks)
-                  </h3>
+                  {/* Architectural Feasibility Bar */}
+                  <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
                 </div>
-                <span className="text-xs font-mono text-slate-500">
-                  Perturbation limit: &lt; 5% deviation on reaction rate
-                </span>
-              </div>
+              )}
 
-              {/* Diagnostic Criteria Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {simulation.criteria.map((c) => (
-                  <DiagnosticCard key={c.id} criterion={c} />
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+              {/* SECTION 2: REACTOR SETUP & GEOMETRY */}
+              {activeSection === 'setup' && (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                  <div className="lg:col-span-6 space-y-4">
+                    <InputConsole
+                      inputs={inputs}
+                      onChange={handleUpdateInputs}
+                      onReset={handleReset}
+                      isDirty={isDirty}
+                    />
+                  </div>
+                  <div className="lg:col-span-6 space-y-4">
+                    <Reactor3D
+                      simulation={simulation}
+                      currentZNormalized={playbackState.currentZNormalized}
+                      onZNormalizedChange={handleZNormalizedChange}
+                      onSelectPellet={() => setShowMicroscopyView(true)}
+                      className="h-[520px]"
+                    />
+                  </div>
+                </div>
+              )}
 
-        {/* View 2: Detailed Reactor Architecture View */}
-        {activeView === 'reactor_suggestion' && (
-          <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
-            <div className="xl:col-span-4 space-y-5">
-              <InputConsole
-                inputs={inputs}
-                onChange={setInputs}
-                onReset={handleReset}
-              />
-            </div>
-            <div className="xl:col-span-8 space-y-5">
-              <ReactorVisualizer simulation={simulation} />
-            </div>
-          </div>
-        )}
+              {/* SECTION 3: CATALYST STUDIO */}
+              {activeSection === 'catalyst' && (
+                <div className="space-y-4">
+                  <div className="bg-[#0A0D12] border border-[#1E2533] p-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xs font-mono font-bold uppercase text-slate-100 flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-[#00D8F6]" />
+                        <span>Catalyst Studio & Pellet Morphology</span>
+                      </h3>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Promoted Magnetite (K₂O-Al₂O₃-CaO) active iron crystallites.
+                      </p>
+                    </div>
 
-        {/* View 3: NIST WebBook Data Mapping Ledger & Live Calculator */}
-        {activeView === 'nist_data' && (
-          <NistMappingView
-            currentInputs={inputs}
-            onApplyNistProperties={handleApplyNistProperties}
-          />
-        )}
+                    <button
+                      onClick={() => setShowMicroscopyView(true)}
+                      className="px-3 py-1.5 bg-[#00D8F6] text-[#080A0D] font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+                    >
+                      <ZoomIn className="w-3.5 h-3.5" />
+                      <span>Inspect Microscopic Pore Cutaway</span>
+                    </button>
+                  </div>
 
-        {/* View 4: Formula Audit & Custom Criteria Studio */}
-        {activeView === 'custom_formulas' && (
-          <CustomFormulaStudio
-            customCriteria={customCriteria}
-            onUpdateCriteria={setCustomCriteria}
-            simulation={simulation}
-          />
-        )}
+                  <CatalystMicroscopy simulation={simulation} />
+                </div>
+              )}
 
-        {/* View 5: Sensitivity Sweeps */}
-        {activeView === 'sweep' && (
-          <SensitivitySweep baseInputs={inputs} />
-        )}
-      </main>
+              {/* SECTION 4: FEED CONFIGURATION & NIST THERMOPHYSICS */}
+              {activeSection === 'feed' && (
+                <NistMappingView
+                  currentInputs={inputs}
+                  onApplyNistProperties={(updated) => handleUpdateInputs({ ...inputs, ...updated })}
+                />
+              )}
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white py-4 text-xs font-mono text-slate-500 text-center shadow-xs">
-        <div className="max-w-[1720px] mx-auto px-4 flex flex-wrap items-center justify-between gap-3">
-          <div className="text-slate-600">
-            SIM-CAT Intrinsic Kinetics Diagnostic Suite • NIST Chemistry WebBook (SRD 69) Thermophysical Mapping
-          </div>
-          <div className="flex items-center gap-4 text-slate-600">
-            <span>Ammonia Synthesis Benchmark Focus</span>
-            <span className="text-emerald-700 font-semibold">Eurokin Protocol Compliant</span>
-          </div>
-        </div>
-      </footer>
+              {/* SECTION 5: OPERATING CONDITIONS */}
+              {activeSection === 'operating' && (
+                <div className="space-y-4">
+                  <InputConsole
+                    inputs={inputs}
+                    onChange={handleUpdateInputs}
+                    onReset={handleReset}
+                    isDirty={isDirty}
+                  />
+                  <AxialCharts
+                    simulation={simulation}
+                    currentZNormalized={playbackState.currentZNormalized}
+                    onZNormalizedChange={handleZNormalizedChange}
+                  />
+                </div>
+              )}
 
-      {/* Audit Report & Export Modal */}
+              {/* SECTION 6: SIMULATION & PLAYBACK */}
+              {activeSection === 'simulation' && (
+                <div className="space-y-4">
+                  <SimulationWorkspace
+                    simulation={simulation}
+                    onRunSimulation={handleRunSimulation}
+                    isSimulating={isSimulating}
+                    simulationStage={simulationStage}
+                    playbackState={playbackState}
+                    onPlaybackChange={setPlaybackState}
+                    onZNormalizedChange={handleZNormalizedChange}
+                  />
+
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <div className="lg:col-span-6">
+                      <Reactor3D
+                        simulation={simulation}
+                        currentZNormalized={playbackState.currentZNormalized}
+                        onZNormalizedChange={handleZNormalizedChange}
+                        onSelectPellet={() => setShowMicroscopyView(true)}
+                        className="h-[440px]"
+                      />
+                    </div>
+                    <div className="lg:col-span-6">
+                      <AxialCharts
+                        simulation={simulation}
+                        currentZNormalized={playbackState.currentZNormalized}
+                        onZNormalizedChange={handleZNormalizedChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SECTION 7: TRANSPORT DIAGNOSTICS (EUROKIN PROTOCOL) */}
+              {activeSection === 'diagnostics' && (
+                <TransportDiagnosticsView simulation={simulation} />
+              )}
+
+              {/* SECTION 8: RESULTS EXPLORER */}
+              {activeSection === 'results' && (
+                <div className="space-y-4">
+                  <AxialCharts
+                    simulation={simulation}
+                    currentZNormalized={playbackState.currentZNormalized}
+                    onZNormalizedChange={handleZNormalizedChange}
+                  />
+                  <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
+                </div>
+              )}
+
+              {/* SECTION 9: CATALYST COMPARISON */}
+              {activeSection === 'comparison' && (
+                <CatalystComparison
+                  baseInputs={inputs}
+                  baseResult={simulation}
+                />
+              )}
+
+              {/* SECTION 10: VALIDATION LAB & CUSTOM FORMULAS */}
+              {activeSection === 'validation' && (
+                <CustomFormulaStudio
+                  customCriteria={customCriteria}
+                  onUpdateCriteria={setCustomCriteria}
+                  simulation={simulation}
+                />
+              )}
+            </>
+          )}
+        </main>
+
+        {/* Right Collapsible Engineering Inspector */}
+        <EngineeringInspector
+          simulation={simulation}
+          inputs={inputs}
+          onUpdateInput={handleUpdateSingleField}
+          isOpen={isInspectorOpen}
+          onToggle={() => setIsInspectorOpen(!isInspectorOpen)}
+          isDirty={isDirty}
+        />
+      </div>
+
+      {/* Modal: Diagnostic Report & Audit Export */}
       {showExportModal && (
         <ReportExportModal
           simulation={simulation}

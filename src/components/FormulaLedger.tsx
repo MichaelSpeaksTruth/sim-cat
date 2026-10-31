@@ -163,39 +163,39 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
   });
 
   return (
-    <div className="bg-[#0f141d] border border-slate-800/80 rounded-xl overflow-hidden shadow-2xl p-5 space-y-4">
+    <div className="bg-[#0A0D12] border border-[#1E2533] p-4 space-y-4">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1E2533]">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-amber-400" />
-          <h3 className="font-semibold text-xs tracking-wider uppercase text-slate-100">
-            Sim-Cat Mathematical Framework & Formula Ledger
+          <BookOpen className="w-4 h-4 text-[#00D8F6]" />
+          <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+            SIM-CAT Mathematical Framework & Formula Ledger
           </h3>
         </div>
 
         {/* Search Input */}
-        <div className="relative min-w-[240px]">
+        <div className="relative min-w-[260px]">
           <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
           <input
             type="text"
             placeholder="Search formulas, Mears, Ergun, Carberry..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#090c13] border border-slate-700/80 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-amber-500"
+            className="w-full bg-[#141922] border border-[#1E2533] pl-8 pr-3 py-1.5 text-xs font-mono text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-[#00D8F6]"
           />
         </div>
       </div>
 
       {/* Filter Category Chips */}
-      <div className="flex flex-wrap gap-1.5 text-xs font-mono">
+      <div className="flex flex-wrap gap-1 text-xs font-mono">
         {['all', 'Hydrodynamics', 'Mass Transfer', 'Heat Transfer', 'Diffusivity'].map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1 rounded-md transition-colors ${
+            className={`px-3 py-1 font-bold uppercase tracking-wider transition-colors ${
               activeCategory === cat
-                ? 'bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40'
-                : 'bg-[#0a0e16] text-slate-400 hover:text-slate-200 border border-slate-800'
+                ? 'bg-[#00D8F6] text-[#080A0D]'
+                : 'bg-[#141922] text-slate-400 hover:text-slate-200 border border-[#1E2533]'
             }`}
           >
             {cat === 'all' ? 'All Governing Equations' : cat}
@@ -204,36 +204,36 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
       </div>
 
       {/* Formula Cards Grid */}
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-3">
         {filtered.map((item) => (
           <div
             key={item.id}
-            className="p-4 rounded-xl bg-[#090d15] border border-slate-800/80 space-y-3 hover:border-slate-700 transition-colors"
+            className="p-4 bg-[#141922] border border-[#1E2533] space-y-3"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30 font-semibold uppercase">
                     {item.category}
                   </span>
-                  <span className="text-xs font-mono text-slate-500">{item.source}</span>
+                  <span className="text-[11px] font-mono text-slate-500">{item.source}</span>
                 </div>
-                <h4 className="font-semibold text-sm text-slate-100">{item.title}</h4>
+                <h4 className="font-mono text-xs font-bold text-slate-100">{item.title}</h4>
               </div>
 
               <button
                 onClick={() => copyLatex(item.id, item.latexFormula)}
                 title="Copy LaTeX formula to clipboard"
-                className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800/60 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-xs font-mono transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 bg-[#0A0D12] hover:bg-[#1E2533] text-slate-300 text-xs font-mono border border-[#1E2533] transition-colors"
               >
                 {copiedId === item.id ? (
                   <>
-                    <Check className="w-3 h-3 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <Check className="w-3 h-3 text-[#10B981]" />
+                    <span className="text-[#10B981]">Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-3 h-3" />
+                    <Copy className="w-3 h-3 text-slate-400" />
                     <span>Copy LaTeX</span>
                   </>
                 )}
@@ -243,27 +243,27 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
             <p className="text-xs text-slate-400 leading-relaxed font-sans">{item.description}</p>
 
             {/* LaTeX Display */}
-            <div className="p-3 rounded-lg bg-[#06080e] border border-slate-800 overflow-x-auto text-amber-200 text-center">
+            <div className="p-3 bg-[#080A0D] border border-[#1E2533] overflow-x-auto text-[#00D8F6] text-center font-mono">
               <MathView math={item.latexFormula} block={true} />
             </div>
 
             {/* Live Substitution */}
-            <div className="p-2.5 rounded-lg bg-[#0b101a] border border-slate-800/70 text-xs font-mono">
+            <div className="p-2.5 bg-[#080A0D] border border-[#1E2533] text-xs font-mono">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider block mb-1">
                 Live Simulation Substitution:
               </span>
-              <div className="overflow-x-auto text-cyan-300">
+              <div className="overflow-x-auto text-[#F59E0B]">
                 <MathView math={item.liveSubstitution} block={true} />
               </div>
             </div>
 
             {/* Variable Table */}
-            <div className="pt-2 border-t border-slate-800/60">
+            <div className="pt-2 border-t border-[#1E2533]">
               <div className="text-[10px] uppercase font-mono text-slate-500 mb-1.5">Nomenclature:</div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
                 {item.variableDefinitions.map((v, idx) => (
-                  <div key={idx} className="flex items-baseline gap-2 bg-[#06080e] p-1.5 rounded border border-slate-800/40">
-                    <span className="text-amber-400 font-bold shrink-0">
+                  <div key={idx} className="flex items-baseline gap-2 bg-[#080A0D] p-1.5 border border-[#1E2533]">
+                    <span className="text-[#00D8F6] font-bold shrink-0">
                       <MathView math={v.symbol} />:
                     </span>
                     <span className="text-slate-300 font-sans">{v.meaning}</span>

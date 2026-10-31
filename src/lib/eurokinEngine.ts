@@ -8,6 +8,9 @@ import {
   ReactorSuitabilityAssessment,
   ReactorSuitabilityDimension
 } from '../types/eurokin';
+import { solveAxialProfiles } from './axialSolver';
+import { calculatePengRobinsonState } from './nist/equationOfState';
+import { evaluateEurokinTransport } from './eurokinTransport';
 
 export const GAS_CONSTANT = 8.314462618; // J/(mol·K)
 
@@ -48,10 +51,16 @@ export function runEurokinSimulation(
   const Xdil = Math.min(Math.max(rawDilConv, 0.0001), 0.9999);
   const nSafe = Math.max(n, 0.01);
 
-  // 1. Hydrodynamics
-  const gasDensity = (P * M_gas) / (GAS_CONSTANT * T); // kg/m³
+  // 1. Hydrodynamics via Peng-Robinson (1976) Real-Gas EOS
+  const prState = calculatePengRobinsonState(T, P, {
+    N2: 0.25 * (1.0 - yA),
+    H2: 0.75 * (1.0 - yA),
+    NH3: yA,
+  });
+  const gasDensity = prState.densityKgM3; // kg/m³ real gas
+  const Z = prState.compressibilityFactorZ;
   const bedCrossSection = (Math.PI / 4.0) * Math.pow(dt, 2); // m²
-  const superficialVelocity = feedFlow / (bedCrossSection * gasDensity); // m/s
+  const superficialVelocity = feedFlow / (bedCrossSection * Math.max(gasDensity, 1e-4)); // m/s
 
   // Reynolds number
   const Re = (dp * gasDensity * superficialVelocity) / Math.max(mu_g, 1e-9);
@@ -68,8 +77,8 @@ export function runEurokinSimulation(
   const bodensteinInv = (epsB / (tauB * Math.max(Re, 1e-5) * Sc)) + 0.5;
   const Bo = bodensteinInv > 0 ? 1.0 / bodensteinInv : 2.0;
 
-  // 2. Kinetics & Concentrations
-  const bulkConc = (yA * P) / (GAS_CONSTANT * T); // mol/m³
+  // 2. Kinetics & Concentrations (Real-Gas Fugacity / Compressibility Basis)
+  const bulkConc = (yA * P) / (Z * GAS_CONSTANT * T); // mol/m³ real gas
   const rVobs = rObsMass * rhoCat; // mol/(m³_pellet · s)
 
   // External mass transfer (Wakao Sh correlation)
@@ -165,153 +174,29 @@ export function runEurokinSimulation(
     return val.toFixed(prec);
   };
 
-  // Build the 9 Audited Eurokin Diagnostic Criteria
-  const coreCriteria: DiagnosticCriterion[] = [
-    {
-      id: 'axial_dispersion',
-      name: 'Axial Dispersion & Plug Flow Criterion',
-      category: 'Fluid Dynamics',
-      symbol: 'L / d_p',
-      calculatedValue: axialDispRatio,
-      limitValue: axialDispLimit,
-      operator: '>',
-      unit: '[-]',
-      passed: axialDispRatio > axialDispLimit,
-      marginPercent: calcMargin(axialDispRatio, axialDispLimit, '>'),
-      formulaLatex: String.raw`\frac{h_{\text{bed}}}{d_p} > \frac{8}{Bo} \, n \ln\left(\frac{1}{1 - X_A}\right)`,
-      substitutionLatex: String.raw`\frac{${L}}{${dp}} = ${fmtSci(axialDispRatio, 1)} > \frac{8}{${fmtSci(Bo, 2)}} \cdot ${nSafe} \cdot \ln\left(\frac{1}{1 - ${XA}}\right) = ${fmtSci(axialDispLimit, 2)}`,
-      description: 'Ensures ideal plug-flow regime along bed length, preventing axial Taylor backmixing dispersion from damping apparent reaction kinetics.',
-      reference: 'Mears (1971), Gierman (1988), Wakao et al. (1979)'
-    },
-    {
-      id: 'radial_dispersion',
-      name: 'Radial Dispersion & Wall Effect Criterion',
-      category: 'Fluid Dynamics',
-      symbol: 'd_t / d_p',
-      calculatedValue: radialDispRatio,
-      limitValue: radialDispLimit,
-      operator: '>',
-      unit: '[-]',
-      passed: radialDispRatio > radialDispLimit,
-      marginPercent: calcMargin(radialDispRatio, radialDispLimit, '>'),
-      formulaLatex: String.raw`\frac{d_t}{d_p} > 8.0`,
-      substitutionLatex: String.raw`\frac{${dt}}{${dp}} = ${fmtSci(radialDispRatio, 1)} > 8.0`,
-      description: 'Guarantees sufficiently high tube-to-pellet ratio to prevent wall flow bypass channeling and cross-sectional maldistribution.',
-      reference: 'Chu & Ng (1989)'
-    },
-    {
-      id: 'external_mass_transfer',
-      name: 'External Film Mass Transfer (Carberry)',
-      category: 'Mass Transfer',
-      symbol: 'Ca',
-      calculatedValue: carberryNum,
-      limitValue: carberryLimit,
-      operator: '<',
-      unit: '[-]',
-      passed: carberryNum < carberryLimit,
-      marginPercent: calcMargin(carberryNum, carberryLimit, '<'),
-      formulaLatex: String.raw`Ca = \frac{R_{v,A}^{\text{obs}}}{k_g \, a_v \, C_{A,b}} < \frac{0.05}{n}`,
-      substitutionLatex: String.raw`\frac{${fmtSci(rVobs, 2)}}{${fmtSci(kg, 3)} \cdot ${fmtSci(av, 0)} \cdot ${fmtSci(bulkConc, 3)}} = ${fmtSci(carberryNum, 4)} < \frac{0.05}{${nSafe}} = ${fmtSci(carberryLimit, 3)}`,
-      description: 'Confirms that concentration drop across the gas boundary film changes reaction rate by less than 5%.',
-      reference: 'Mears (1971), Wakao et al. (1979)'
-    },
-    {
-      id: 'internal_diffusion',
-      name: 'Internal Pore Diffusion (Weisz-Prater)',
-      category: 'Mass Transfer',
-      symbol: String.raw`\Phi`,
-      calculatedValue: weiszPrater,
-      limitValue: weiszLimit,
-      operator: '<',
-      unit: '[-]',
-      passed: weiszPrater < weiszLimit,
-      marginPercent: calcMargin(weiszPrater, weiszLimit, '<'),
-      formulaLatex: String.raw`\Phi = \frac{n + 1}{2} \cdot \frac{R_{v,A}^{\text{obs}} (d_p / 6)^2}{D_{A,\text{eff}} \, C_{A,s}} < 0.08`,
-      substitutionLatex: String.raw`\frac{${nSafe} + 1}{2} \cdot \frac{${fmtSci(rVobs, 2)} \cdot (${fmtSci(charLength, 2)})^2}{${fmtSci(Deff, 2)} \cdot ${fmtSci(bulkConc, 3)}} = ${fmtSci(weiszPrater, 4)} < 0.080`,
-      description: 'Ensures intraparticle pore diffusion does not hinder reactant transport (effectiveness factor η > 0.95).',
-      reference: 'Froment & Bischoff (1990), Anderson & Pratt (1985)'
-    },
-    {
-      id: 'external_heat_transfer',
-      name: 'External Boundary Film Heat Transfer',
-      category: 'Heat Transfer',
-      symbol: String.raw`\Delta T_{\text{film}}`,
-      calculatedValue: deltaTfilm,
-      limitValue: deltaTfilmLimit,
-      operator: '<',
-      unit: 'K',
-      passed: deltaTfilm < deltaTfilmLimit,
-      marginPercent: calcMargin(deltaTfilm, deltaTfilmLimit, '<'),
-      formulaLatex: String.raw`\Delta T_{\text{film}} = \frac{R_{v,A}^{\text{obs}} |\Delta_r H| \, d_p}{6 \, \alpha_p} < \frac{0.05 \, R \, T_G^2}{E_a}`,
-      substitutionLatex: String.raw`\frac{${fmtSci(rVobs, 2)} \cdot ${fmtSci(Math.abs(dHr), 1)} \cdot ${dp}}{6 \cdot ${fmtSci(alphaP, 2)}} = ${fmtSci(deltaTfilm, 4)}\,\text{K} < \frac{0.05 \cdot 8.314 \cdot ${T}^2}{${fmtSci(Ea, 1)}} = ${fmtSci(deltaTfilmLimit, 3)}\,\text{K}`,
-      description: 'Prevents non-isothermal boundary film temperature gradient between bulk gas and outer catalyst surface (< 5% rate perturbation).',
-      reference: 'Mears (1971), Wakao et al. (1979)'
-    },
-    {
-      id: 'radial_heat_transfer',
-      name: 'Radial Bed Heat Transfer & Hotspots',
-      category: 'Heat Transfer',
-      symbol: String.raw`\Delta T_{\text{rad}}`,
-      calculatedValue: deltaTrad,
-      limitValue: deltaTradLimit,
-      operator: '<',
-      unit: 'K',
-      passed: deltaTrad < deltaTradLimit,
-      marginPercent: calcMargin(deltaTrad, deltaTradLimit, '<'),
-      formulaLatex: String.raw`\Delta T_{\text{rad}} = \frac{R_{v,A}^{\text{obs}} |\Delta_r H|(1 - \varepsilon_b)(1 - b) d_t^2}{32 \, \lambda_{\text{er}}} < \frac{0.05 \, R \, T_w^2}{E_a}`,
-      substitutionLatex: String.raw`\frac{${fmtSci(rVobs, 2)} \cdot ${fmtSci(Math.abs(dHr), 1)} \cdot (1 - ${epsB}) \cdot (1 - ${fmtSci(bDilution, 2)}) \cdot (${dt})^2}{32 \cdot ${fmtSci(lambdaEr, 3)}} = ${fmtSci(deltaTrad, 4)}\,\text{K} < ${fmtSci(deltaTradLimit, 3)}\,\text{K}`,
-      description: 'Limits thermal non-uniformity across the packed bed radius from center-line to tube wall to avoid centerline thermal runaways.',
-      reference: 'Mears (1971), Specchia et al. (1980)'
-    },
-    {
-      id: 'intraparticle_heat',
-      name: 'Intraparticle Solid Heat Conduction',
-      category: 'Heat Transfer',
-      symbol: String.raw`\Delta T_{\text{int}}`,
-      calculatedValue: deltaTint,
-      limitValue: deltaTintLimit,
-      operator: '<',
-      unit: 'K',
-      passed: deltaTint < deltaTintLimit,
-      marginPercent: calcMargin(deltaTint, deltaTintLimit, '<'),
-      formulaLatex: String.raw`\Delta T_{\text{int}} = \frac{R_{v,A}^{\text{obs}} |\Delta_r H| \, d_p^2}{60 \, \lambda_p} < \frac{0.05 \, R \, T^2}{E_a}`,
-      substitutionLatex: String.raw`\frac{${fmtSci(rVobs, 2)} \cdot ${fmtSci(Math.abs(dHr), 1)} \cdot (${dp})^2}{60 \cdot ${fmtSci(lambdaPeff, 3)}} = ${fmtSci(deltaTint, 5)}\,\text{K} < ${fmtSci(deltaTintLimit, 3)}\,\text{K}`,
-      description: 'Validates that solid-phase thermal conduction inside the porous pellet is fast enough to preserve internal pellet isothermality.',
-      reference: 'Mears (1971)'
-    },
-    {
-      id: 'pressure_drop',
-      name: 'Relative Hydraulic Pressure Drop',
-      category: 'Hydrodynamics',
-      symbol: String.raw`\Delta P`,
-      calculatedValue: pressureDrop,
-      limitValue: pressureDropLimit,
-      operator: '<',
-      unit: 'Pa',
-      passed: pressureDrop < pressureDropLimit,
-      marginPercent: calcMargin(pressureDrop, pressureDropLimit, '<'),
-      formulaLatex: String.raw`\Delta P = \frac{f_m \, \rho_G \, u_0^2 \, h_{\text{bed}}}{d_p} < \frac{0.2 \, P_{\text{tot}}}{n}`,
-      substitutionLatex: String.raw`\frac{${fmtSci(fm, 2)} \cdot ${fmtSci(gasDensity, 3)} \cdot (${fmtSci(superficialVelocity, 3)})^2 \cdot ${L}}{${dp}} = ${fmtSci(pressureDrop, 1)}\,\text{Pa} < \frac{0.2 \cdot ${fmtSci(P, 1)}}{${nSafe}} = ${fmtSci(pressureDropLimit, 1)}\,\text{Pa}`,
-      description: 'Prevents significant pressure loss along the bed (< 20% total pressure) to preserve uniform reactant partial pressures.',
-      reference: 'Ergun (1952)'
-    },
-    {
-      id: 'inert_dilution',
-      name: 'Inert Bed Dilution Homogeneity (Berger)',
-      category: 'Bed Dilution',
-      symbol: String.raw`\Delta_{\text{dilution}}`,
-      calculatedValue: dilutionDeviation,
-      limitValue: dilutionLimit,
-      operator: '<',
-      unit: '[-]',
-      passed: dilutionDeviation < dilutionLimit,
-      marginPercent: calcMargin(dilutionDeviation, dilutionLimit, '<'),
-      formulaLatex: String.raw`\Delta = \left(\frac{b}{1 - b}\right) \frac{X_{\text{dil}} \, d_p}{2 \, h_{\text{bed}}} < 0.05`,
-      substitutionLatex: String.raw`\left(\frac{${fmtSci(bDilution, 3)}}{1 - ${fmtSci(bDilution, 3)}}\right) \frac{${Xdil} \cdot ${dp}}{2 \cdot ${L}} = ${fmtSci(dilutionDeviation, 4)} < 0.050`,
-      description: 'Guarantees that dilution of catalyst with inert particles (e.g. SiC) does not cause kinetic conversion maldistribution or bypass paths.',
-      reference: 'Berger et al. (2002)'
-    }
-  ];
+  // Build the Audited Eurokin Diagnostic Criteria via Dedicated Transport Module
+  const transportAssessment = evaluateEurokinTransport(inputs, rObsMass, T, P);
+  const coreCriteria: DiagnosticCriterion[] = transportAssessment.criteria.map(c => ({
+    id: c.id,
+    name: c.name,
+    category: c.category,
+    symbol: c.symbol,
+    calculatedValue: c.calculatedValue,
+    limitValue: c.limitValue,
+    operator: c.operator,
+    unit: c.unit,
+    passed: c.passed,
+    status: c.status,
+    applicabilityRange: c.applicabilityRange,
+    isWithinApplicability: c.isWithinApplicability,
+    provenance: c.reference,
+    marginPercent: c.marginPercent,
+    formulaLatex: c.formulaLatex,
+    substitutionLatex: c.substitutionLatex,
+    description: c.description,
+    reference: c.reference,
+    warningNote: c.warningNote,
+  }));
 
   // Evaluate Custom Criteria (if defined and enabled)
   const evaluatedCustomCriteria: DiagnosticCriterion[] = [];
@@ -579,15 +464,36 @@ export function runEurokinSimulation(
     adiabaticTemperatureRise: deltaTad,
   };
 
+  // Compute full 1D Runge-Kutta numerical axial profiles
+  const axialProfiles = solveAxialProfiles(inputs, 60);
+  const lastProfile = axialProfiles[axialProfiles.length - 1];
+  const maxTemp = Math.max(...axialProfiles.map((p) => p.temperature));
+  const hotspotPoint = axialProfiles.find((p) => p.temperature === maxTemp);
+
+  // Ammonia production rate: F_NH3_out [mol/s] * 0.01703 kg/mol * 3600 s/h
+  const totalMolarFeed = feedFlow / M_gas;
+  const F_N2_feed = totalMolarFeed * 0.25 * (1.0 - yA);
+  const ammoniaOutMolS = 2.0 * F_N2_feed * lastProfile.conversion;
+  const ammoniaProductionRateKgH = ammoniaOutMolS * 0.0170305 * 3600.0;
+
   return {
     inputs,
     hydrodynamics,
     transport,
     criteria: allCriteria,
-    overallStatus,
+    overallStatus: transportAssessment.overallStatus,
     passedCount,
     totalCount,
-    recommendations,
+    recommendations: [...transportAssessment.recommendations, ...transportAssessment.combinedInteractions],
     reactorSuitability,
+    axialProfiles,
+    inletTemperature: T,
+    outletTemperature: lastProfile.temperature,
+    maxTemperature: maxTemp,
+    hotspotLocationZ: hotspotPoint ? hotspotPoint.z : 0.0,
+    totalDeltaP: lastProfile.deltaP,
+    outletConversion: lastProfile.conversion,
+    ammoniaProductionRateKgH,
+    transportAssessment,
   };
 }

@@ -6,7 +6,6 @@ import {
   Eye,
   Flame,
   Wind,
-  Layers,
   ZoomIn,
   Crosshair,
   Play,
@@ -95,10 +94,10 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 500;
 
-    // 1. Scene
+    // 1. Scene with dark viewport background for high particle contrast
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(0xF8FAFC); // Clean crisp light background
+    scene.background = new THREE.Color(0x0a0f1d); // Deep slate-900 / dark contrast viewport
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
@@ -111,57 +110,57 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.15;
     container.innerHTML = '';
     container.appendChild(renderer.domElement);
 
     // 4. Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.3);
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.4);
     dirLight1.position.set(12, 18, 12);
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0xdbeafe, 0.6);
+    const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.6);
     dirLight2.position.set(-12, 6, -10);
     scene.add(dirLight2);
 
-    const accentLight = new THREE.PointLight(0x0284c7, 0.8, 25);
+    const accentLight = new THREE.PointLight(0x00d8f6, 1.2, 25);
     accentLight.position.set(0, 5, 4);
     scene.add(accentLight);
 
     // 5. Materials
     const metalSteel = new THREE.MeshStandardMaterial({
-      color: 0x64748b,
-      metalness: 0.8,
+      color: 0x475569,
+      metalness: 0.85,
       roughness: 0.25,
     });
 
     const flangeMetal = new THREE.MeshStandardMaterial({
-      color: 0x475569,
-      metalness: 0.85,
+      color: 0x334155,
+      metalness: 0.9,
       roughness: 0.3,
     });
 
     const glassWallMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xe0f2fe,
-      metalness: 0.05,
+      color: 0x38bdf8,
+      metalness: 0.1,
       roughness: 0.05,
-      transmission: 0.85,
+      transmission: 0.8,
       thickness: 0.5,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.3,
       side: THREE.DoubleSide,
     });
 
     const coolingJacketMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xbae6fd,
+      color: 0x0284c7,
       metalness: 0.2,
       roughness: 0.15,
       transmission: 0.75,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.22,
       side: THREE.DoubleSide,
     });
 
@@ -253,7 +252,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
     const pelletGeo = new THREE.SphereGeometry(pelletRadius, 10, 8);
     const pelletMat = new THREE.MeshStandardMaterial({
       color: 0x334155,
-      metalness: 0.65,
+      metalness: 0.7,
       roughness: 0.35,
     });
 
@@ -262,7 +261,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
 
     const dummy = new THREE.Object3D();
     const colorActive = new THREE.Color(0x334155);
-    const colorInert = new THREE.Color(0x94a3b8);
+    const colorInert = new THREE.Color(0x64748b);
     const colorHeatMap = new THREE.Color();
 
     const minT = 600;
@@ -291,7 +290,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
         const temp = axialProfiles[profileIdx]?.temperature || inputs.temperature;
         const tFraction = Math.max(0, Math.min(1, (temp - minT) / (maxT - minT || 1)));
 
-        colorHeatMap.setHSL(0.55 - tFraction * 0.55, 0.9, 0.45);
+        colorHeatMap.setHSL(0.55 - tFraction * 0.55, 0.95, 0.5);
         instancedPellets.setColorAt(i, colorHeatMap);
       } else {
         instancedPellets.setColorAt(i, isInert ? colorInert : colorActive);
@@ -304,9 +303,9 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
     // F. Interactive Axial Slice Marker Plane
     const sliceGeo = new THREE.CylinderGeometry(tubeRadius + 0.05, tubeRadius + 0.05, 0.03, 36);
     const sliceMat = new THREE.MeshBasicMaterial({
-      color: 0x0284c7,
+      color: 0x00e5ff,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.85,
       wireframe: true,
     });
     const slicePlane = new THREE.Mesh(sliceGeo, sliceMat);
@@ -315,8 +314,8 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
     slicePlane.position.y = initialY;
     reactorGroup.add(slicePlane);
 
-    // G. Animated Flow Particle System
-    const particleCount = 280;
+    // G. Animated Flow Particle System - High Visibility Fluid
+    const particleCount = 320;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -331,28 +330,30 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
 
       speeds[p] = 0.02 + Math.random() * 0.03;
 
-      // Syngas (blue) to Ammonia (amber)
-      colors[p * 3] = 0.05;
-      colors[p * 3 + 1] = 0.55;
-      colors[p * 3 + 2] = 0.95;
+      // Radiant Electric Cyan (Syngas)
+      colors[p * 3] = 0.0;
+      colors[p * 3 + 1] = 0.9;
+      colors[p * 3 + 2] = 1.0;
     }
 
     particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
+    // Increased size and opacity for distinct fluid visibility
     const particleMat = new THREE.PointsMaterial({
-      size: 0.09,
+      size: 0.14,
       vertexColors: true,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.95,
+      blending: THREE.AdditiveBlending,
     });
 
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     particleSystemRef.current = particleSystem;
     reactorGroup.add(particleSystem);
 
-    // H. Coordinate Grid / Baseline ring
-    const baseGrid = new THREE.GridHelper(16, 16, 0xCBD5E1, 0xE2E8F0);
+    // H. Coordinate Grid / Baseline ring on dark slate background
+    const baseGrid = new THREE.GridHelper(16, 16, 0x334155, 0x1e293b);
     baseGrid.position.y = -bedHeight / 2 - 2.5;
     scene.add(baseGrid);
 
@@ -385,10 +386,10 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
           const curY = posArray[idx + 1];
           const normZ = Math.max(0, Math.min(1, 0.5 - (curY / bedHeight)));
 
-          // Blue (N2/H2) -> Amber/Orange (NH3)
-          colArray[idx] = 0.05 + normZ * 0.85;
-          colArray[idx + 1] = 0.55 - normZ * 0.25;
-          colArray[idx + 2] = 0.95 - normZ * 0.85;
+          // Radiant Cyan (N2/H2 inlet) -> Vivid Amber-Gold (NH3 product outlet)
+          colArray[idx] = normZ * 1.0;
+          colArray[idx + 1] = 0.9 - normZ * 0.25;
+          colArray[idx + 2] = 1.0 - normZ * 0.88;
 
           // Wrap around to top inlet
           if (posArray[idx + 1] < -bedHeight / 2 - 1.2) {
@@ -477,28 +478,28 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
   }, [currentZNormalized]);
 
   return (
-    <div className={`relative bg-white border border-slate-200/90 rounded-xl shadow-xs overflow-hidden flex flex-col ${className}`}>
+    <div className={`relative bg-[#0a0f1d] border border-slate-300 rounded-xl shadow-sm overflow-hidden flex flex-col ${className}`}>
       {/* Top Overlay HUD Bar */}
-      <div className="absolute top-0 left-0 right-0 h-10 px-4 bg-white/90 border-b border-slate-200/80 backdrop-blur-md flex items-center justify-between text-xs font-mono z-10 select-none">
+      <div className="absolute top-0 left-0 right-0 h-10 px-4 bg-slate-900/85 border-b border-slate-800/80 backdrop-blur-md flex items-center justify-between text-xs font-mono z-10 select-none">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-slate-800">
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
+          <div className="flex items-center gap-2 text-white">
+            <span className="w-2 h-2 rounded-full bg-blue-400" />
             <span className="font-bold tracking-wider uppercase text-xs">
               Fixed-Bed 3D Reactor
             </span>
           </div>
 
-          <span className="text-slate-300">|</span>
+          <span className="text-slate-600">|</span>
 
-          <div className="hidden sm:flex items-center gap-3 text-xs text-slate-500">
+          <div className="hidden sm:flex items-center gap-3 text-xs text-slate-300">
             <span>
-              L: <strong className="text-slate-800">{(inputs.bedHeight * 1000).toFixed(0)} mm</strong>
+              L: <strong className="text-white">{(inputs.bedHeight * 1000).toFixed(0)} mm</strong>
             </span>
             <span>
-              Dt: <strong className="text-slate-800">{(inputs.tubeDiameter * 1000).toFixed(0)} mm</strong>
+              Dt: <strong className="text-white">{(inputs.tubeDiameter * 1000).toFixed(0)} mm</strong>
             </span>
             <span>
-              dp: <strong className="text-slate-800">{(inputs.particleDiameter * 1e6).toFixed(0)} µm</strong>
+              dp: <strong className="text-white">{(inputs.particleDiameter * 1e6).toFixed(0)} µm</strong>
             </span>
           </div>
         </div>
@@ -509,20 +510,20 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             onClick={() => setAutoRotate(!autoRotate)}
             className={`px-2.5 py-1 text-xs font-medium rounded-lg flex items-center gap-1 transition-colors cursor-pointer ${
               autoRotate
-                ? 'bg-blue-50 text-blue-700 border border-blue-200/80'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
             }`}
             title="Toggle Continuous 360° Auto-Rotation"
           >
-            {autoRotate ? <Pause className="w-3 h-3 text-blue-600" /> : <Play className="w-3 h-3 text-slate-600" />}
+            {autoRotate ? <Pause className="w-3 h-3 text-white" /> : <Play className="w-3 h-3 text-slate-300" />}
             <span className="hidden sm:inline">Orbit</span>
           </button>
 
-          <div className="flex items-center bg-slate-100 rounded-lg p-0.5 text-xs font-medium">
+          <div className="flex items-center bg-slate-800 rounded-lg p-0.5 text-xs font-medium border border-slate-700">
             <button
               onClick={() => setPresetView('isometric')}
               className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                cameraView === 'isometric' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                cameraView === 'isometric' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white'
               }`}
             >
               ISO
@@ -530,7 +531,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             <button
               onClick={() => setPresetView('front')}
               className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                cameraView === 'front' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                cameraView === 'front' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white'
               }`}
             >
               FRONT
@@ -538,7 +539,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             <button
               onClick={() => setPresetView('side')}
               className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                cameraView === 'side' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                cameraView === 'side' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white'
               }`}
             >
               SIDE
@@ -546,7 +547,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             <button
               onClick={() => setPresetView('top')}
               className={`px-2 py-0.5 rounded-md transition-colors cursor-pointer ${
-                cameraView === 'top' ? 'bg-white text-slate-900 font-semibold shadow-xs' : 'text-slate-600 hover:text-slate-900'
+                cameraView === 'top' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'text-slate-300 hover:text-white'
               }`}
             >
               TOP
@@ -555,7 +556,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
 
           <button
             onClick={resetCamera}
-            className="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors cursor-pointer"
+            className="p-1.5 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg border border-slate-700 transition-colors cursor-pointer"
             title="Reset Camera View"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -567,7 +568,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
       <div ref={mountRef} className="w-full flex-1 min-h-[380px] cursor-grab active:cursor-grabbing" />
 
       {/* Bottom Floating Control Panel */}
-      <div className="absolute bottom-3 left-3 right-3 p-2.5 bg-white/95 border border-slate-200/90 rounded-xl shadow-md backdrop-blur-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono z-10 select-none">
+      <div className="absolute bottom-3 left-3 right-3 p-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl shadow-lg backdrop-blur-md flex flex-wrap items-center justify-between gap-3 text-xs font-mono z-10 select-none">
         {/* Left: Visualization Feature Toggles */}
         <div className="flex items-center gap-2">
           <button
@@ -575,7 +576,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
               showCutaway
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
             }`}
           >
             <Eye className="w-3.5 h-3.5" />
@@ -587,7 +588,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
               showFlow
                 ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
             }`}
           >
             <Wind className="w-3.5 h-3.5" />
@@ -599,7 +600,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
             className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
               showThermalOverlay
                 ? 'bg-amber-600 text-white shadow-xs'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
             }`}
           >
             <Flame className="w-3.5 h-3.5" />
@@ -609,9 +610,9 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
           {onSelectPellet && (
             <button
               onClick={onSelectPellet}
-              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg transition-colors cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition-colors cursor-pointer"
             >
-              <ZoomIn className="w-3.5 h-3.5 text-blue-600" />
+              <ZoomIn className="w-3.5 h-3.5 text-blue-400" />
               <span>Inspect Pellet</span>
             </button>
           )}
@@ -619,15 +620,15 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
 
         {/* Right: Axial Scrubber Status */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-xs text-slate-600">
-            <span className="flex items-center gap-1 text-blue-700 font-semibold">
+          <div className="flex items-center gap-2 text-xs text-slate-300">
+            <span className="flex items-center gap-1 text-cyan-400 font-semibold">
               <Crosshair className="w-3.5 h-3.5" />
               <span>Axial Slice:</span>
             </span>
-            <span className="text-slate-900 font-bold font-mono">
+            <span className="text-white font-bold font-mono">
               z = {(currentZNormalized * inputs.bedHeight * 1000).toFixed(1)} mm
             </span>
-            <span className="text-slate-500 font-mono">
+            <span className="text-slate-400 font-mono">
               ({(currentZNormalized * 100).toFixed(0)}% L)
             </span>
           </div>
@@ -640,7 +641,7 @@ export const Reactor3D: React.FC<Reactor3DProps> = ({
               step="0.01"
               value={currentZNormalized}
               onChange={(e) => onZNormalizedChange(parseFloat(e.target.value))}
-              className="w-24 sm:w-32 accent-blue-600 cursor-pointer"
+              className="w-24 sm:w-32 accent-cyan-400 cursor-pointer"
               title="Drag to inspect reactor cross-section along axial height z"
             />
           )}

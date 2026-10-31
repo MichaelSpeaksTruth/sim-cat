@@ -152,15 +152,15 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
           <div className="flex items-center gap-2 font-mono text-xs">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-[#1A202A] text-slate-700 border border-slate-300 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-300 transition-colors shadow-xs"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied!' : 'Copy to Clipboard'}</span>
             </button>
 
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-[#38BDF8] text-white font-bold border border-blue-600 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-xs"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download Report</span>

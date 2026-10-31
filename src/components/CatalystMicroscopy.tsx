@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { SimulationResult } from '../types/eurokin';
 import { MathView } from './MathView';
 import {
@@ -66,7 +66,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="px-3 py-1.5 text-xs font-mono bg-slate-100 hover:bg-[#1E2533] text-slate-700 border border-[#283244] transition-colors"
+              className="px-3 py-1.5 text-xs font-mono bg-white hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-300 transition-colors shadow-xs"
             >
               Exit Microscopy View
             </button>
@@ -227,20 +227,20 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
               </text>
 
               {/* Scientific Annotation Box */}
-              <rect x="440" y="20" width="145" height="110" fill="#0C1017" stroke="#1E2533" />
-              <text x="450" y="38" fill="#E2E8F0" fontSize="10" fontWeight="bold" fontFamily="monospace">
+              <rect x="440" y="20" width="145" height="110" rx="4" fill="#F8FAFC" stroke="#E2E8F0" />
+              <text x="450" y="38" fill="#1E293B" fontSize="10" fontWeight="bold" fontFamily="monospace">
                 Species Legend
               </text>
-              <circle cx="455" cy="55" r="4" fill="#00D8F6" />
-              <text x="466" y="58" fill="#8B949E" fontSize="9" fontFamily="monospace">
+              <circle cx="455" cy="55" r="4" fill="#0284C7" />
+              <text x="466" y="58" fill="#475569" fontSize="9" fontFamily="monospace">
                 N₂ (Reactant)
               </text>
-              <circle cx="455" cy="73" r="3" fill="#FFFFFF" />
-              <text x="466" y="76" fill="#8B949E" fontSize="9" fontFamily="monospace">
+              <circle cx="455" cy="73" r="3" fill="#64748B" />
+              <text x="466" y="76" fill="#475569" fontSize="9" fontFamily="monospace">
                 H₂ (Reactant)
               </text>
-              <circle cx="455" cy="91" r="4.5" fill="#F59E0B" />
-              <text x="466" y="94" fill="#F59E0B" fontSize="9" fontFamily="monospace">
+              <circle cx="455" cy="91" r="4.5" fill="#D97706" />
+              <text x="466" y="94" fill="#D97706" fontSize="9" fontFamily="monospace">
                 NH₃ (Product)
               </text>
               <rect x="451" y="105" width="8" height="8" fill="#353D48" stroke="#4A5568" />
@@ -278,7 +278,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2 bg-slate-50 border border-[#1C2433]">
+              <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
                 <span className="text-[10px] text-slate-500 block">Weisz-Prater Modulus</span>
                 <span className="font-bold text-slate-900 text-sm">
                   {transport.thieleModulus ? Math.pow(transport.thieleModulus, 2).toFixed(4) : '0.0381'}
@@ -286,7 +286,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
                 <span className="text-[10px] text-slate-500 block mt-0.5">Limit: &lt; 0.080</span>
               </div>
 
-              <div className="p-2 bg-slate-50 border border-[#1C2433]">
+              <div className="p-2 bg-slate-50 rounded-lg border border-slate-200">
                 <span className="text-[10px] text-slate-500 block">Thiele Modulus (ϕ)</span>
                 <span className="font-bold text-slate-900 text-sm">
                   {transport.thieleModulus.toFixed(3)}
@@ -307,22 +307,22 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
             </span>
 
             <div className="space-y-1.5 text-xs font-mono">
-              <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
+              <div className="flex justify-between items-center py-1 border-b border-slate-200">
                 <span className="text-slate-500">Effective Pore Diffusivity (D_eff):</span>
                 <span className="text-slate-800">{inputs.effectiveDiffusivity.toExponential(3)} m²/s</span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
+              <div className="flex justify-between items-center py-1 border-b border-slate-200">
                 <span className="text-slate-500">External Mass Transfer Coeff (k_g):</span>
                 <span className="text-slate-800">{transport.externalMassTransferCoeff.toFixed(4)} m/s</span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
+              <div className="flex justify-between items-center py-1 border-b border-slate-200">
                 <span className="text-slate-500">Specific Surface Area (a_v):</span>
                 <span className="text-slate-800">{transport.specificSurfaceArea.toFixed(0)} m²/m³</span>
               </div>
 
-              <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
+              <div className="flex justify-between items-center py-1 border-b border-slate-200">
                 <span className="text-slate-500">Gas Boundary Film ΔT:</span>
                 <span className="text-blue-600">
                   {(criteria.find(c => c.id === 'external_heat_transfer')?.calculatedValue || 0).toFixed(4)} K

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { ReactorSuitabilityAssessment } from '../types/eurokin';
 import { CheckCircle2, AlertTriangle, XCircle, ArrowRight, Factory, Wrench } from 'lucide-react';
 

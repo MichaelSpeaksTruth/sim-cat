@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { SimulationResult } from '../types/eurokin';
 import { MathView } from './MathView';
 import { BookOpen, Search, Copy, Check, Filter } from 'lucide-react';
@@ -175,13 +175,13 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
 
         {/* Search Input */}
         <div className="relative min-w-[260px]">
-          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
           <input
             type="text"
             placeholder="Search formulas, Mears, Ergun, Carberry..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#141922] border border-slate-200/80 pl-8 pr-3 py-1.5 text-xs font-mono text-slate-800 placeholder:text-slate-600 focus:outline-none focus:border-blue-600"
+            className="w-full bg-slate-50 hover:bg-white focus:bg-white border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs font-mono text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 shadow-xs"
           />
         </div>
       </div>
@@ -192,10 +192,10 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1 font-bold uppercase tracking-wider transition-colors ${
+            className={`px-3 py-1 font-bold uppercase tracking-wider rounded-lg border transition-colors ${
               activeCategory === cat
-                ? 'bg-blue-600 text-white'
-                : 'bg-[#141922] text-slate-500 hover:text-slate-800 border border-slate-200/80'
+                ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
+                : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200 hover:border-slate-300'
             }`}
           >
             {cat === 'all' ? 'All Governing Equations' : cat}
@@ -208,12 +208,12 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
         {filtered.map((item) => (
           <div
             key={item.id}
-            className="p-4 bg-[#141922] border border-slate-200/80 space-y-3"
+            className="p-4 bg-white rounded-xl shadow-xs border border-slate-200 space-y-3"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30 font-semibold uppercase">
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded font-semibold uppercase">
                     {item.category}
                   </span>
                   <span className="text-[11px] font-mono text-slate-500">{item.source}</span>
@@ -224,12 +224,12 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
               <button
                 onClick={() => copyLatex(item.id, item.latexFormula)}
                 title="Copy LaTeX formula to clipboard"
-                className="flex items-center gap-1 px-2.5 py-1 bg-white rounded-xl shadow-xs hover:bg-[#1E2533] text-slate-700 text-xs font-mono border border-slate-200/80 transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-mono rounded-md border border-slate-200 transition-colors"
               >
                 {copiedId === item.id ? (
                   <>
-                    <Check className="w-3 h-3 text-[#10B981]" />
-                    <span className="text-[#10B981]">Copied</span>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-600 font-semibold">Copied</span>
                   </>
                 ) : (
                   <>
@@ -240,7 +240,7 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
               </button>
             </div>
 
-            <p className="text-xs text-slate-500 leading-relaxed font-sans">{item.description}</p>
+            <p className="text-xs text-slate-600 leading-relaxed font-sans">{item.description}</p>
 
             {/* LaTeX Display */}
             <div className="p-3 bg-slate-50 rounded-lg border border-slate-200/80 overflow-x-auto text-blue-600 text-center font-mono">

@@ -55,17 +55,17 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
 
           <div className="flex items-center gap-2">
             {assessment?.overallStatus === 'VALID_INTRINSIC' ? (
-              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/40 flex items-center gap-1.5">
+              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-md flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 OVERALL STATUS: VALID INTRINSIC KINETICS REGIME
               </span>
             ) : assessment?.overallStatus === 'CORRELATION_EXTRAPOLATION' ? (
-              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-purple-950/40 text-purple-300 border border-purple-500/50 flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-purple-400" />
+              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-purple-50 text-purple-700 border border-purple-200 rounded-md flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-purple-600" />
                 OVERALL STATUS: CORRELATION EXTRAPOLATION DETECTED
               </span>
             ) : (
-              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/40 flex items-center gap-1.5">
+              <span className="px-2.5 py-1 text-xs font-bold font-mono bg-red-50 text-red-700 border border-red-300 rounded-md flex items-center gap-1.5">
                 <XCircle className="w-3.5 h-3.5" />
                 OVERALL STATUS: TRANSPORT LIMITED (MASKED INTRINSIC KINETICS)
               </span>
@@ -457,10 +457,10 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
           )}
 
           {assessment?.diffusivity?.highPressureWarning && (
-            <div className="p-3 bg-purple-950/20 border border-purple-600/40 text-purple-300 text-[11px] flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+            <div className="p-3 bg-purple-50 rounded-lg border border-purple-200 text-purple-800 text-[11px] flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-purple-600 shrink-0 mt-0.5" />
               <div>
-                <span className="font-bold text-purple-200">High-Pressure Dense Gas Fuller Correlation Disclaimer:</span>{' '}
+                <span className="font-bold text-purple-900">High-Pressure Dense Gas Fuller Correlation Disclaimer:</span>{' '}
                 {assessment.diffusivity.highPressureWarning}
               </div>
             </div>
@@ -479,7 +479,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-[11px]">
               <thead>
-                <tr className="border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
+                <tr className="border-b border-slate-200 text-slate-500 uppercase text-[10px]">
                   <th className="py-2 px-3">Correlation / Law</th>
                   <th className="py-2 px-3">Documented Range</th>
                   <th className="py-2 px-3">Current Operating Value</th>
@@ -487,13 +487,13 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
                   <th className="py-2 px-3">Reference</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#171E2A]">
+              <tbody className="divide-y divide-slate-100">
                 <tr>
                   <td className="py-2.5 px-3 font-bold text-slate-800">Ergun Pressure Drop</td>
                   <td className="py-2.5 px-3 text-slate-500">0.1 &lt; Re &lt; 1000</td>
                   <td className="py-2.5 px-3 font-mono text-slate-900">Re = {fmt(hydrodynamics.reynoldsNumber, 2)}</td>
                   <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 text-[9px] font-bold border ${hydrodynamics.reynoldsValid ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40' : 'bg-purple-950/40 text-purple-300 border-purple-500/50'}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold border rounded-md ${hydrodynamics.reynoldsValid ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-purple-50 text-purple-700 border-purple-200'}`}>
                       {hydrodynamics.reynoldsValid ? 'COMPLIANT' : 'OUTSIDE VALID RANGE'}
                     </span>
                   </td>
@@ -504,7 +504,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
                   <td className="py-2.5 px-3 text-slate-500">0.1 &lt; Re &lt; 100</td>
                   <td className="py-2.5 px-3 font-mono text-slate-900">Re = {fmt(hydrodynamics.reynoldsNumber, 2)}</td>
                   <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 text-[9px] font-bold border ${hydrodynamics.reynoldsNumber >= 0.1 && hydrodynamics.reynoldsNumber <= 100 ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40' : 'bg-amber-950/40 text-amber-300 border-amber-500/50'}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold border rounded-md ${hydrodynamics.reynoldsNumber >= 0.1 && hydrodynamics.reynoldsNumber <= 100 ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
                       {hydrodynamics.reynoldsNumber >= 0.1 && hydrodynamics.reynoldsNumber <= 100 ? 'COMPLIANT' : 'EXTRAPOLATED (Re > 100)'}
                     </span>
                   </td>
@@ -515,7 +515,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
                   <td className="py-2.5 px-3 text-slate-500">40 &lt; Re &lt; 10,000</td>
                   <td className="py-2.5 px-3 font-mono text-slate-900">Re = {fmt(hydrodynamics.reynoldsNumber, 2)}</td>
                   <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 text-[9px] font-bold border ${hydrodynamics.reynoldsNumber >= 40 && hydrodynamics.reynoldsNumber <= 10000 ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40' : 'bg-purple-950/40 text-purple-300 border-purple-500/50'}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold border rounded-md ${hydrodynamics.reynoldsNumber >= 40 && hydrodynamics.reynoldsNumber <= 10000 ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-purple-50 text-purple-700 border-purple-200'}`}>
                       {hydrodynamics.reynoldsNumber >= 40 && hydrodynamics.reynoldsNumber <= 10000 ? 'COMPLIANT' : 'OUTSIDE VALID RANGE'}
                     </span>
                   </td>
@@ -526,7 +526,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
                   <td className="py-2.5 px-3 text-slate-500">Dt / dp &gt; 8.0</td>
                   <td className="py-2.5 px-3 font-mono text-slate-900">Dt/dp = {(inputs.tubeDiameter / inputs.particleDiameter).toFixed(1)}</td>
                   <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 text-[9px] font-bold border ${inputs.tubeDiameter / inputs.particleDiameter > 8.0 ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40' : 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/40'}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold border rounded-md ${inputs.tubeDiameter / inputs.particleDiameter > 8.0 ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-red-50 text-red-700 border-red-300'}`}>
                       {inputs.tubeDiameter / inputs.particleDiameter > 8.0 ? 'COMPLIANT' : 'WALL CHANNELLING RISK'}
                     </span>
                   </td>
@@ -537,7 +537,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
                   <td className="py-2.5 px-3 text-slate-500">P &lt; 10 bar (non-polar)</td>
                   <td className="py-2.5 px-3 font-mono text-slate-900">P = {(inputs.totalPressure / 1e5).toFixed(1)} bar</td>
                   <td className="py-2.5 px-3">
-                    <span className={`px-2 py-0.5 text-[9px] font-bold border ${inputs.totalPressure <= 1.0e6 ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40' : 'bg-amber-950/40 text-amber-300 border-amber-500/50'}`}>
+                    <span className={`px-2 py-0.5 text-[9px] font-bold border rounded-md ${inputs.totalPressure <= 1.0e6 ? 'bg-emerald-50 text-emerald-700 border-emerald-300' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
                       {inputs.totalPressure <= 1.0e6 ? 'COMPLIANT' : 'HIGH-PRESSURE WARNING'}
                     </span>
                   </td>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { SimulationResult, SimulationStage } from '../types/eurokin';
 import { PRESET_SCENARIOS } from '../lib/presets';
 import {

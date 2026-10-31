@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { ReactorInputs } from '../types/eurokin';
 import { runEurokinSimulation } from '../lib/eurokinEngine';
 import { TrendingUp, BarChart2, ShieldAlert, CheckCircle, Crosshair } from 'lucide-react';
@@ -112,7 +112,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
         </div>
 
         {/* Sweep Variable Selector Buttons */}
-        <div className="flex bg-[#141922] p-0.5 border border-slate-200/80 text-xs font-mono">
+        <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-mono">
           {(Object.keys(sweepConfigs) as SweepVar[]).map((vKey) => (
             <button
               key={vKey}
@@ -120,10 +120,10 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
                 setSweepVar(vKey);
                 setHoverIndex(null);
               }}
-              className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
+              className={`px-3 py-1 font-bold uppercase tracking-wider rounded-md transition-all ${
                 sweepVar === vKey
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white text-slate-900 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               {sweepConfigs[vKey].label.split(' ')[0]}
@@ -243,14 +243,14 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               </span>
             </div>
 
-            <div className="p-3 bg-[#141922] border border-slate-200/80 space-y-2 text-xs font-mono">
+            <div className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 text-xs font-mono">
               <div className="flex justify-between">
                 <span className="text-slate-500">{currentCfg.label}:</span>
                 <span className="font-bold text-slate-800">{activePoint.scaledVal.toFixed(3)} {currentCfg.unit}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Weisz-Prater Modulus (Φ):</span>
-                <span className={`font-bold ${activePoint.weiszPass ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
+                <span className={`font-bold ${activePoint.weiszPass ? 'text-emerald-600' : 'text-red-600'}`}>
                   {activePoint.weiszVal.toExponential(3)}
                 </span>
               </div>
@@ -260,20 +260,20 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Ergun ΔP (Pressure Drop):</span>
-                <span className={`font-bold ${activePoint.deltaPPass ? 'text-slate-800' : 'text-[#EF4444]'}`}>
+                <span className={`font-bold ${activePoint.deltaPPass ? 'text-slate-800' : 'text-red-600'}`}>
                   {activePoint.deltaPVal.toFixed(0)} Pa
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Radial Centerline ΔT:</span>
-                <span className={`font-bold ${activePoint.deltaTradPass ? 'text-slate-800' : 'text-[#EF4444]'}`}>
+                <span className={`font-bold ${activePoint.deltaTradPass ? 'text-slate-800' : 'text-red-600'}`}>
                   {activePoint.deltaTradVal.toFixed(3)} K
                 </span>
               </div>
             </div>
           </div>
 
-          <p className="text-xs text-slate-500 leading-relaxed bg-[#141922] p-3 border border-slate-200/80 font-mono text-[11px]">
+          <p className="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-[11px]">
             Hover along the chart points to inspect the critical bifurcation point where transport gradients exceed the 5% error tolerance threshold.
           </p>
         </div>

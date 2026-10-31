@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+﻿import React, { useState, useMemo } from 'react';
 import { ReactorInputs, SimulationResult } from '../types/eurokin';
 import { runEurokinSimulation } from '../lib/eurokinEngine';
 import { Split, Layers, CheckCircle2, AlertTriangle, ArrowRight, TrendingUp, Info } from 'lucide-react';

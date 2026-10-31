@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { AxialProfilePoint, SimulationResult } from '../types/eurokin';
 import { LineChart, Crosshair } from 'lucide-react';
 

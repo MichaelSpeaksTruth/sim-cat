@@ -194,7 +194,7 @@ export const FormulaLedger: React.FC<FormulaLedgerProps> = ({ simulation }) => {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1 font-bold uppercase tracking-wider transition-colors ${
               activeCategory === cat
-                ? 'bg-[#00D8F6] text-[#080A0D]'
+                ? 'bg-blue-600 text-white'
                 : 'bg-[#141922] text-slate-500 hover:text-slate-800 border border-slate-200/80'
             }`}
           >

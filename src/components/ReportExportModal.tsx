@@ -112,7 +112,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
               <button
                 onClick={() => setExportFormat('markdown')}
                 className={`px-3 py-1 transition-colors ${
-                  exportFormat === 'markdown' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-500'
+                  exportFormat === 'markdown' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500'
                 }`}
               >
                 Markdown
@@ -120,7 +120,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
               <button
                 onClick={() => setExportFormat('json')}
                 className={`px-3 py-1 transition-colors ${
-                  exportFormat === 'json' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-500'
+                  exportFormat === 'json' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500'
                 }`}
               >
                 JSON
@@ -137,7 +137,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
         </div>
 
         {/* Content Body */}
-        <div className="p-4 flex-1 overflow-y-auto font-mono text-xs text-slate-700 bg-[#06080B]">
+        <div className="p-4 flex-1 overflow-y-auto font-mono text-xs text-slate-700 bg-slate-50">
           <pre className="p-4 bg-white rounded-xl shadow-xs border border-slate-200/80 whitespace-pre-wrap select-all font-mono leading-relaxed text-slate-700">
             {exportFormat === 'markdown' ? markdownReport : JSON.stringify(simulation, null, 2)}
           </pre>
@@ -160,7 +160,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
 
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] font-bold border border-blue-600 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 hover:bg-[#38BDF8] text-white font-bold border border-blue-600 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download Report</span>

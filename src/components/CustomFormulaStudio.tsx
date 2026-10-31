@@ -175,7 +175,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             onClick={() => setActiveTab('custom_builder')}
             className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
               activeTab === 'custom_builder'
-                ? 'bg-[#00D8F6] text-[#080A0D]'
+                ? 'bg-blue-600 text-white'
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -185,7 +185,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             onClick={() => setActiveTab('formula_audit')}
             className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
               activeTab === 'formula_audit'
-                ? 'bg-[#00D8F6] text-[#080A0D]'
+                ? 'bg-blue-600 text-white'
                 : 'text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -389,7 +389,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
               <button
                 type="button"
                 onClick={handleAddCriterion}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-[#00D8F6] text-[#080A0D] text-xs font-mono font-bold uppercase tracking-wider transition-colors hover:bg-[#33E0F8]"
+                className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 text-white text-xs font-mono font-bold uppercase tracking-wider transition-colors hover:bg-[#33E0F8]"
               >
                 <Plus className="w-4 h-4" />
                 <span>Add Criterion to Live Matrix</span>

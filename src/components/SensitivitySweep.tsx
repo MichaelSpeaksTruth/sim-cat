@@ -122,7 +122,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               }}
               className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
                 sweepVar === vKey
-                  ? 'bg-[#00D8F6] text-[#080A0D]'
+                  ? 'bg-blue-600 text-white'
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >

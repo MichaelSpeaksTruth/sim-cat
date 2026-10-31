@@ -62,7 +62,7 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
             <select
               value={selectedPresetId}
               onChange={(e) => onSelectPreset(e.target.value)}
-              className="appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-lg text-slate-800 text-xs font-mono font-medium pl-2.5 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors cursor-pointer truncate max-w-[200px] sm:max-w-[280px]"
+              className="appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-lg text-slate-800 text-xs font-mono font-medium pl-2.5 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors cursor-pointer truncate max-w-[260px] sm:max-w-[340px] md:max-w-md"
             >
               {PRESET_SCENARIOS.map((p) => (
                 <option key={p.id} value={p.id}>

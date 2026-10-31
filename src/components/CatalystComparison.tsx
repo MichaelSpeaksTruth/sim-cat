@@ -153,7 +153,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
         <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-3.5 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase font-bold text-blue-600 flex items-center gap-1.5">
-              <span className="w-2 h-2 bg-[#00D8F6]" />
+              <span className="w-2 h-2 bg-blue-600" />
               Configuration A (Reference)
             </span>
             <span className="text-[10px] font-mono text-slate-500">
@@ -205,7 +205,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
       {/* Comparative Metrics Table with Delta Badges */}
       <div className="border border-slate-200/80 overflow-x-auto">
         <table className="w-full text-left text-xs font-mono">
-          <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
+          <thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
             <tr>
               <th className="p-3">Performance Metric</th>
               <th className="p-3 text-blue-600">Catalyst A ({catA.name.split(' (')[0]})</th>
@@ -213,7 +213,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
               <th className="p-3 text-right">Differential Δ (B - A)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#171E2A] text-slate-800">
+          <tbody className="divide-y divide-slate-100 text-slate-800">
             <tr>
               <td className="p-3 text-slate-500 font-medium">Ammonia Production Rate</td>
               <td className="p-3 font-bold">{resultA.ammoniaProductionRateKgH.toFixed(3)} kg/h</td>

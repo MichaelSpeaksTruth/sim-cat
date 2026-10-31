@@ -11,7 +11,7 @@ import { provenanceRegistry } from '../lib/nist/dataProvenanceRegistry';
 import { DataStatus } from '../lib/nist/types';
 import { ReactorInputs } from '../types/eurokin';
 import { MathView } from './MathView';
-import { Database, Check, RefreshCw, Gauge, Zap, FileSpreadsheet, ShieldCheck, ExternalLink, Download } from 'lucide-react';
+import { Database, Check, RefreshCw, Gauge, Zap, ShieldCheck, ExternalLink, Download } from 'lucide-react';
 
 interface NistMappingViewProps {
   currentInputs: ReactorInputs;
@@ -99,33 +99,6 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
         source: sp.molarMass.sourceOrganization,
         url: sp.molarMass.sourceUrl,
         status: sp.molarMass.status,
-        uncertainty: sp.molarMass.uncertainty,
-      },
-      {
-        species: sp.name,
-        formula: sp.chemicalFormula,
-        cas: sp.casNumber,
-        propertyName: 'Std Formation Enthalpy (298.15 K)',
-        symbol: sp.standardEnthalpyFormation298.symbol,
-        value: (sp.standardEnthalpyFormation298.value / 1000).toFixed(2),
-        units: 'kJ/mol',
-        source: sp.standardEnthalpyFormation298.sourceOrganization,
-        url: sp.standardEnthalpyFormation298.sourceUrl,
-        status: sp.standardEnthalpyFormation298.status,
-        uncertainty: sp.standardEnthalpyFormation298.uncertainty,
-      },
-      {
-        species: sp.name,
-        formula: sp.chemicalFormula,
-        cas: sp.casNumber,
-        propertyName: 'Std Absolute Entropy (298.15 K)',
-        symbol: sp.standardEntropy298.symbol,
-        value: sp.standardEntropy298.value.toFixed(2),
-        units: 'J/(mol·K)',
-        source: sp.standardEntropy298.sourceOrganization,
-        url: sp.standardEntropy298.sourceUrl,
-        status: sp.standardEntropy298.status,
-        uncertainty: sp.standardEntropy298.uncertainty,
       },
       {
         species: sp.name,
@@ -186,12 +159,12 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
     : provenanceRows.filter(r => r.status === provenanceFilter);
 
   return (
-    <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-5 space-y-5">
+    <div className="bg-white rounded-xl shadow-xs border border-slate-200/90 p-5 lg:p-6 space-y-6">
       {/* Top Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#00D8F6]/10 text-blue-600 border border-blue-600/30">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded">
               NIST CHEMISTRY WEBBOOK (SRD 69) & PR-EOS
             </span>
             <span className="text-xs text-slate-500 font-mono">
@@ -202,23 +175,23 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
             Thermophysical, Reaction Kinetics & Provenance Registry
           </h2>
           <p className="text-xs text-slate-500 mt-1 max-w-4xl leading-relaxed font-sans">
-            Authoritative thermodynamic properties, Peng-Robinson (1976) real-gas compressibility Z(T,P), Dyson & Baddour industrial kinetics, and complete provenance metadata directly traceable to NIST Standard Reference Database 69.
+            Authoritative thermodynamic properties, Peng-Robinson real-gas compressibility Z(T,P), Dyson & Baddour industrial kinetics, and complete provenance metadata directly traceable to NIST Standard Reference Database 69.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2.5 shrink-0">
           <button
             onClick={handleExportProvenanceSnapshot}
-            className="flex items-center gap-2 px-3 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[#141922] hover:bg-[#1E2533] text-slate-800 border border-slate-200/80 transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition-colors cursor-pointer"
           >
             {snapshotExported ? (
               <>
-                <Check className="w-3.5 h-3.5 text-[#10B981]" />
-                <span className="text-[#10B981]">Exported!</span>
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span className="text-emerald-700 font-semibold">Exported!</span>
               </>
             ) : (
               <>
-                <Download className="w-3.5 h-3.5 text-blue-600" />
+                <Download className="w-4 h-4 text-blue-600" />
                 <span>Export Provenance JSON</span>
               </>
             )}
@@ -226,10 +199,10 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
 
           <button
             onClick={handleApplyAll}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider border transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg shadow-xs transition-all cursor-pointer ${
               appliedNotice
-                ? 'bg-[#10B981] text-[#080A0D] border-[#10B981]'
-                : 'bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] border-blue-600'
+                ? 'bg-emerald-600 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
             }`}
           >
             {appliedNotice ? (
@@ -248,64 +221,66 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       </div>
 
       {/* View Switcher Tabs */}
-      <div className="flex bg-[#07090D] border border-slate-200/80 text-xs font-mono max-w-fit">
+      <div className="flex bg-slate-100 p-1 rounded-lg text-xs font-medium gap-1 max-w-fit">
         <button
           onClick={() => setActiveTab('thermophysics')}
-          className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
             activeTab === 'thermophysics'
-              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-500 hover:text-slate-800'
+              ? 'bg-white text-blue-700 font-semibold shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Database className="w-3.5 h-3.5" />
-          <span>Thermophysical Properties (NIST SRD 69)</span>
+          <span>Thermophysical Properties</span>
         </button>
 
         <button
           onClick={() => setActiveTab('kinetics')}
-          className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
             activeTab === 'kinetics'
-              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-500 hover:text-slate-800'
+              ? 'bg-white text-blue-700 font-semibold shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <Zap className="w-3.5 h-3.5" />
-          <span>Ammonia Kinetics & Equilibrium</span>
+          <span>Ammonia Kinetics</span>
         </button>
 
         <button
           onClick={() => setActiveTab('provenance')}
-          className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-md transition-all cursor-pointer ${
             activeTab === 'provenance'
-              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-500 hover:text-slate-800'
+              ? 'bg-white text-blue-700 font-semibold shadow-xs'
+              : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Data Provenance & Audit Registry ({provenanceRows.length})</span>
+          <span>Data Provenance Registry ({provenanceRows.length})</span>
         </button>
       </div>
 
       {/* Operating State Controller */}
-      <div className="bg-[#080A0D] border border-slate-200/80 p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-xs font-mono">
+      <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-4 sm:p-5 space-y-4">
+        <div className="flex flex-wrap items-center justify-between border-b border-slate-200/80 pb-3 gap-2">
           <div className="flex items-center gap-2">
             <Gauge className="w-4 h-4 text-blue-600" />
-            <h3 className="font-bold text-slate-900 uppercase tracking-wide">
-              NIST Process Conditions Controller & Real-Gas PR-EOS
+            <h3 className="font-bold text-xs font-mono text-slate-900 uppercase tracking-wide">
+              NIST Process Conditions & Real-Gas PR-EOS
             </h3>
           </div>
-          <span className="text-[10px] text-slate-500">
-            Real Gas Z = {prState.compressibilityFactorZ.toFixed(3)} | Density ρ = {prState.densityKgM3.toFixed(2)} kg/m³
+          <span className="text-xs font-mono text-slate-500">
+            Real Gas Z = <strong className="text-slate-800">{prState.compressibilityFactorZ.toFixed(3)}</strong> | Density ρ = <strong className="text-slate-800">{prState.densityKgM3.toFixed(2)} kg/m³</strong>
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Temperature Slider */}
-          <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
-            <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-slate-500">Temperature (T)</span>
-              <span className="text-[#F59E0B] font-bold">{testTemp.toFixed(1)} K ({(testTemp - 273.15).toFixed(1)} °C)</span>
+          <div className="space-y-2.5 bg-white p-4 rounded-lg border border-slate-200/80 shadow-xs">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-slate-600">Bed Temperature (T)</span>
+              <span className="text-amber-700 font-bold font-mono">
+                {testTemp.toFixed(1)} K <span className="text-slate-400 font-normal">({(testTemp - 273.15).toFixed(1)} °C)</span>
+              </span>
             </div>
             <input
               type="range"
@@ -314,9 +289,9 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               step="5"
               value={testTemp}
               onChange={(e) => setTestTemp(parseFloat(e.target.value))}
-              className="w-full accent-[#00D8F6] cursor-pointer"
+              className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-100 rounded-lg appearance-none"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[11px] font-mono text-slate-400">
               <span>300 K</span>
               <span>600 K</span>
               <span>900 K</span>
@@ -324,10 +299,10 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           </div>
 
           {/* Pressure Slider */}
-          <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
-            <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-slate-500">Total Pressure (P)</span>
-              <span className="text-[#38BDF8] font-bold">{(testPressure / 1e5).toFixed(1)} bar</span>
+          <div className="space-y-2.5 bg-white p-4 rounded-lg border border-slate-200/80 shadow-xs">
+            <div className="flex justify-between items-center text-xs">
+              <span className="font-medium text-slate-600">Total Pressure (P)</span>
+              <span className="text-sky-700 font-bold font-mono">{(testPressure / 1e5).toFixed(1)} bar</span>
             </div>
             <input
               type="range"
@@ -336,24 +311,24 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               step="500000"
               value={testPressure}
               onChange={(e) => setTestPressure(parseFloat(e.target.value))}
-              className="w-full accent-[#00D8F6] cursor-pointer"
+              className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-100 rounded-lg appearance-none"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[11px] font-mono text-slate-400">
               <span>1 bar</span>
               <span>100 bar</span>
-              <span>250 bar (Industrial High-P)</span>
+              <span>250 bar (High-P)</span>
             </div>
           </div>
 
           {/* Bulk Gas Selector */}
-          <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
-            <label className="text-xs text-slate-500 block font-mono">
+          <div className="space-y-2.5 bg-white p-4 rounded-lg border border-slate-200/80 shadow-xs">
+            <label className="text-xs font-medium text-slate-600 block">
               Feed Composition & Inerts
             </label>
             <select
               value={testBulkGas}
               onChange={(e) => setTestBulkGas(e.target.value as BulkGasType)}
-              className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-mono font-medium text-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               {Object.values(BULK_GAS_CONFIGS).map((cfg) => (
                 <option key={cfg.id} value={cfg.id}>
@@ -361,7 +336,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                 </option>
               ))}
             </select>
-            <span className="text-[10px] text-slate-500 block leading-tight font-sans">
+            <span className="text-xs text-slate-500 block leading-tight font-sans">
               {BULK_GAS_CONFIGS[testBulkGas]?.description}
             </span>
           </div>
@@ -372,101 +347,109 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {activeTab === 'thermophysics' && (
         <div className="space-y-5">
           {/* Calculated Output Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono">
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Mean Molar Mass</span>
-              <span className="text-sm font-bold text-slate-900">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Mean Molar Mass</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {(nistCalculated.molarMassKgMol * 1000).toFixed(3)} g/mol
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">NIST SRD 69</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">NIST SRD 69</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Real Gas Density</span>
-              <span className="text-sm font-bold text-blue-600">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Real Gas Density</span>
+              <span className="text-base font-bold font-mono text-blue-700 my-0.5 truncate">
                 {prState.densityKgM3.toFixed(3)} kg/m³
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Peng-Robinson (Z = {prState.compressibilityFactorZ.toFixed(3)})</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">PR-EOS (Z={prState.compressibilityFactorZ.toFixed(3)})</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Heat Capacity (c_p)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Heat Capacity (c_p)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistCalculated.heatCapacity.toFixed(1)} J/(kg·K)
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Shomate Polynomial</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Shomate Polynomial</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Gas Viscosity (μ_G)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Gas Viscosity (μ_G)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {(nistCalculated.viscosity * 1e6).toFixed(2)} µPa·s
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Wilke Formulation</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Wilke Formulation</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Conductivity (λ_G)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Conductivity (λ_G)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistCalculated.thermalConductivity.toFixed(4)} W/(m·K)
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Mason & Saxena</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Mason & Saxena</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Reaction Enthalpy</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Reaction Enthalpy</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {(nistCalculated.reactionEnthalpy / 1000).toFixed(2)} kJ/mol
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Kirchhoff Integration</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Kirchhoff Integral</span>
             </div>
           </div>
 
           {/* Detailed Species Database Table */}
-          <div className="border border-slate-200/80 overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
-                <tr>
-                  <th className="p-3">Species</th>
-                  <th className="p-3">Formula & CAS</th>
-                  <th className="p-3">Molar Mass</th>
-                  <th className="p-3">Critical (T_c / P_c)</th>
-                  <th className="p-3">Acentric (ω)</th>
-                  <th className="p-3">Δ_f H°₂₉₈</th>
-                  <th className="p-3">Shomate Range</th>
-                  <th className="p-3">NIST Source</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#171E2A] text-slate-800">
-                {allSpeciesKeys.map((k) => {
-                  const sub = NIST_SPECIES_REGISTRY[k];
-                  return (
-                    <tr key={sub.casNumber} className="hover:bg-[#0E131A]">
-                      <td className="p-3 font-bold text-slate-900 font-sans">{sub.name}</td>
-                      <td className="p-3 text-slate-500">
-                        <span className="font-bold text-blue-600">{sub.chemicalFormula}</span> [{sub.casNumber}]
-                      </td>
-                      <td className="p-3">{(sub.molarMass.value * 1000).toFixed(3)} g/mol</td>
-                      <td className="p-3">{sub.criticalTemperature.value.toFixed(1)} K / {(sub.criticalPressure.value / 1e5).toFixed(1)} bar</td>
-                      <td className="p-3">{sub.acentricFactor.value.toFixed(3)}</td>
-                      <td className="p-3">{(sub.standardEnthalpyFormation298.value / 1000).toFixed(1)} kJ/mol</td>
-                      <td className="p-3">{sub.shomateGas.value.tMin} – {sub.shomateGas.value.tMax} K</td>
-                      <td className="p-3">
-                        <a
-                          href={sub.webBookUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-blue-600 hover:underline flex items-center gap-1"
-                        >
-                          <span>WebBook</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div className="p-4 border-b border-slate-200 bg-slate-50/60 flex items-center justify-between">
+              <h4 className="font-bold text-xs uppercase tracking-wider font-mono text-slate-700">
+                Pure Species Reference Data (NIST WebBook SRD 69)
+              </h4>
+              <span className="text-xs text-slate-400 font-mono">6 Components Evaluated</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-mono">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase text-[11px] font-semibold">
+                  <tr>
+                    <th className="p-3">Species</th>
+                    <th className="p-3">Formula & CAS</th>
+                    <th className="p-3">Molar Mass</th>
+                    <th className="p-3">Critical (T_c / P_c)</th>
+                    <th className="p-3">Acentric (ω)</th>
+                    <th className="p-3">Δ_f H°₂₉₈</th>
+                    <th className="p-3">Shomate Range</th>
+                    <th className="p-3">Source</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-800">
+                  {allSpeciesKeys.map((k) => {
+                    const sub = NIST_SPECIES_REGISTRY[k];
+                    return (
+                      <tr key={sub.casNumber} className="hover:bg-slate-50/80 transition-colors">
+                        <td className="p-3 font-bold text-slate-900 font-sans">{sub.name}</td>
+                        <td className="p-3 text-slate-500">
+                          <span className="font-bold text-blue-700">{sub.chemicalFormula}</span> [{sub.casNumber}]
+                        </td>
+                        <td className="p-3">{(sub.molarMass.value * 1000).toFixed(3)} g/mol</td>
+                        <td className="p-3">{sub.criticalTemperature.value.toFixed(1)} K / {(sub.criticalPressure.value / 1e5).toFixed(1)} bar</td>
+                        <td className="p-3">{sub.acentricFactor.value.toFixed(3)}</td>
+                        <td className="p-3">{(sub.standardEnthalpyFormation298.value / 1000).toFixed(1)} kJ/mol</td>
+                        <td className="p-3">{sub.shomateGas.value.tMin} – {sub.shomateGas.value.tMax} K</td>
+                        <td className="p-3">
+                          <a
+                            href={sub.webBookUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-blue-700 hover:underline flex items-center gap-1 font-sans font-medium"
+                          >
+                            <span>WebBook</span>
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
@@ -474,74 +457,74 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {/* TAB 2: AMMONIA REACTION KINETICS */}
       {activeTab === 'kinetics' && (
         <div className="space-y-5">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono">
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Intrinsic Rate (r_m)</span>
-              <span className="text-sm font-bold text-slate-900">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Intrinsic Rate</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistKinetics.reactionRate.toExponential(3)}
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">mol/(kg-cat·s)</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">mol/(kg-cat·s)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Activation Energy</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Activation Energy</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {(nistKinetics.activationEnergy / 1000).toFixed(1)} kJ/mol
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Promoted Fe Catalyst</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Promoted Fe Catalyst</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Apparent Order (n)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Apparent Order (n)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistKinetics.reactionOrder.toFixed(1)}
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Temkin Pseudo-Order</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Temkin Pseudo-Order</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Synthesis Const (k₁)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Synthesis Const (k₁)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistKinetics.rateConstantK1.toExponential(2)}
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">kmol/(m³·h·atm)</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">kmol/(m³·h·atm)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Equilibrium K_p(T)</span>
-              <span className="text-sm font-bold text-slate-900">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Equilibrium K_p(T)</span>
+              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
                 {nistKinetics.equilibriumConstantKp.toExponential(2)}
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">atm⁻¹ (NIST Gibbs)</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">atm⁻¹ (NIST Gibbs)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
-              <span className="text-[10px] text-slate-500 block uppercase">Equilibrium X_eq</span>
-              <span className="text-sm font-bold text-[#10B981]">
+            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Equilibrium X_eq</span>
+              <span className="text-base font-bold font-mono text-emerald-700 my-0.5 truncate">
                 {(nistKinetics.equilibriumConversionXeq * 100).toFixed(1)}%
               </span>
-              <span className="text-[9px] text-slate-500 block mt-0.5">Max Thermodynamic Cap</span>
+              <span className="text-[11px] font-mono text-slate-400 block truncate">Max Thermodynamic Cap</span>
             </div>
           </div>
 
           {/* Governing Equation Card */}
-          <div className="bg-[#080A0D] border border-slate-200/80 p-4 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-xs font-mono">
-              <span className="font-bold text-slate-900 uppercase">
+          <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-5 space-y-4">
+            <div className="flex flex-wrap items-center justify-between border-b border-slate-200/80 pb-3 gap-2">
+              <span className="font-bold text-xs font-mono text-slate-900 uppercase">
                 {nistKinetics.kineticModelName}
               </span>
-              <span className="text-[10px] text-slate-500">
+              <span className="text-xs font-mono text-slate-500">
                 Thermodynamic Consistency Enforced: Net Rate r → 0 as Q → K_p
               </span>
             </div>
 
-            <div className="p-3 bg-[#05070A] border border-slate-200/60 text-center font-mono text-slate-900 overflow-x-auto">
+            <div className="p-4 bg-white rounded-lg border border-slate-200/80 text-center font-mono text-slate-900 overflow-x-auto shadow-xs">
               <MathView math={nistKinetics.rateEquationLatex} block />
             </div>
 
-            <div className="space-y-1 pt-1 text-xs font-mono text-slate-500">
-              <span className="text-slate-700 font-bold block">Model Parameters & Arrhenius Constants:</span>
-              <ul className="list-disc list-inside space-y-0.5 text-[11px] text-slate-500">
+            <div className="space-y-1.5 pt-1 text-xs text-slate-600 font-sans">
+              <span className="text-slate-800 font-bold font-mono block">Model Parameters & Arrhenius Constants:</span>
+              <ul className="list-disc list-inside space-y-1 text-xs text-slate-600">
                 {nistKinetics.notes.map((note, idx) => (
                   <li key={idx}>{note}</li>
                 ))}
@@ -555,17 +538,17 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {activeTab === 'provenance' && (
         <div className="space-y-4">
           {/* Provenance Filter Chips */}
-          <div className="flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
+          <div className="flex items-center justify-between flex-wrap gap-3 text-xs">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-slate-500 text-[11px] uppercase mr-1">Classification:</span>
+              <span className="text-slate-500 text-xs font-medium uppercase mr-1">Classification:</span>
               {(['all', 'evaluated', 'experimental', 'correlated', 'calculated'] as const).map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setProvenanceFilter(filter)}
-                  className={`px-2.5 py-1 uppercase text-[10px] font-bold border transition-colors ${
+                  className={`px-3 py-1 uppercase text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                     provenanceFilter === filter
-                      ? 'bg-[#00D8F6] text-[#080A0D] border-blue-600'
-                      : 'bg-[#141922] text-slate-500 border-slate-200/80 hover:text-slate-800'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
                   }`}
                 >
                   {filter}
@@ -573,61 +556,61 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               ))}
             </div>
 
-            <span className="text-[11px] text-slate-500">
+            <span className="text-xs font-mono text-slate-500">
               Showing {filteredProvenance.length} audited property parameters
             </span>
           </div>
 
           {/* Full Audited Provenance Table */}
-          <div className="border border-slate-200/80 overflow-x-auto max-h-[500px]">
+          <div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden max-h-[520px] overflow-y-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px] sticky top-0">
+              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 uppercase text-[11px] font-semibold sticky top-0 z-10">
                 <tr>
-                  <th className="p-2.5">Species</th>
-                  <th className="p-2.5">Property</th>
-                  <th className="p-2.5">Symbol</th>
-                  <th className="p-2.5">Audited Value</th>
-                  <th className="p-2.5">Units</th>
-                  <th className="p-2.5">Classification</th>
-                  <th className="p-2.5">Reported Uncertainty</th>
-                  <th className="p-2.5">Authoritative Source</th>
+                  <th className="p-3">Species</th>
+                  <th className="p-3">Property</th>
+                  <th className="p-3">Symbol</th>
+                  <th className="p-3">Audited Value</th>
+                  <th className="p-3">Units</th>
+                  <th className="p-3">Classification</th>
+                  <th className="p-3">Reported Uncertainty</th>
+                  <th className="p-3">Authoritative Source</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#171E2A] text-slate-800">
+              <tbody className="divide-y divide-slate-100 text-slate-800">
                 {filteredProvenance.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-[#0E131A]">
-                    <td className="p-2.5 font-bold text-slate-900">
-                      {row.formula} <span className="text-[10px] text-slate-500 font-normal">({row.species})</span>
+                  <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="p-3 font-bold text-slate-900">
+                      {row.formula} <span className="text-[11px] text-slate-500 font-normal">({row.species})</span>
                     </td>
-                    <td className="p-2.5 font-sans">{row.propertyName}</td>
-                    <td className="p-2.5 text-blue-600 font-bold">
+                    <td className="p-3 font-sans">{row.propertyName}</td>
+                    <td className="p-3 text-blue-700 font-bold">
                       <MathView math={row.symbol} />
                     </td>
-                    <td className="p-2.5 font-bold text-slate-900">{row.value}</td>
-                    <td className="p-2.5 text-slate-500">{row.units}</td>
-                    <td className="p-2.5">
-                      <span className={`px-2 py-0.5 text-[9px] uppercase font-bold border ${
+                    <td className="p-3 font-bold text-slate-900">{row.value}</td>
+                    <td className="p-3 text-slate-500">{row.units}</td>
+                    <td className="p-3">
+                      <span className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${
                         row.status === 'evaluated'
-                          ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                           : row.status === 'experimental'
-                          ? 'bg-[#00D8F6]/10 text-blue-600 border-blue-600/30'
-                          : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
+                          ? 'bg-blue-50 text-blue-800 border border-blue-200'
+                          : 'bg-amber-50 text-amber-800 border border-amber-200'
                       }`}>
                         {row.status}
                       </span>
                     </td>
-                    <td className="p-2.5 text-[11px] text-slate-500">
+                    <td className="p-3 text-xs text-slate-500">
                       {row.uncertainty || 'Evaluated standard'}
                     </td>
-                    <td className="p-2.5">
+                    <td className="p-3">
                       <a
                         href={row.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-blue-600 hover:underline flex items-center gap-1 text-[11px]"
+                        className="text-blue-700 hover:underline flex items-center gap-1 text-xs font-sans font-medium"
                       >
                         <span className="truncate max-w-[180px]">{row.source}</span>
-                        <ExternalLink className="w-3 h-3 shrink-0" />
+                        <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                       </a>
                     </td>
                   </tr>

@@ -80,7 +80,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
         <div className="lg:col-span-7 bg-slate-50 rounded-lg border border-slate-200/80 p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3 text-xs font-mono">
             <span className="text-slate-500 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-              <span className="w-2 h-2 bg-[#00D8F6]" />
+              <span className="w-2 h-2 bg-blue-600" />
               Pellet Radial Cross-Section Cutaway ($r = 0 \to R_p$)
             </span>
             <div className="flex items-center gap-1">
@@ -118,7 +118,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
           </div>
 
           {/* Procedural Microscopic Diagram */}
-          <div className="relative w-full aspect-16/10 bg-[#06080B] border border-[#171E2B] flex items-center justify-center overflow-hidden">
+          <div className="relative w-full aspect-16/10 bg-slate-50 border border-slate-200 flex items-center justify-center overflow-hidden">
             <svg viewBox="0 0 600 380" className="w-full h-full">
               <defs>
                 {/* Radial Gradient for Catalyst Core */}
@@ -250,7 +250,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
             </svg>
           </div>
 
-          <div className="mt-3 p-2 bg-[#0C1017] border border-[#1A2230] text-[10px] font-mono text-slate-500 flex items-center justify-between">
+          <div className="mt-3 p-2 bg-slate-50 border border-slate-200 text-[10px] font-mono text-slate-500 flex items-center justify-between">
             <span>
               Pore diffusion model: Bosanquet combination of Fuller molecular ($D_{'{AB}'}$) and Knudsen ($D_K$) diffusion.
             </span>

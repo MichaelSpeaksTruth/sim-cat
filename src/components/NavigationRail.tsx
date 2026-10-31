@@ -1,11 +1,10 @@
-﻿import React from 'react';
+import React from 'react';
 import { NavigationSection } from '../types/eurokin';
 import {
   LayoutDashboard,
   Cpu,
   Layers,
   Wind,
-  Gauge,
   PlaySquare,
   Activity,
   LineChart,
@@ -49,12 +48,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
     { id: 'setup', label: 'Reactor Setup', shortCode: '02', icon: Cpu },
     { id: 'catalyst', label: 'Catalyst Studio', shortCode: '03', icon: Layers },
     { id: 'feed', label: 'Feed Configuration', shortCode: '04', icon: Wind },
-    { id: 'operating', label: 'Operating Conditions', shortCode: '05', icon: Gauge },
-    { id: 'simulation', label: 'Simulation & Playback', shortCode: '06', icon: PlaySquare, badge: isDirty ? 'DIRTY' : 'READY' },
-    { id: 'diagnostics', label: 'Transport Diagnostics', shortCode: '07', icon: Activity, badge: `${passedCount}/${totalCount}` },
-    { id: 'results', label: 'Results Explorer', shortCode: '08', icon: LineChart },
-    { id: 'comparison', label: 'Catalyst Comparison', shortCode: '09', icon: Split },
-    { id: 'validation', label: 'Validation Lab', shortCode: '10', icon: FileCode2 },
+    { id: 'simulation', label: 'Simulation & Playback', shortCode: '05', icon: PlaySquare, badge: isDirty ? 'DIRTY' : 'READY' },
+    { id: 'diagnostics', label: 'Transport Diagnostics', shortCode: '06', icon: Activity, badge: `${passedCount}/${totalCount}` },
+    { id: 'results', label: 'Results Explorer', shortCode: '07', icon: LineChart },
+    { id: 'comparison', label: 'Catalyst Comparison', shortCode: '08', icon: Split },
+    { id: 'validation', label: 'Validation Lab', shortCode: '09', icon: FileCode2 },
   ];
 
   return (

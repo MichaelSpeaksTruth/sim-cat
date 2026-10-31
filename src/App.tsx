@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   ReactorInputs,
   CustomCriterionDefinition,
@@ -201,26 +201,20 @@ export function App() {
                 </div>
               )}
 
-              {/* SECTION 2: REACTOR SETUP & GEOMETRY */}
-              {activeSection === 'setup' && (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto">
-                  <div className="lg:col-span-6 space-y-4">
-                    <InputConsole
-                      inputs={inputs}
-                      onChange={handleUpdateInputs}
-                      onReset={handleReset}
-                      isDirty={isDirty}
-                    />
-                  </div>
-                  <div className="lg:col-span-6 space-y-4">
-                    <Reactor3D
-                      simulation={simulation}
-                      currentZNormalized={playbackState.currentZNormalized}
-                      onZNormalizedChange={handleZNormalizedChange}
-                      onSelectPellet={() => setShowMicroscopyView(true)}
-                      className="h-[520px]"
-                    />
-                  </div>
+              {/* SECTION 2: REACTOR SETUP & OPERATING PARAMETERS */}
+              {(activeSection === 'setup' || (activeSection as string) === 'operating') && (
+                <div className="space-y-6 max-w-7xl mx-auto">
+                  <InputConsole
+                    inputs={inputs}
+                    onChange={handleUpdateInputs}
+                    onReset={handleReset}
+                    isDirty={isDirty}
+                  />
+                  <AxialCharts
+                    simulation={simulation}
+                    currentZNormalized={playbackState.currentZNormalized}
+                    onZNormalizedChange={handleZNormalizedChange}
+                  />
                 </div>
               )}
 
@@ -259,24 +253,7 @@ export function App() {
                 />
               )}
 
-              {/* SECTION 5: OPERATING CONDITIONS */}
-              {activeSection === 'operating' && (
-                <div className="space-y-4">
-                  <InputConsole
-                    inputs={inputs}
-                    onChange={handleUpdateInputs}
-                    onReset={handleReset}
-                    isDirty={isDirty}
-                  />
-                  <AxialCharts
-                    simulation={simulation}
-                    currentZNormalized={playbackState.currentZNormalized}
-                    onZNormalizedChange={handleZNormalizedChange}
-                  />
-                </div>
-              )}
-
-              {/* SECTION 6: SIMULATION & PLAYBACK */}
+              {/* SECTION 5: SIMULATION & PLAYBACK */}
               {activeSection === 'simulation' && (
                 <div className="space-y-4">
                   <SimulationWorkspace
@@ -310,12 +287,12 @@ export function App() {
                 </div>
               )}
 
-              {/* SECTION 7: TRANSPORT DIAGNOSTICS (EUROKIN PROTOCOL) */}
+              {/* SECTION 6: TRANSPORT DIAGNOSTICS (EUROKIN PROTOCOL) */}
               {activeSection === 'diagnostics' && (
                 <TransportDiagnosticsView simulation={simulation} />
               )}
 
-              {/* SECTION 8: RESULTS EXPLORER */}
+              {/* SECTION 7: RESULTS EXPLORER */}
               {activeSection === 'results' && (
                 <div className="space-y-4">
                   <AxialCharts
@@ -327,7 +304,7 @@ export function App() {
                 </div>
               )}
 
-              {/* SECTION 9: CATALYST COMPARISON */}
+              {/* SECTION 8: CATALYST COMPARISON */}
               {activeSection === 'comparison' && (
                 <CatalystComparison
                   baseInputs={inputs}
@@ -335,7 +312,7 @@ export function App() {
                 />
               )}
 
-              {/* SECTION 10: VALIDATION LAB & CUSTOM FORMULAS */}
+              {/* SECTION 9: VALIDATION LAB & CUSTOM FORMULAS */}
               {activeSection === 'validation' && (
                 <CustomFormulaStudio
                   customCriteria={customCriteria}

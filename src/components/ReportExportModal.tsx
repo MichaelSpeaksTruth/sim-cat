@@ -95,24 +95,24 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#080A0D]/80 backdrop-blur-xs flex items-center justify-center p-4 select-none">
-      <div className="bg-[#0A0D12] border border-[#1E2533] shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-slate-50 rounded-lg/80 backdrop-blur-xs flex items-center justify-center p-4 select-none">
+      <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="p-4 bg-[#080B10] border-b border-[#1E2533] flex items-center justify-between">
+        <div className="p-4 bg-slate-50 rounded-lg border-b border-slate-200/80 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileCheck className="w-4 h-4 text-[#00D8F6]" />
-            <h3 className="font-bold text-xs font-mono uppercase tracking-wider text-slate-100">
+            <FileCheck className="w-4 h-4 text-blue-600" />
+            <h3 className="font-bold text-xs font-mono uppercase tracking-wider text-slate-900">
               Eurokin Diagnostic Audit Report & Export
             </h3>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Format toggle */}
-            <div className="flex bg-[#12161E] border border-[#252E3E] text-xs font-mono">
+            <div className="flex bg-slate-50 border border-slate-300 text-xs font-mono">
               <button
                 onClick={() => setExportFormat('markdown')}
                 className={`px-3 py-1 transition-colors ${
-                  exportFormat === 'markdown' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-400'
+                  exportFormat === 'markdown' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-500'
                 }`}
               >
                 Markdown
@@ -120,7 +120,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
               <button
                 onClick={() => setExportFormat('json')}
                 className={`px-3 py-1 transition-colors ${
-                  exportFormat === 'json' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-400'
+                  exportFormat === 'json' ? 'bg-[#00D8F6] text-[#080A0D] font-bold' : 'text-slate-500'
                 }`}
               >
                 JSON
@@ -129,7 +129,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
 
             <button
               onClick={onClose}
-              className="p-1 text-slate-400 hover:text-slate-100 hover:bg-[#141A24] border border-transparent hover:border-[#252E3E]"
+              className="p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 border border-transparent hover:border-slate-300"
             >
               <X className="w-4 h-4" />
             </button>
@@ -137,14 +137,14 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
         </div>
 
         {/* Content Body */}
-        <div className="p-4 flex-1 overflow-y-auto font-mono text-xs text-slate-300 bg-[#06080B]">
-          <pre className="p-4 bg-[#0A0D12] border border-[#1E2533] whitespace-pre-wrap select-all font-mono leading-relaxed text-slate-300">
+        <div className="p-4 flex-1 overflow-y-auto font-mono text-xs text-slate-700 bg-[#06080B]">
+          <pre className="p-4 bg-white rounded-xl shadow-xs border border-slate-200/80 whitespace-pre-wrap select-all font-mono leading-relaxed text-slate-700">
             {exportFormat === 'markdown' ? markdownReport : JSON.stringify(simulation, null, 2)}
           </pre>
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 bg-[#080B10] border-t border-[#1E2533] flex items-center justify-between">
+        <div className="p-4 bg-slate-50 rounded-lg border-t border-slate-200/80 flex items-center justify-between">
           <span className="text-[10px] font-mono text-slate-500">
             NIST SRD 69 & Eurokin Compliant Format
           </span>
@@ -152,7 +152,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
           <div className="flex items-center gap-2 font-mono text-xs">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#12161E] hover:bg-[#1A202A] text-slate-300 border border-[#252E3E] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-[#1A202A] text-slate-700 border border-slate-300 transition-colors"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-[#10B981]" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied!' : 'Copy to Clipboard'}</span>
@@ -160,7 +160,7 @@ ${reactorSuitability.actionableEngineeringSteps.map((step) => `- ${step}`).join(
 
             <button
               onClick={handleDownload}
-              className="flex items-center gap-1.5 px-4 py-1.5 bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] font-bold border border-[#00D8F6] transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] font-bold border border-blue-600 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download Report</span>

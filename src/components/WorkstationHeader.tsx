@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimulationResult, PresetScenario, SimulationStage } from '../types/eurokin';
+import { SimulationResult, SimulationStage } from '../types/eurokin';
 import { PRESET_SCENARIOS } from '../lib/presets';
 import {
   FileCheck2,
@@ -7,10 +7,8 @@ import {
   ShieldCheck,
   AlertTriangle,
   Zap,
-  Layers,
-  ChevronDown,
-  Activity,
-  Sliders
+  Sliders,
+  ChevronDown
 } from 'lucide-react';
 
 interface WorkstationHeaderProps {
@@ -40,99 +38,102 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
   onOpenInspector,
   isInspectorOpen,
 }) => {
-  const { overallStatus, passedCount, totalCount, inputs } = simulation;
+  const { overallStatus, passedCount, totalCount } = simulation;
 
   return (
-    <header className="h-14 bg-[#0A0D12] border-b border-[#1E2533] px-4 flex items-center justify-between gap-4 select-none z-30">
+    <header className="h-14 bg-white border-b border-slate-200/90 px-4 lg:px-6 flex items-center justify-between gap-3 select-none z-30 shadow-xs">
       {/* Left: Chemical System & Preset Scenario Selector */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono uppercase text-slate-500 font-semibold">
+      <div className="flex items-center gap-3 min-w-0">
+        <div className="hidden sm:flex items-center gap-2 shrink-0">
+          <span className="text-[11px] font-mono uppercase text-slate-500 font-semibold">
             System:
           </span>
-          <span className="font-mono text-xs font-bold text-slate-100 flex items-center gap-1.5">
+          <span className="font-mono text-xs font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
             0.5 N₂ + 1.5 H₂ ⇌ NH₃
           </span>
         </div>
 
-        <span className="text-slate-700">|</span>
+        <span className="hidden sm:inline text-slate-300">|</span>
 
         {/* Preset Selector */}
-        <div className="flex items-center gap-1.5 text-xs font-mono">
-          <span className="text-[10px] uppercase text-slate-500">Preset:</span>
-          <select
-            value={selectedPresetId}
-            onChange={(e) => onSelectPreset(e.target.value)}
-            className="bg-[#12161E] border border-[#252E3E] text-slate-200 text-xs font-mono px-2 py-1 focus:outline-none focus:border-[#00D8F6]"
-          >
-            {PRESET_SCENARIOS.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-[11px] uppercase text-slate-500 font-medium shrink-0">Preset:</span>
+          <div className="relative">
+            <select
+              value={selectedPresetId}
+              onChange={(e) => onSelectPreset(e.target.value)}
+              className="appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-lg text-slate-800 text-xs font-mono font-medium pl-2.5 pr-8 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors cursor-pointer truncate max-w-[200px] sm:max-w-[280px]"
+            >
+              {PRESET_SCENARIOS.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
         </div>
 
         {/* Dirty State Indicator */}
         {isDirty && (
-          <span className="text-[10px] font-mono px-2 py-0.5 bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/40 animate-pulse">
-            Simulation Out of Date — Run Solver
+          <span className="hidden md:inline-flex items-center text-[11px] font-mono px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md font-medium shrink-0 animate-pulse">
+            Out of Date
           </span>
         )}
       </div>
 
       {/* Right: Actions, Solver Trigger & Eurokin Status Pill */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 shrink-0">
         {/* Reset Defaults */}
         <button
           onClick={onReset}
-          className="p-1.5 bg-[#12161E] hover:bg-[#1A202A] text-slate-400 hover:text-slate-100 border border-[#252E3E] transition-colors"
+          className="p-1.5 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg transition-colors cursor-pointer"
           title="Reset to Baseline Haber-Bosch Defaults"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-4 h-4" />
         </button>
 
         {/* Audit & Export Modal Trigger */}
         <button
           onClick={onOpenExport}
-          className="px-3 py-1.5 bg-[#12161E] hover:bg-[#1A202A] text-slate-300 hover:text-slate-100 border border-[#252E3E] text-xs font-mono font-medium flex items-center gap-1.5 transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 border border-slate-200 rounded-lg text-xs font-medium transition-colors cursor-pointer"
         >
-          <FileCheck2 className="w-3.5 h-3.5 text-[#00D8F6]" />
+          <FileCheck2 className="w-3.5 h-3.5 text-blue-600" />
           <span>Audit & Export</span>
         </button>
 
-        {/* Big Rectangular Solver Action Button */}
+        {/* Solver Action Button */}
         <button
           onClick={onRunSimulation}
           disabled={isSimulating}
-          className={`px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider border flex items-center gap-2 transition-all shadow-xs ${
+          className={`px-4 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-2 transition-all shadow-xs cursor-pointer ${
             isSimulating
-              ? 'bg-[#141A24] text-slate-500 border-[#283244] cursor-not-allowed'
+              ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
               : isDirty
-              ? 'bg-[#EF4444] hover:bg-[#F87171] text-white border-[#EF4444] animate-pulse'
-              : 'bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] border-[#00D8F6]'
+              ? 'bg-amber-600 hover:bg-amber-700 text-white shadow-amber-600/20'
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20'
           }`}
         >
           <Zap className={`w-3.5 h-3.5 ${isSimulating ? 'animate-spin' : ''}`} />
           <span>{isSimulating ? 'Solving RK4...' : 'Run Simulation'}</span>
         </button>
 
-        {/* Eurokin Status Badge */}
+        {/* Status Badge */}
         <div
-          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold border tracking-wide ${
+          className={`hidden md:flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-semibold rounded-lg border tracking-wide ${
             overallStatus === 'VALID_INTRINSIC'
-              ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30'
-              : 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              : 'bg-rose-50 text-rose-700 border-rose-200'
           }`}
         >
           {overallStatus === 'VALID_INTRINSIC' ? (
             <>
-              <ShieldCheck className="w-4 h-4 text-[#10B981]" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>INTRINSIC ({passedCount}/{totalCount})</span>
             </>
           ) : (
             <>
-              <AlertTriangle className="w-4 h-4 text-[#EF4444]" />
+              <AlertTriangle className="w-4 h-4 text-rose-600" />
               <span>TRANSPORT LIMITED ({passedCount}/{totalCount})</span>
             </>
           )}
@@ -141,14 +142,14 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
         {/* Toggle Right Inspector */}
         <button
           onClick={onOpenInspector}
-          className={`p-1.5 border transition-colors ${
+          className={`p-1.5 border rounded-lg transition-colors cursor-pointer ${
             isInspectorOpen
-              ? 'bg-[#141A24] text-[#00D8F6] border-[#00D8F6]/50'
-              : 'bg-[#12161E] text-slate-400 hover:text-slate-100 border-[#252E3E]'
+              ? 'bg-blue-50 text-blue-700 border-blue-200'
+              : 'bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-200'
           }`}
           title="Toggle Engineering Inspector Panel"
         >
-          <Sliders className="w-3.5 h-3.5" />
+          <Sliders className="w-4 h-4" />
         </button>
       </div>
     </header>

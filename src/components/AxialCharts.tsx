@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AxialProfilePoint, SimulationResult } from '../types/eurokin';
-import { LineChart, Crosshair, Eye, Flame, Gauge, Layers, Info } from 'lucide-react';
+import { LineChart, Crosshair } from 'lucide-react';
 
 interface AxialChartsProps {
   simulation: SimulationResult;
@@ -21,7 +21,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
 
   if (!axialProfiles || axialProfiles.length === 0) {
     return (
-      <div className="p-8 text-center bg-[#0A0D12] border border-[#1E2533] text-xs font-mono text-slate-500">
+      <div className="p-8 text-center bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-500">
         No numerical solution data available. Run simulation to generate 1D axial profiles.
       </div>
     );
@@ -106,83 +106,80 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
   const currentX = scaleX(currentZNormalized);
 
   return (
-    <div className="bg-[#0A0D12] border border-[#1E2533] p-5 space-y-4">
+    <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs p-5 lg:p-6 space-y-5">
       {/* Header and Metric Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1E2533]">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 bg-[#141A24] border border-[#252E3E] text-[#00D8F6]">
-            <LineChart className="w-4 h-4" />
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+            <LineChart className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100 flex items-center gap-2">
-              <span>Synchronized Reactor Axial Profile Explorer</span>
-              <span className="text-[10px] font-normal text-slate-500 font-mono">
-                (Runge-Kutta 1D Differential Integration)
-              </span>
+            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <span>Synchronized Reactor Axial Profile</span>
             </h3>
-            <span className="text-[11px] text-slate-400 font-sans">
+            <span className="text-xs text-slate-500 font-sans">
               Cursor tracking is synchronized in real time with the 3D reactor cross-section and local state inspection.
             </span>
           </div>
         </div>
 
         {/* Metric Switcher Tabs */}
-        <div className="flex items-center gap-1 text-xs font-mono">
+        <div className="flex items-center bg-slate-100 rounded-lg p-1 text-xs font-medium">
           <button
             onClick={() => setActiveMetric('temperature')}
-            className={`px-2.5 py-1 text-[11px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeMetric === 'temperature'
-                ? 'bg-[#141A24] text-[#F59E0B] border-[#F59E0B]/60'
-                : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                ? 'bg-white text-amber-700 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Temperature T(z)
+            Temperature
           </button>
           <button
             onClick={() => setActiveMetric('species')}
-            className={`px-2.5 py-1 text-[11px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeMetric === 'species'
-                ? 'bg-[#141A24] text-[#00D8F6] border-[#00D8F6]/60'
-                : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                ? 'bg-white text-blue-700 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Species y_i(z)
+            Species
           </button>
           <button
             onClick={() => setActiveMetric('rate')}
-            className={`px-2.5 py-1 text-[11px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeMetric === 'rate'
-                ? 'bg-[#141A24] text-[#10B981] border-[#10B981]/60'
-                : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                ? 'bg-white text-emerald-700 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Rate r(z) & X_A(z)
+            Rate & Conversion
           </button>
           <button
             onClick={() => setActiveMetric('pressure')}
-            className={`px-2.5 py-1 text-[11px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeMetric === 'pressure'
-                ? 'bg-[#141A24] text-[#38BDF8] border-[#38BDF8]/60'
-                : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                ? 'bg-white text-sky-700 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Pressure P(z)
+            Pressure
           </button>
           <button
             onClick={() => setActiveMetric('effectiveness')}
-            className={`px-2.5 py-1 text-[11px] border transition-colors ${
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
               activeMetric === 'effectiveness'
-                ? 'bg-[#141A24] text-purple-400 border-purple-500/60'
-                : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                ? 'bg-white text-purple-700 font-semibold shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Effectiveness η(z)
+            Effectiveness
           </button>
         </div>
       </div>
 
       {/* Main SVG Scientific Chart */}
-      <div className="relative bg-[#06080B] border border-[#171E2B] overflow-hidden">
+      <div className="relative bg-slate-50/70 border border-slate-200/80 rounded-lg overflow-hidden">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           className="w-full h-auto cursor-crosshair select-none"
@@ -199,7 +196,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                   y1={y}
                   x2={margin.left + plotWidth}
                   y2={y}
-                  stroke="#171F2C"
+                  stroke="#E2E8F0"
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />
@@ -207,7 +204,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                   x={margin.left - 8}
                   y={y + 3}
                   textAnchor="end"
-                  fill="#5C6878"
+                  fill="#64748B"
                   fontSize="9"
                   fontFamily="monospace"
                 >
@@ -228,7 +225,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                   y1={margin.top}
                   x2={x}
                   y2={margin.top + plotHeight}
-                  stroke="#171F2C"
+                  stroke="#E2E8F0"
                   strokeWidth="1"
                   strokeDasharray="2 2"
                 />
@@ -236,7 +233,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                   x={x}
                   y={margin.top + plotHeight + 16}
                   textAnchor="middle"
-                  fill="#5C6878"
+                  fill="#64748B"
                   fontSize="9"
                   fontFamily="monospace"
                 >
@@ -251,7 +248,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
             x={margin.left + plotWidth / 2}
             y={svgHeight - 8}
             textAnchor="middle"
-            fill="#8B949E"
+            fill="#64748B"
             fontSize="10"
             fontFamily="monospace"
           >
@@ -260,10 +257,10 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
 
           <text
             x={-margin.top - plotHeight / 2}
-            y={16}
+            y={18}
             transform="rotate(-90)"
             textAnchor="middle"
-            fill="#8B949E"
+            fill="#64748B"
             fontSize="10"
             fontFamily="monospace"
           >
@@ -279,7 +276,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 y1={scaleY(inputs.wallTemperature ?? inputs.temperature - 15)}
                 x2={margin.left + plotWidth}
                 y2={scaleY(inputs.wallTemperature ?? inputs.temperature - 15)}
-                stroke="#64748B"
+                stroke="#94A3B8"
                 strokeWidth="1"
                 strokeDasharray="4 4"
               />
@@ -298,7 +295,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
               <path
                 d={generatePath((p) => p.temperature)}
                 fill="none"
-                stroke="#F59E0B"
+                stroke="#D97706"
                 strokeWidth="2.5"
               />
             </g>
@@ -308,7 +305,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
             <path
               d={generatePath((p) => p.pressure / 1e5)}
               fill="none"
-              stroke="#38BDF8"
+              stroke="#0284C7"
               strokeWidth="2.5"
             />
           )}
@@ -319,7 +316,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 <path
                   d={generatePath((p) => p.yH2)}
                   fill="none"
-                  stroke="#E2E8F0"
+                  stroke="#475569"
                   strokeWidth="2"
                 />
               )}
@@ -327,7 +324,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 <path
                   d={generatePath((p) => p.yN2)}
                   fill="none"
-                  stroke="#00D8F6"
+                  stroke="#2563EB"
                   strokeWidth="2"
                 />
               )}
@@ -335,7 +332,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 <path
                   d={generatePath((p) => p.yNH3)}
                   fill="none"
-                  stroke="#F59E0B"
+                  stroke="#D97706"
                   strokeWidth="2.5"
                 />
               )}
@@ -347,7 +344,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
               <path
                 d={generatePath((p) => p.reactionRate)}
                 fill="none"
-                stroke="#10B981"
+                stroke="#059669"
                 strokeWidth="2.5"
               />
             </g>
@@ -361,7 +358,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 y1={scaleY(0.95)}
                 x2={margin.left + plotWidth}
                 y2={scaleY(0.95)}
-                stroke="#10B981"
+                stroke="#059669"
                 strokeWidth="1"
                 strokeDasharray="3 3"
               />
@@ -369,7 +366,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 x={margin.left + plotWidth - 4}
                 y={scaleY(0.95) - 4}
                 textAnchor="end"
-                fill="#10B981"
+                fill="#059669"
                 fontSize="8"
                 fontFamily="monospace"
               >
@@ -379,7 +376,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
               <path
                 d={generatePath((p) => p.effectiveness)}
                 fill="none"
-                stroke="#A855F7"
+                stroke="#7C3AED"
                 strokeWidth="2.5"
               />
             </g>
@@ -391,7 +388,7 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
             y1={margin.top}
             x2={currentX}
             y2={margin.top + plotHeight}
-            stroke="#00D8F6"
+            stroke="#2563EB"
             strokeWidth="1.5"
           />
 
@@ -410,106 +407,126 @@ export const AxialCharts: React.FC<AxialChartsProps> = ({
                 : scaleY(currentPoint.effectiveness)
             }
             r="4.5"
-            fill="#00D8F6"
-            stroke="#06080B"
-            strokeWidth="1.5"
+            fill="#2563EB"
+            stroke="#FFFFFF"
+            strokeWidth="2"
           />
         </svg>
 
         {/* Legend for Species */}
         {activeMetric === 'species' && (
-          <div className="absolute top-2 right-2 px-2.5 py-1.5 bg-[#0A0D12]/90 border border-[#1E2533] flex items-center gap-3 text-[10px] font-mono select-none">
+          <div className="absolute top-2 right-2 px-3 py-1.5 bg-white/95 border border-slate-200/90 rounded-lg shadow-xs flex items-center gap-3 text-[11px] font-mono select-none">
             <button
               onClick={() => setShowNH3(!showNH3)}
-              className={`flex items-center gap-1.5 ${showNH3 ? 'text-[#F59E0B]' : 'text-slate-600 line-through'}`}
+              className={`flex items-center gap-1.5 cursor-pointer ${showNH3 ? 'text-amber-700 font-semibold' : 'text-slate-400 line-through'}`}
             >
-              <span className="w-2.5 h-1 bg-[#F59E0B]" />
+              <span className="w-2.5 h-1 rounded bg-[#D97706]" />
               <span>y_NH₃ (Product)</span>
             </button>
             <button
               onClick={() => setShowH2(!showH2)}
-              className={`flex items-center gap-1.5 ${showH2 ? 'text-slate-200' : 'text-slate-600 line-through'}`}
+              className={`flex items-center gap-1.5 cursor-pointer ${showH2 ? 'text-slate-700 font-semibold' : 'text-slate-400 line-through'}`}
             >
-              <span className="w-2.5 h-1 bg-[#E2E8F0]" />
+              <span className="w-2.5 h-1 rounded bg-[#475569]" />
               <span>y_H₂ (Reactant)</span>
             </button>
             <button
               onClick={() => setShowN2(!showN2)}
-              className={`flex items-center gap-1.5 ${showN2 ? 'text-[#00D8F6]' : 'text-slate-600 line-through'}`}
+              className={`flex items-center gap-1.5 cursor-pointer ${showN2 ? 'text-blue-700 font-semibold' : 'text-slate-400 line-through'}`}
             >
-              <span className="w-2.5 h-1 bg-[#00D8F6]" />
+              <span className="w-2.5 h-1 rounded bg-[#2563EB]" />
               <span>y_N₂ (Reactant)</span>
             </button>
           </div>
         )}
       </div>
 
-      {/* Synchronized Readout Bar at Selected Axial Position */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 text-xs font-mono">
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Axial Pos (z)</span>
-          <span className="font-bold text-slate-100">
+      {/* Dynamic & Responsive Metric Cards Bar (Resolves squishing at 100% zoom) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7 gap-3">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Axial Position
+          </span>
+          <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
             {(currentPoint.z * 1000).toFixed(1)} mm
           </span>
-          <span className="text-[9px] text-[#00D8F6] block">
+          <span className="text-[11px] font-mono text-blue-700 font-medium truncate">
             {(currentPoint.zNormalized * 100).toFixed(0)}% L
           </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Temperature T</span>
-          <span className="font-bold text-[#F59E0B]">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Temperature
+          </span>
+          <span className="text-base font-bold font-mono text-amber-700 my-0.5 truncate">
             {currentPoint.temperature.toFixed(1)} K
           </span>
-          <span className="text-[9px] text-slate-400 block">
-            ({(currentPoint.temperature - 273.15).toFixed(1)} °C)
+          <span className="text-[11px] font-mono text-slate-500 truncate">
+            {(currentPoint.temperature - 273.15).toFixed(1)} °C
           </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Pressure P</span>
-          <span className="font-bold text-[#38BDF8]">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Pressure
+          </span>
+          <span className="text-base font-bold font-mono text-sky-700 my-0.5 truncate">
             {(currentPoint.pressure / 1e5).toFixed(2)} bar
           </span>
-          <span className="text-[9px] text-slate-500 block">
+          <span className="text-[11px] font-mono text-slate-500 truncate">
             -{(currentPoint.deltaP / 1e3).toFixed(1)} kPa
           </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Conversion X_A</span>
-          <span className="font-bold text-[#10B981]">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Conversion
+          </span>
+          <span className="text-base font-bold font-mono text-emerald-700 my-0.5 truncate">
             {(currentPoint.conversion * 100).toFixed(1)}%
           </span>
-          <span className="text-[9px] text-slate-500 block">N₂ reacted</span>
+          <span className="text-[11px] font-mono text-slate-500 truncate">
+            N₂ reacted
+          </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Ammonia y_NH3</span>
-          <span className="font-bold text-[#F59E0B]">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Ammonia
+          </span>
+          <span className="text-base font-bold font-mono text-amber-700 my-0.5 truncate">
             {(currentPoint.yNH3 * 100).toFixed(2)}%
           </span>
-          <span className="text-[9px] text-slate-500 block">mol fraction</span>
+          <span className="text-[11px] font-mono text-slate-500 truncate">
+            mol fraction
+          </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Reaction Rate</span>
-          <span className="font-bold text-slate-100">
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Reaction Rate
+          </span>
+          <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
             {currentPoint.reactionRate.toExponential(2)}
           </span>
-          <span className="text-[9px] text-slate-500 block">mol/(kg·s)</span>
+          <span className="text-[11px] font-mono text-slate-500 truncate">
+            mol/(kg·s)
+          </span>
         </div>
 
-        <div className="p-2 bg-[#080A0D] border border-[#1E2533]">
-          <span className="text-[10px] text-slate-500 uppercase block">Effectiveness η</span>
+        <div className="bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-lg p-3 transition-colors flex flex-col justify-between">
+          <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider truncate">
+            Effectiveness
+          </span>
           <span
-            className={`font-bold ${
-              currentPoint.effectiveness >= 0.95 ? 'text-[#10B981]' : 'text-[#EF4444]'
+            className={`text-base font-bold font-mono my-0.5 truncate ${
+              currentPoint.effectiveness >= 0.95 ? 'text-emerald-700' : 'text-rose-700'
             }`}
           >
             {(currentPoint.effectiveness * 100).toFixed(1)}%
           </span>
-          <span className="text-[9px] text-slate-500 block">
+          <span className="text-[11px] font-mono text-slate-500 truncate">
             Φ = {currentPoint.weiszPrater.toFixed(3)}
           </span>
         </div>

@@ -96,23 +96,23 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
   return (
     <div className="space-y-4">
       {/* Top Banner */}
-      <div className="bg-[#0A0D12] border border-[#1E2533] p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30">
               PARAMETRIC SENSITIVITY SWEEPS
             </span>
           </div>
-          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-100 mt-1">
+          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 mt-1">
             Transport Limit Transition Boundaries & Safe Operating Windows
           </h2>
-          <p className="text-xs text-slate-400 mt-1 max-w-4xl leading-relaxed">
+          <p className="text-xs text-slate-500 mt-1 max-w-4xl leading-relaxed">
             Examine how catalyst pellet diameter, operating temperature, mass flow velocity, and inert bed dilution trigger transitions between intrinsic kinetics and transport-limited regimes.
           </p>
         </div>
 
         {/* Sweep Variable Selector Buttons */}
-        <div className="flex bg-[#141922] p-0.5 border border-[#1E2533] text-xs font-mono">
+        <div className="flex bg-[#141922] p-0.5 border border-slate-200/80 text-xs font-mono">
           {(Object.keys(sweepConfigs) as SweepVar[]).map((vKey) => (
             <button
               key={vKey}
@@ -123,7 +123,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
                 sweepVar === vKey
                   ? 'bg-[#00D8F6] text-[#080A0D]'
-                  : 'text-slate-400 hover:text-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {sweepConfigs[vKey].label.split(' ')[0]}
@@ -135,11 +135,11 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
       {/* Main Graph & Metric Readout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Interactive SVG Chart */}
-        <div className="lg:col-span-8 bg-[#0A0D12] border border-[#1E2533] p-4 space-y-4">
-          <div className="flex items-center justify-between border-b border-[#1E2533] pb-3">
+        <div className="lg:col-span-8 bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#00D8F6]" />
-              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
                 Pore Diffusion (Weisz-Prater Φ) & Pellet Effectiveness (η) vs {currentCfg.label}
               </h3>
             </div>
@@ -222,7 +222,7 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
           </div>
 
           {/* X Axis Labels */}
-          <div className="flex justify-between px-10 text-xs font-mono text-slate-500 border-t border-[#1E2533] pt-2">
+          <div className="flex justify-between px-10 text-xs font-mono text-slate-500 border-t border-slate-200/80 pt-2">
             <span>Min: {currentCfg.min * currentCfg.scale} {currentCfg.unit}</span>
             <span>Target: {(currentCfg.defaultTarget * currentCfg.scale).toFixed(2)} {currentCfg.unit}</span>
             <span>Max: {currentCfg.max * currentCfg.scale} {currentCfg.unit}</span>
@@ -230,9 +230,9 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
         </div>
 
         {/* Selected Evaluation Point Telemetry */}
-        <div className="lg:col-span-4 bg-[#0A0D12] border border-[#1E2533] p-4 space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 space-y-4 flex flex-col justify-between">
           <div className="space-y-3">
-            <div className="flex items-center justify-between border-b border-[#1E2533] pb-2">
+            <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
               <span className="text-[11px] font-mono uppercase text-slate-500 font-semibold">Hovered State:</span>
               <span className={`px-2 py-0.5 text-[10px] font-mono font-bold border ${
                 activePoint.overallStatus === 'VALID_INTRINSIC'
@@ -243,37 +243,37 @@ export const SensitivitySweep: React.FC<SensitivitySweepProps> = ({ baseInputs }
               </span>
             </div>
 
-            <div className="p-3 bg-[#141922] border border-[#1E2533] space-y-2 text-xs font-mono">
+            <div className="p-3 bg-[#141922] border border-slate-200/80 space-y-2 text-xs font-mono">
               <div className="flex justify-between">
-                <span className="text-slate-400">{currentCfg.label}:</span>
-                <span className="font-bold text-slate-200">{activePoint.scaledVal.toFixed(3)} {currentCfg.unit}</span>
+                <span className="text-slate-500">{currentCfg.label}:</span>
+                <span className="font-bold text-slate-800">{activePoint.scaledVal.toFixed(3)} {currentCfg.unit}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Weisz-Prater Modulus (Φ):</span>
+                <span className="text-slate-500">Weisz-Prater Modulus (Φ):</span>
                 <span className={`font-bold ${activePoint.weiszPass ? 'text-[#10B981]' : 'text-[#EF4444]'}`}>
                   {activePoint.weiszVal.toExponential(3)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Pellet Effectiveness (η):</span>
-                <span className="font-bold text-[#00D8F6]">{(activePoint.eta * 100).toFixed(1)}%</span>
+                <span className="text-slate-500">Pellet Effectiveness (η):</span>
+                <span className="font-bold text-blue-600">{(activePoint.eta * 100).toFixed(1)}%</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Ergun ΔP (Pressure Drop):</span>
-                <span className={`font-bold ${activePoint.deltaPPass ? 'text-slate-200' : 'text-[#EF4444]'}`}>
+                <span className="text-slate-500">Ergun ΔP (Pressure Drop):</span>
+                <span className={`font-bold ${activePoint.deltaPPass ? 'text-slate-800' : 'text-[#EF4444]'}`}>
                   {activePoint.deltaPVal.toFixed(0)} Pa
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Radial Centerline ΔT:</span>
-                <span className={`font-bold ${activePoint.deltaTradPass ? 'text-slate-200' : 'text-[#EF4444]'}`}>
+                <span className="text-slate-500">Radial Centerline ΔT:</span>
+                <span className={`font-bold ${activePoint.deltaTradPass ? 'text-slate-800' : 'text-[#EF4444]'}`}>
                   {activePoint.deltaTradVal.toFixed(3)} K
                 </span>
               </div>
             </div>
           </div>
 
-          <p className="text-xs text-slate-400 leading-relaxed bg-[#141922] p-3 border border-[#1E2533] font-mono text-[11px]">
+          <p className="text-xs text-slate-500 leading-relaxed bg-[#141922] p-3 border border-slate-200/80 font-mono text-[11px]">
             Hover along the chart points to inspect the critical bifurcation point where transport gradients exceed the 5% error tolerance threshold.
           </p>
         </div>

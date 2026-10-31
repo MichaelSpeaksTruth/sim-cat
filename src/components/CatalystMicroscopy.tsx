@@ -37,26 +37,26 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
   const intraHeatCriterion = criteria.find((c) => c.id === 'intraparticle_heat');
 
   return (
-    <div className="bg-[#0A0D12] border border-[#1E2533] p-5 flex flex-col space-y-5">
+    <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-5 flex flex-col space-y-5">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1E2533]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#141A24] border border-[#252E3E] text-[#00D8F6]">
+          <div className="p-2 bg-slate-100 border border-slate-300 text-blue-600">
             <ZoomIn className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
                 Catalyst Pellet Microscopy Laboratory
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30">
+              <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30">
                 dp = {dp_um.toFixed(0)} µm
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 bg-[#141A24] text-slate-400 border border-[#252E3E]">
+              <span className="text-[10px] font-mono px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-300">
                 Promoted Magnetite (K₂O-Al₂O₃-CaO)
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-0.5 font-sans">
+            <p className="text-xs text-slate-500 mt-0.5 font-sans">
               High-magnification transport phenomena inspection across stagnant boundary film, pellet surface, and intraparticle pore network.
             </p>
           </div>
@@ -66,7 +66,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="px-3 py-1.5 text-xs font-mono bg-[#141A24] hover:bg-[#1E2533] text-slate-300 border border-[#283244] transition-colors"
+              className="px-3 py-1.5 text-xs font-mono bg-slate-100 hover:bg-[#1E2533] text-slate-700 border border-[#283244] transition-colors"
             >
               Exit Microscopy View
             </button>
@@ -77,9 +77,9 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
       {/* Main Microscopy Workspace Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Interactive Pellet Cutaway Visualizer (SVG) */}
-        <div className="lg:col-span-7 bg-[#080A0D] border border-[#1E2533] p-4 flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-slate-50 rounded-lg border border-slate-200/80 p-4 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-3 text-xs font-mono">
-            <span className="text-slate-400 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <span className="text-slate-500 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
               <span className="w-2 h-2 bg-[#00D8F6]" />
               Pellet Radial Cross-Section Cutaway ($r = 0 \to R_p$)
             </span>
@@ -88,8 +88,8 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
                 onClick={() => setActiveLayer('film')}
                 className={`px-2 py-0.5 text-[10px] border ${
                   activeLayer === 'film'
-                    ? 'bg-[#141A24] text-[#00D8F6] border-[#00D8F6]/60'
-                    : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                    ? 'bg-slate-100 text-blue-600 border-blue-600/60'
+                    : 'text-slate-500 border-slate-200/80 hover:text-slate-800'
                 }`}
               >
                 Gas Film (δ_film)
@@ -98,8 +98,8 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
                 onClick={() => setActiveLayer('pore')}
                 className={`px-2 py-0.5 text-[10px] border ${
                   activeLayer === 'pore'
-                    ? 'bg-[#141A24] text-[#00D8F6] border-[#00D8F6]/60'
-                    : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                    ? 'bg-slate-100 text-blue-600 border-blue-600/60'
+                    : 'text-slate-500 border-slate-200/80 hover:text-slate-800'
                 }`}
               >
                 Pore Network (D_eff)
@@ -109,7 +109,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
                 className={`px-2 py-0.5 text-[10px] border ${
                   activeLayer === 'heat'
                     ? 'bg-[#F59E0B]/15 text-[#F59E0B] border-[#F59E0B]/60'
-                    : 'text-slate-400 border-[#1E2533] hover:text-slate-200'
+                    : 'text-slate-500 border-slate-200/80 hover:text-slate-800'
                 }`}
               >
                 Thermal Gradient (ΔT)
@@ -250,7 +250,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
             </svg>
           </div>
 
-          <div className="mt-3 p-2 bg-[#0C1017] border border-[#1A2230] text-[10px] font-mono text-slate-400 flex items-center justify-between">
+          <div className="mt-3 p-2 bg-[#0C1017] border border-[#1A2230] text-[10px] font-mono text-slate-500 flex items-center justify-between">
             <span>
               Pore diffusion model: Bosanquet combination of Fuller molecular ($D_{'{AB}'}$) and Knudsen ($D_K$) diffusion.
             </span>
@@ -261,9 +261,9 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
         {/* Right Column: Exact Numerical Transport Diagnostics & Effectiveness */}
         <div className="lg:col-span-5 space-y-3.5">
           {/* Effectiveness Factor & Thiele Modulus Card */}
-          <div className="bg-[#080A0D] border border-[#1E2533] p-4 space-y-3">
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-xs font-bold text-slate-200 uppercase tracking-wide">
+              <span className="font-mono text-xs font-bold text-slate-800 uppercase tracking-wide">
                 Intraparticle Effectiveness
               </span>
               <span
@@ -278,60 +278,60 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-              <div className="p-2 bg-[#0E131A] border border-[#1C2433]">
+              <div className="p-2 bg-slate-50 border border-[#1C2433]">
                 <span className="text-[10px] text-slate-500 block">Weisz-Prater Modulus</span>
-                <span className="font-bold text-slate-100 text-sm">
+                <span className="font-bold text-slate-900 text-sm">
                   {transport.thieleModulus ? Math.pow(transport.thieleModulus, 2).toFixed(4) : '0.0381'}
                 </span>
                 <span className="text-[10px] text-slate-500 block mt-0.5">Limit: &lt; 0.080</span>
               </div>
 
-              <div className="p-2 bg-[#0E131A] border border-[#1C2433]">
+              <div className="p-2 bg-slate-50 border border-[#1C2433]">
                 <span className="text-[10px] text-slate-500 block">Thiele Modulus (ϕ)</span>
-                <span className="font-bold text-slate-100 text-sm">
+                <span className="font-bold text-slate-900 text-sm">
                   {transport.thieleModulus.toFixed(3)}
                 </span>
                 <span className="text-[10px] text-slate-500 block mt-0.5">ϕ = sqrt(Φ)</span>
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
+            <p className="text-[11px] text-slate-500 font-sans leading-relaxed">
               When internal pore diffusion resistance is negligible ($\Phi &lt; 0.08$), the catalyst effectiveness factor $\eta &gt; 95\%$. Reactant molecules penetrate deeply to active iron centers without creating a starved catalyst core.
             </p>
           </div>
 
           {/* Microkinetics Transport Properties Grid */}
-          <div className="bg-[#080A0D] border border-[#1E2533] p-4 space-y-2.5">
-            <span className="font-mono text-xs font-bold text-slate-200 uppercase tracking-wide block mb-1">
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-4 space-y-2.5">
+            <span className="font-mono text-xs font-bold text-slate-800 uppercase tracking-wide block mb-1">
               Microscale Pellet Parameters
             </span>
 
             <div className="space-y-1.5 text-xs font-mono">
               <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
-                <span className="text-slate-400">Effective Pore Diffusivity (D_eff):</span>
-                <span className="text-slate-200">{inputs.effectiveDiffusivity.toExponential(3)} m²/s</span>
+                <span className="text-slate-500">Effective Pore Diffusivity (D_eff):</span>
+                <span className="text-slate-800">{inputs.effectiveDiffusivity.toExponential(3)} m²/s</span>
               </div>
 
               <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
-                <span className="text-slate-400">External Mass Transfer Coeff (k_g):</span>
-                <span className="text-slate-200">{transport.externalMassTransferCoeff.toFixed(4)} m/s</span>
+                <span className="text-slate-500">External Mass Transfer Coeff (k_g):</span>
+                <span className="text-slate-800">{transport.externalMassTransferCoeff.toFixed(4)} m/s</span>
               </div>
 
               <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
-                <span className="text-slate-400">Specific Surface Area (a_v):</span>
-                <span className="text-slate-200">{transport.specificSurfaceArea.toFixed(0)} m²/m³</span>
+                <span className="text-slate-500">Specific Surface Area (a_v):</span>
+                <span className="text-slate-800">{transport.specificSurfaceArea.toFixed(0)} m²/m³</span>
               </div>
 
               <div className="flex justify-between items-center py-1 border-b border-[#141B26]">
-                <span className="text-slate-400">Gas Boundary Film ΔT:</span>
-                <span className="text-[#00D8F6]">
+                <span className="text-slate-500">Gas Boundary Film ΔT:</span>
+                <span className="text-blue-600">
                   {(criteria.find(c => c.id === 'external_heat_transfer')?.calculatedValue || 0).toFixed(4)} K
                 </span>
               </div>
 
               <div className="flex justify-between items-center py-1">
-                <span className="text-slate-400">Intraparticle Thermal Drop ΔT_int:</span>
-                <span className="text-[#00D8F6]">
+                <span className="text-slate-500">Intraparticle Thermal Drop ΔT_int:</span>
+                <span className="text-blue-600">
                   {(criteria.find(c => c.id === 'intraparticle_heat')?.calculatedValue || 0).toFixed(5)} K
                 </span>
               </div>
@@ -344,7 +344,7 @@ export const CatalystMicroscopy: React.FC<CatalystMicroscopyProps> = ({
               <CheckCircle2 className="w-4 h-4" />
               <span>Intrinsic Kinetics Uncorrupted</span>
             </div>
-            <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+            <p className="text-[11px] text-slate-700 font-sans leading-relaxed">
               At pellet diameter d<sub>p</sub> = {dp_um.toFixed(0)} µm, both the Carberry film criterion (Ca &lt; 0.05/n) and the Weisz-Prater modulus (Φ &lt; 0.08) are strictly satisfied. The observed reaction rate r<sub>m</sub> = {inputs.reactionRate.toExponential(2)} mol/(kg·s) reflects genuine molecular kinetics.
             </p>
           </div>

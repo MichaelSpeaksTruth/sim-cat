@@ -134,7 +134,7 @@ export function App() {
   };
 
   return (
-    <div className="h-screen w-screen bg-[#080A0D] text-slate-100 flex flex-col font-sans overflow-hidden selection:bg-[#00D8F6]/25 selection:text-[#00D8F6]">
+    <div className="h-screen w-screen bg-slate-50 text-slate-900 flex flex-col font-sans overflow-hidden selection:bg-blue-500/20 selection:text-blue-700">
       {/* 1. Top Industrial Engineering Workstation Header */}
       <WorkstationHeader
         simulation={simulation}
@@ -149,23 +149,6 @@ export function App() {
         onOpenInspector={() => setIsInspectorOpen(!isInspectorOpen)}
         isInspectorOpen={isInspectorOpen}
       />
-
-      {/* Visible Research-Use Disclaimer Banner */}
-      <div className="bg-amber-950/40 border-b border-amber-500/30 px-4 py-1.5 flex items-center justify-between text-[11px] font-mono text-amber-200 select-none shrink-0 z-20">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <span className="px-1.5 py-0.5 bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 uppercase tracking-wide text-[10px] shrink-0">
-            RESEARCH PREVIEW
-          </span>
-          <span className="truncate">
-            SIM-CAT v1.0 (Rev 15) — For research, educational, and exploratory engineering analysis only. Industrial readiness not established.
-          </span>
-        </div>
-        <div className="hidden lg:flex items-center gap-3 text-[10px] text-amber-300/80 shrink-0">
-          <span>Status: Verified with operational limitations</span>
-          <span className="text-amber-500/40">•</span>
-          <span className="text-amber-300/90 font-medium">Do not use for commercial plant design or life-critical safety</span>
-        </div>
-      </div>
 
       {/* 2. Main Workstation Body: Navigation Rail + Central Canvas + Right Inspector */}
       <div className="flex flex-1 overflow-hidden">
@@ -185,7 +168,7 @@ export function App() {
         />
 
         {/* Central Dynamic Scientific Workspace */}
-        <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#080A0D] tech-grid-pattern">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-slate-50 tech-grid-pattern">
           {/* Modal / High-Magnification Pellet Inspection Override */}
           {showMicroscopyView ? (
             <CatalystMicroscopy
@@ -196,14 +179,14 @@ export function App() {
             <>
               {/* SECTION 1: OVERVIEW & 3D REACTOR */}
               {activeSection === 'overview' && (
-                <div className="space-y-4">
+                <div className="space-y-6 max-w-7xl mx-auto">
                   {/* Centerpiece 3D WebGL Fixed-Bed Reactor */}
                   <Reactor3D
                     simulation={simulation}
                     currentZNormalized={playbackState.currentZNormalized}
                     onZNormalizedChange={handleZNormalizedChange}
                     onSelectPellet={() => setShowMicroscopyView(true)}
-                    className="h-[460px]"
+                    className="h-[460px] lg:h-[500px]"
                   />
 
                   {/* Synchronized 1D Axial Profile Explorer */}
@@ -220,7 +203,7 @@ export function App() {
 
               {/* SECTION 2: REACTOR SETUP & GEOMETRY */}
               {activeSection === 'setup' && (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto">
                   <div className="lg:col-span-6 space-y-4">
                     <InputConsole
                       inputs={inputs}
@@ -243,21 +226,21 @@ export function App() {
 
               {/* SECTION 3: CATALYST STUDIO */}
               {activeSection === 'catalyst' && (
-                <div className="space-y-4">
-                  <div className="bg-[#0A0D12] border border-[#1E2533] p-4 flex items-center justify-between">
+                <div className="space-y-6 max-w-7xl mx-auto">
+                  <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs p-4 flex items-center justify-between">
                     <div>
-                      <h3 className="text-xs font-mono font-bold uppercase text-slate-100 flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-[#00D8F6]" />
+                      <h3 className="text-xs font-mono font-bold uppercase text-slate-800 flex items-center gap-2">
+                        <Layers className="w-4 h-4 text-blue-600" />
                         <span>Catalyst Studio & Pellet Morphology</span>
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-500 mt-0.5">
                         Promoted Magnetite (K₂O-Al₂O₃-CaO) active iron crystallites.
                       </p>
                     </div>
 
                     <button
                       onClick={() => setShowMicroscopyView(true)}
-                      className="px-3 py-1.5 bg-[#00D8F6] text-[#080A0D] font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
                     >
                       <ZoomIn className="w-3.5 h-3.5" />
                       <span>Inspect Microscopic Pore Cutaway</span>

@@ -154,29 +154,29 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
   return (
     <div className="space-y-4">
       {/* Top Header & Tab Switching */}
-      <div className="bg-[#0A0D12] border border-[#1E2533] p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30">
               FORMULA AUDIT & CUSTOM CRITERIA STUDIO
             </span>
           </div>
-          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-100 mt-1">
+          <h2 className="text-sm font-mono font-bold uppercase tracking-wider text-slate-900 mt-1">
             Audited Kinetic Diagnostic Equations & Custom Formula Authoring
           </h2>
-          <p className="text-xs text-slate-400 mt-1 max-w-4xl leading-relaxed">
+          <p className="text-xs text-slate-500 mt-1 max-w-4xl leading-relaxed">
             Audit the mathematical and dimensional integrity of all 9 Eurokin criteria, or author custom algebraic diagnostic rules with live execution against simulation state.
           </p>
         </div>
 
         {/* Tab Controls */}
-        <div className="flex bg-[#141922] p-0.5 border border-[#1E2533] text-xs font-mono">
+        <div className="flex bg-[#141922] p-0.5 border border-slate-200/80 text-xs font-mono">
           <button
             onClick={() => setActiveTab('custom_builder')}
             className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
               activeTab === 'custom_builder'
                 ? 'bg-[#00D8F6] text-[#080A0D]'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
             Custom Formula Builder ({customCriteria.length})
@@ -186,7 +186,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             className={`px-3 py-1 font-bold uppercase tracking-wider transition-all ${
               activeTab === 'formula_audit'
                 ? 'bg-[#00D8F6] text-[#080A0D]'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-slate-500 hover:text-slate-800'
             }`}
           >
             Formal 9-Criteria Audit
@@ -197,11 +197,11 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
       {activeTab === 'custom_builder' && (
         <div className="space-y-4">
           {/* Custom Formula Creator Form */}
-          <div className="bg-[#0A0D12] border border-[#1E2533] p-4 space-y-4">
-            <div className="flex items-center justify-between border-b border-[#1E2533] pb-3">
+          <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
               <div className="flex items-center gap-2">
-                <Code2 className="w-4 h-4 text-[#00D8F6]" />
-                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+                <Code2 className="w-4 h-4 text-blue-600" />
+                <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
                   Define New Custom Diagnostic Rule
                 </h3>
               </div>
@@ -226,7 +226,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                   description: 'Ultra-strict isothermal film jump limit for ultra-sensitive microkinetics.',
                   formulaLatex: String.raw`\Delta T_{\text{film}} < 0.50\,\text{K}`,
                 })}
-                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-300 border border-[#1E2533] font-mono text-[11px]"
+                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-700 border border-slate-200/80 font-mono text-[11px]"
               >
                 + 1% Film Jump Guard
               </button>
@@ -243,7 +243,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                   description: 'Hard ceiling on radial centerline temperature rise to prevent catalyst sintering.',
                   formulaLatex: String.raw`\Delta T_{\text{rad}} < 1.50\,\text{K}`,
                 })}
-                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-300 border border-[#1E2533] font-mono text-[11px]"
+                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-700 border border-slate-200/80 font-mono text-[11px]"
               >
                 + Max 1.5 K Radial Hotspot
               </button>
@@ -260,7 +260,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                   description: 'Restricts total bed pressure loss to under 5% for precise isobaric kinetics.',
                   formulaLatex: String.raw`\frac{\Delta P}{P_{\text{tot}}} < 0.05`,
                 })}
-                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-300 border border-[#1E2533] font-mono text-[11px]"
+                className="px-2.5 py-1 bg-[#141922] hover:bg-[#1E2533] text-slate-700 border border-slate-200/80 font-mono text-[11px]"
               >
                 + ΔP / P &lt; 5% Isobaric Guard
               </button>
@@ -269,22 +269,22 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             {/* Inputs Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1">
-                <label className="text-[11px] font-mono text-slate-400 uppercase">Rule / Criterion Name</label>
+                <label className="text-[11px] font-mono text-slate-500 uppercase">Rule / Criterion Name</label>
                 <input
                   type="text"
                   value={newCriterion.name || ''}
                   onChange={(e) => setNewCriterion({ ...newCriterion, name: e.target.value })}
-                  className="w-full bg-[#141922] border border-[#1E2533] px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                  className="w-full bg-[#141922] border border-slate-200/80 px-3 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                   placeholder="e.g. Strict Isothermal Film Jump"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-mono text-slate-400 uppercase">Category</label>
+                <label className="text-[11px] font-mono text-slate-500 uppercase">Category</label>
                 <select
                   value={newCriterion.category}
                   onChange={(e) => setNewCriterion({ ...newCriterion, category: e.target.value as any })}
-                  className="w-full bg-[#141922] border border-[#1E2533] px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                  className="w-full bg-[#141922] border border-slate-200/80 px-3 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                 >
                   <option value="Fluid Dynamics">Fluid Dynamics</option>
                   <option value="Mass Transfer">Mass Transfer</option>
@@ -296,37 +296,37 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-mono text-slate-400 uppercase">LaTeX Math Symbol</label>
+                <label className="text-[11px] font-mono text-slate-500 uppercase">LaTeX Math Symbol</label>
                 <input
                   type="text"
                   value={newCriterion.symbol || ''}
                   onChange={(e) => setNewCriterion({ ...newCriterion, symbol: e.target.value })}
-                  className="w-full bg-[#141922] border border-[#1E2533] px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                  className="w-full bg-[#141922] border border-slate-200/80 px-3 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                   placeholder="e.g. \Delta T_{film,strict}"
                 />
               </div>
 
               <div className="space-y-1 md:col-span-2">
-                <label className="text-[11px] font-mono text-slate-400 uppercase">
+                <label className="text-[11px] font-mono text-slate-500 uppercase">
                   Algebraic Expression (JavaScript Syntax)
                 </label>
                 <input
                   type="text"
                   value={newCriterion.expression || ''}
                   onChange={(e) => setNewCriterion({ ...newCriterion, expression: e.target.value })}
-                  className="w-full bg-[#141922] border border-[#1E2533] px-3 py-1.5 text-xs font-mono text-[#00D8F6] focus:outline-none focus:border-[#00D8F6] font-bold"
+                  className="w-full bg-[#141922] border border-slate-200/80 px-3 py-1.5 text-xs font-mono text-blue-600 focus:outline-none focus:border-blue-600 font-bold"
                   placeholder="e.g. deltaTfilm or (pressureDrop / P)"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="space-y-1">
-                  <label className="text-[11px] font-mono text-slate-400 uppercase">Operator & Limit</label>
+                  <label className="text-[11px] font-mono text-slate-500 uppercase">Operator & Limit</label>
                   <div className="flex gap-1.5">
                     <select
                       value={newCriterion.operator}
                       onChange={(e) => setNewCriterion({ ...newCriterion, operator: e.target.value as any })}
-                      className="w-16 bg-[#141922] border border-[#1E2533] px-2 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                      className="w-16 bg-[#141922] border border-slate-200/80 px-2 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                     >
                       <option value="<">&lt;</option>
                       <option value="<=">&le;</option>
@@ -338,18 +338,18 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                       step="any"
                       value={newCriterion.limitValue ?? 0}
                       onChange={(e) => setNewCriterion({ ...newCriterion, limitValue: parseFloat(e.target.value) })}
-                      className="w-full bg-[#141922] border border-[#1E2533] px-2 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                      className="w-full bg-[#141922] border border-slate-200/80 px-2 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-[11px] font-mono text-slate-400 uppercase">Unit</label>
+                  <label className="text-[11px] font-mono text-slate-500 uppercase">Unit</label>
                   <input
                     type="text"
                     value={newCriterion.unit || ''}
                     onChange={(e) => setNewCriterion({ ...newCriterion, unit: e.target.value })}
-                    className="w-full bg-[#141922] border border-[#1E2533] px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+                    className="w-full bg-[#141922] border border-slate-200/80 px-3 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
                     placeholder="e.g. K, Pa, [-]"
                   />
                 </div>
@@ -357,12 +357,12 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             </div>
 
             {/* Test and Add Controls */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#1E2533]">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={handleTestExpression}
-                  className="px-3.5 py-1.5 bg-[#141922] hover:bg-[#1E2533] text-slate-200 text-xs font-mono font-semibold border border-[#1E2533] transition-colors"
+                  className="px-3.5 py-1.5 bg-[#141922] hover:bg-[#1E2533] text-slate-800 text-xs font-mono font-semibold border border-slate-200/80 transition-colors"
                 >
                   Evaluate Live Expression
                 </button>
@@ -397,15 +397,15 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
             </div>
 
             {/* Available Scope Cheat-Sheet */}
-            <details className="text-xs text-slate-400 pt-1">
-              <summary className="cursor-pointer font-mono font-semibold text-slate-300 hover:text-slate-100">
+            <details className="text-xs text-slate-500 pt-1">
+              <summary className="cursor-pointer font-mono font-semibold text-slate-700 hover:text-slate-900">
                 Show Available Simulation Variables & Scope ({availableVariables.length} parameters)
               </summary>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 pt-2 text-[11px] font-mono">
                 {availableVariables.map((v) => (
-                  <div key={v.name} className="p-1.5 bg-[#141922] border border-[#1E2533]">
-                    <span className="font-bold text-[#00D8F6]">{v.name}</span>
-                    <span className="text-slate-400 block text-[10px] truncate">{v.desc}</span>
+                  <div key={v.name} className="p-1.5 bg-[#141922] border border-slate-200/80">
+                    <span className="font-bold text-blue-600">{v.name}</span>
+                    <span className="text-slate-500 block text-[10px] truncate">{v.desc}</span>
                   </div>
                 ))}
               </div>
@@ -413,9 +413,9 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
           </div>
 
           {/* Active Custom Criteria List */}
-          <div className="bg-[#0A0D12] border border-[#1E2533] overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#1E2533] bg-[#141922] flex items-center justify-between">
-              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+          <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 overflow-hidden">
+            <div className="px-4 py-3 border-b border-slate-200/80 bg-[#141922] flex items-center justify-between">
+              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
                 Active Custom Diagnostic Rules ({customCriteria.length})
               </h3>
               <span className="text-[11px] font-mono text-slate-500">
@@ -433,22 +433,22 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                   <div key={crit.id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:bg-[#141922]/50">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono px-2 py-0.5 bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30 font-semibold">
+                        <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30 font-semibold">
                           {crit.category}
                         </span>
-                        <h4 className="font-mono text-xs font-bold text-slate-200">
+                        <h4 className="font-mono text-xs font-bold text-slate-800">
                           {crit.name}
                         </h4>
-                        <span className="text-xs font-mono text-slate-400">
+                        <span className="text-xs font-mono text-slate-500">
                           (<MathView math={crit.symbol} />)
                         </span>
                       </div>
-                      <div className="text-xs font-mono text-slate-300 flex items-center gap-2">
-                        <span className="bg-[#141922] px-2 py-0.5 border border-[#1E2533]">
+                      <div className="text-xs font-mono text-slate-700 flex items-center gap-2">
+                        <span className="bg-[#141922] px-2 py-0.5 border border-slate-200/80">
                           Expression: {crit.expression} {crit.operator} {crit.limitValue} {crit.unit}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-400">
+                      <p className="text-[11px] text-slate-500">
                         {crit.description}
                       </p>
                     </div>
@@ -459,7 +459,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                         className={`p-1.5 text-xs font-mono flex items-center gap-1 border ${
                           crit.enabled
                             ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30'
-                            : 'bg-[#141922] text-slate-500 border-[#1E2533]'
+                            : 'bg-[#141922] text-slate-500 border-slate-200/80'
                         }`}
                         title={crit.enabled ? 'Enabled in simulation' : 'Disabled'}
                       >
@@ -484,11 +484,11 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
       )}
 
       {activeTab === 'formula_audit' && (
-        <div className="bg-[#0A0D12] border border-[#1E2533] p-4 space-y-4">
-          <div className="flex items-center justify-between border-b border-[#1E2533] pb-3">
+        <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-4 space-y-4">
+          <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-[#00D8F6]" />
-              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100">
+              <BookOpen className="w-4 h-4 text-blue-600" />
+              <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900">
                 Formal Mathematical & Dimensional Audit (The 9 Core Criteria)
               </h3>
             </div>
@@ -499,13 +499,13 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
 
           <div className="space-y-4">
             {simulation.criteria.filter(c => !c.isCustom).map((c, idx) => (
-              <div key={c.id} className="p-4 border border-[#1E2533] bg-[#141922] space-y-2">
+              <div key={c.id} className="p-4 border border-slate-200/80 bg-[#141922] space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30 font-bold font-mono text-xs flex items-center justify-center">
+                    <span className="w-5 h-5 bg-blue-50 text-blue-700 text-blue-600 border border-blue-600/30 font-bold font-mono text-xs flex items-center justify-center">
                       {idx + 1}
                     </span>
-                    <h4 className="font-mono text-xs font-bold text-slate-200">
+                    <h4 className="font-mono text-xs font-bold text-slate-800">
                       {c.name}
                     </h4>
                     <span className="text-[11px] font-mono text-slate-500">
@@ -520,17 +520,17 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                 </div>
 
                 {/* Mathematical Formulation */}
-                <div className="p-2.5 bg-[#080A0D] border border-[#1E2533] text-center font-mono">
+                <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200/80 text-center font-mono">
                   <MathView math={c.formulaLatex} displayMode />
                 </div>
 
                 {/* Live substitution */}
-                <div className="text-xs font-mono text-slate-300 bg-[#080A0D] p-2 border border-[#1E2533] overflow-x-auto">
+                <div className="text-xs font-mono text-slate-700 bg-slate-50 rounded-lg p-2 border border-slate-200/80 overflow-x-auto">
                   <span className="text-slate-500 font-semibold block text-[10px] uppercase tracking-wider">Live Substitution with Active Parameters:</span>
                   <MathView math={c.substitutionLatex} />
                 </div>
 
-                <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs text-slate-500 leading-relaxed font-sans">
                   {c.description}
                 </p>
               </div>

@@ -122,18 +122,18 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
   const deltaEta = (resultB.transport.effectivenessFactor - resultA.transport.effectivenessFactor) * 100;
 
   return (
-    <div className="bg-[#0A0D12] border border-[#1E2533] p-5 space-y-5">
+    <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-5 space-y-5">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1E2533]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
         <div className="flex items-center gap-2.5">
-          <div className="p-1.5 bg-[#141A24] border border-[#252E3E] text-[#00D8F6]">
+          <div className="p-1.5 bg-slate-100 border border-slate-300 text-blue-600">
             <Split className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100 flex items-center gap-2">
+            <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-2">
               <span>Dual-Catalyst Performance Comparison Workspace</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5 font-sans">
+            <p className="text-xs text-slate-500 mt-0.5 font-sans">
               Compare kinetic turnover, intraparticle effectiveness factor, hotspot formation, and transport limitations under identical reactor operating conditions (T, P, mass flow).
             </p>
           </div>
@@ -141,7 +141,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
 
         <div className="flex items-center gap-2 text-xs font-mono">
           <span className="text-slate-500">Operating Regime:</span>
-          <span className="px-2 py-0.5 bg-[#141A24] text-slate-300 border border-[#252E3E]">
+          <span className="px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-300">
             {(baseInputs.totalPressure / 1e5).toFixed(0)} bar / {(baseInputs.temperature - 273.15).toFixed(0)} °C
           </span>
         </div>
@@ -150,9 +150,9 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
       {/* Catalyst Selector Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Catalyst A Selector */}
-        <div className="bg-[#080A0D] border border-[#1E2533] p-3.5 space-y-2">
+        <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-3.5 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase font-bold text-[#00D8F6] flex items-center gap-1.5">
+            <span className="text-[11px] font-mono uppercase font-bold text-blue-600 flex items-center gap-1.5">
               <span className="w-2 h-2 bg-[#00D8F6]" />
               Configuration A (Reference)
             </span>
@@ -164,7 +164,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
           <select
             value={selectedCatAId}
             onChange={(e) => setSelectedCatAId(e.target.value)}
-            className="w-full bg-[#12161E] border border-[#252E3E] px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+            className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
           >
             {catalystPresets.map((c) => (
               <option key={c.id} value={c.id}>
@@ -172,11 +172,11 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
               </option>
             ))}
           </select>
-          <p className="text-[11px] text-slate-400 font-sans">{catA.description}</p>
+          <p className="text-[11px] text-slate-500 font-sans">{catA.description}</p>
         </div>
 
         {/* Catalyst B Selector */}
-        <div className="bg-[#080A0D] border border-[#1E2533] p-3.5 space-y-2">
+        <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-3.5 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase font-bold text-[#F59E0B] flex items-center gap-1.5">
               <span className="w-2 h-2 bg-[#F59E0B]" />
@@ -190,7 +190,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
           <select
             value={selectedCatBId}
             onChange={(e) => setSelectedCatBId(e.target.value)}
-            className="w-full bg-[#12161E] border border-[#252E3E] px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#F59E0B]"
+            className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-[#F59E0B]"
           >
             {catalystPresets.map((c) => (
               <option key={c.id} value={c.id}>
@@ -198,24 +198,24 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
               </option>
             ))}
           </select>
-          <p className="text-[11px] text-slate-400 font-sans">{catB.description}</p>
+          <p className="text-[11px] text-slate-500 font-sans">{catB.description}</p>
         </div>
       </div>
 
       {/* Comparative Metrics Table with Delta Badges */}
-      <div className="border border-[#1E2533] overflow-x-auto">
+      <div className="border border-slate-200/80 overflow-x-auto">
         <table className="w-full text-left text-xs font-mono">
-          <thead className="bg-[#0D121A] border-b border-[#1E2533] text-slate-400 uppercase text-[10px]">
+          <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
             <tr>
               <th className="p-3">Performance Metric</th>
-              <th className="p-3 text-[#00D8F6]">Catalyst A ({catA.name.split(' (')[0]})</th>
+              <th className="p-3 text-blue-600">Catalyst A ({catA.name.split(' (')[0]})</th>
               <th className="p-3 text-[#F59E0B]">Catalyst B ({catB.name.split(' (')[0]})</th>
               <th className="p-3 text-right">Differential Δ (B - A)</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#171E2A] text-slate-200">
+          <tbody className="divide-y divide-[#171E2A] text-slate-800">
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Ammonia Production Rate</td>
+              <td className="p-3 text-slate-500 font-medium">Ammonia Production Rate</td>
               <td className="p-3 font-bold">{resultA.ammoniaProductionRateKgH.toFixed(3)} kg/h</td>
               <td className="p-3 font-bold">{resultB.ammoniaProductionRateKgH.toFixed(3)} kg/h</td>
               <td className="p-3 text-right">
@@ -232,7 +232,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
             </tr>
 
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Nitrogen Conversion (X_N2)</td>
+              <td className="p-3 text-slate-500 font-medium">Nitrogen Conversion (X_N2)</td>
               <td className="p-3">{(resultA.outletConversion * 100).toFixed(2)}%</td>
               <td className="p-3">{(resultB.outletConversion * 100).toFixed(2)}%</td>
               <td className="p-3 text-right">
@@ -249,18 +249,18 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
             </tr>
 
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Pellet Effectiveness Factor (η)</td>
+              <td className="p-3 text-slate-500 font-medium">Pellet Effectiveness Factor (η)</td>
               <td className="p-3">{(resultA.transport.effectivenessFactor * 100).toFixed(1)}%</td>
               <td className="p-3">{(resultB.transport.effectivenessFactor * 100).toFixed(1)}%</td>
               <td className="p-3 text-right">
-                <span className="px-2 py-0.5 text-[10px] border bg-[#141A24] text-slate-300 border-[#252E3E]">
+                <span className="px-2 py-0.5 text-[10px] border bg-slate-100 text-slate-700 border-slate-300">
                   {deltaEta >= 0 ? '+' : ''}{deltaEta.toFixed(1)}%
                 </span>
               </td>
             </tr>
 
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Peak Bed Temperature (T_max)</td>
+              <td className="p-3 text-slate-500 font-medium">Peak Bed Temperature (T_max)</td>
               <td className="p-3">{resultA.maxTemperature.toFixed(1)} K</td>
               <td className="p-3">{resultB.maxTemperature.toFixed(1)} K</td>
               <td className="p-3 text-right">
@@ -268,7 +268,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
                   className={`px-2 py-0.5 text-[10px] border ${
                     Math.abs(deltaMaxT) > 20
                       ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
-                      : 'bg-[#141A24] text-slate-300 border-[#252E3E]'
+                      : 'bg-slate-100 text-slate-700 border-slate-300'
                   }`}
                 >
                   {deltaMaxT >= 0 ? '+' : ''}{deltaMaxT.toFixed(1)} K
@@ -277,7 +277,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
             </tr>
 
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Total Bed Pressure Drop (ΔP)</td>
+              <td className="p-3 text-slate-500 font-medium">Total Bed Pressure Drop (ΔP)</td>
               <td className="p-3">{(resultA.totalDeltaP / 1e3).toFixed(1)} kPa</td>
               <td className="p-3">{(resultB.totalDeltaP / 1e3).toFixed(1)} kPa</td>
               <td className="p-3 text-right">
@@ -285,7 +285,7 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
                   className={`px-2 py-0.5 text-[10px] border ${
                     deltaDeltaP > 5000
                       ? 'bg-[#EF4444]/10 text-[#EF4444] border-[#EF4444]/30'
-                      : 'bg-[#141A24] text-slate-300 border-[#252E3E]'
+                      : 'bg-slate-100 text-slate-700 border-slate-300'
                   }`}
                 >
                   {deltaDeltaP >= 0 ? '+' : ''}{(deltaDeltaP / 1e3).toFixed(1)} kPa
@@ -294,15 +294,15 @@ export const CatalystComparison: React.FC<CatalystComparisonProps> = ({
             </tr>
 
             <tr>
-              <td className="p-3 text-slate-400 font-medium">Eurokin Criteria Passed</td>
-              <td className="p-3 font-bold text-[#00D8F6]">
+              <td className="p-3 text-slate-500 font-medium">Eurokin Criteria Passed</td>
+              <td className="p-3 font-bold text-blue-600">
                 {resultA.passedCount} / {resultA.totalCount} Pass
               </td>
               <td className="p-3 font-bold text-[#F59E0B]">
                 {resultB.passedCount} / {resultB.totalCount} Pass
               </td>
               <td className="p-3 text-right">
-                <span className="px-2 py-0.5 text-[10px] border bg-[#141A24] text-slate-300 border-[#252E3E]">
+                <span className="px-2 py-0.5 text-[10px] border bg-slate-100 text-slate-700 border-slate-300">
                   Δ {resultB.passedCount - resultA.passedCount} checks
                 </span>
               </td>

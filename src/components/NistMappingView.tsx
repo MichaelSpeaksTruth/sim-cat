@@ -186,22 +186,22 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
     : provenanceRows.filter(r => r.status === provenanceFilter);
 
   return (
-    <div className="bg-[#0A0D12] border border-[#1E2533] p-5 space-y-5">
+    <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 p-5 space-y-5">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1E2533]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#00D8F6]/10 text-[#00D8F6] border border-[#00D8F6]/30">
+            <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#00D8F6]/10 text-blue-600 border border-blue-600/30">
               NIST CHEMISTRY WEBBOOK (SRD 69) & PR-EOS
             </span>
             <span className="text-xs text-slate-500 font-mono">
               0.5 N₂ + 1.5 H₂ ⇌ NH₃
             </span>
           </div>
-          <h2 className="text-sm font-bold text-slate-100 mt-1 uppercase font-mono tracking-wide">
+          <h2 className="text-sm font-bold text-slate-900 mt-1 uppercase font-mono tracking-wide">
             Thermophysical, Reaction Kinetics & Provenance Registry
           </h2>
-          <p className="text-xs text-slate-400 mt-1 max-w-4xl leading-relaxed font-sans">
+          <p className="text-xs text-slate-500 mt-1 max-w-4xl leading-relaxed font-sans">
             Authoritative thermodynamic properties, Peng-Robinson (1976) real-gas compressibility Z(T,P), Dyson & Baddour industrial kinetics, and complete provenance metadata directly traceable to NIST Standard Reference Database 69.
           </p>
         </div>
@@ -209,7 +209,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleExportProvenanceSnapshot}
-            className="flex items-center gap-2 px-3 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[#141922] hover:bg-[#1E2533] text-slate-200 border border-[#1E2533] transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-xs font-mono font-bold uppercase tracking-wider bg-[#141922] hover:bg-[#1E2533] text-slate-800 border border-slate-200/80 transition-colors"
           >
             {snapshotExported ? (
               <>
@@ -218,7 +218,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               </>
             ) : (
               <>
-                <Download className="w-3.5 h-3.5 text-[#00D8F6]" />
+                <Download className="w-3.5 h-3.5 text-blue-600" />
                 <span>Export Provenance JSON</span>
               </>
             )}
@@ -229,7 +229,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
             className={`flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider border transition-all ${
               appliedNotice
                 ? 'bg-[#10B981] text-[#080A0D] border-[#10B981]'
-                : 'bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] border-[#00D8F6]'
+                : 'bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] border-blue-600'
             }`}
           >
             {appliedNotice ? (
@@ -248,13 +248,13 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       </div>
 
       {/* View Switcher Tabs */}
-      <div className="flex bg-[#07090D] border border-[#1E2533] text-xs font-mono max-w-fit">
+      <div className="flex bg-[#07090D] border border-slate-200/80 text-xs font-mono max-w-fit">
         <button
           onClick={() => setActiveTab('thermophysics')}
           className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
             activeTab === 'thermophysics'
-              ? 'bg-[#141A24] text-[#00D8F6] font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
+              : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <Database className="w-3.5 h-3.5" />
@@ -265,8 +265,8 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           onClick={() => setActiveTab('kinetics')}
           className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
             activeTab === 'kinetics'
-              ? 'bg-[#141A24] text-[#00D8F6] font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
+              : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <Zap className="w-3.5 h-3.5" />
@@ -277,8 +277,8 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           onClick={() => setActiveTab('provenance')}
           className={`flex items-center gap-1.5 px-4 py-2 transition-all ${
             activeTab === 'provenance'
-              ? 'bg-[#141A24] text-[#00D8F6] font-bold border-b-2 border-b-[#00D8F6]'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-slate-100 text-blue-600 font-bold border-b-2 border-b-[#00D8F6]'
+              : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <ShieldCheck className="w-3.5 h-3.5" />
@@ -287,11 +287,11 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       </div>
 
       {/* Operating State Controller */}
-      <div className="bg-[#080A0D] border border-[#1E2533] p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-[#1E2533] pb-2 text-xs font-mono">
+      <div className="bg-[#080A0D] border border-slate-200/80 p-4 space-y-3">
+        <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-xs font-mono">
           <div className="flex items-center gap-2">
-            <Gauge className="w-4 h-4 text-[#00D8F6]" />
-            <h3 className="font-bold text-slate-100 uppercase tracking-wide">
+            <Gauge className="w-4 h-4 text-blue-600" />
+            <h3 className="font-bold text-slate-900 uppercase tracking-wide">
               NIST Process Conditions Controller & Real-Gas PR-EOS
             </h3>
           </div>
@@ -304,7 +304,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           {/* Temperature Slider */}
           <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-slate-400">Temperature (T)</span>
+              <span className="text-slate-500">Temperature (T)</span>
               <span className="text-[#F59E0B] font-bold">{testTemp.toFixed(1)} K ({(testTemp - 273.15).toFixed(1)} °C)</span>
             </div>
             <input
@@ -326,7 +326,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           {/* Pressure Slider */}
           <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
             <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-slate-400">Total Pressure (P)</span>
+              <span className="text-slate-500">Total Pressure (P)</span>
               <span className="text-[#38BDF8] font-bold">{(testPressure / 1e5).toFixed(1)} bar</span>
             </div>
             <input
@@ -347,13 +347,13 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
 
           {/* Bulk Gas Selector */}
           <div className="space-y-1.5 bg-[#0E131A] p-3 border border-[#1C2533]">
-            <label className="text-xs text-slate-400 block font-mono">
+            <label className="text-xs text-slate-500 block font-mono">
               Feed Composition & Inerts
             </label>
             <select
               value={testBulkGas}
               onChange={(e) => setTestBulkGas(e.target.value as BulkGasType)}
-              className="w-full bg-[#12161E] border border-[#252E3E] px-2.5 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-[#00D8F6]"
+              className="w-full bg-slate-50 border border-slate-300 px-2.5 py-1.5 text-xs font-mono text-slate-800 focus:outline-none focus:border-blue-600"
             >
               {Object.values(BULK_GAS_CONFIGS).map((cfg) => (
                 <option key={cfg.id} value={cfg.id}>
@@ -373,49 +373,49 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
         <div className="space-y-5">
           {/* Calculated Output Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono">
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Mean Molar Mass</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {(nistCalculated.molarMassKgMol * 1000).toFixed(3)} g/mol
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">NIST SRD 69</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Real Gas Density</span>
-              <span className="text-sm font-bold text-[#00D8F6]">
+              <span className="text-sm font-bold text-blue-600">
                 {prState.densityKgM3.toFixed(3)} kg/m³
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Peng-Robinson (Z = {prState.compressibilityFactorZ.toFixed(3)})</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Heat Capacity (c_p)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistCalculated.heatCapacity.toFixed(1)} J/(kg·K)
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Shomate Polynomial</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Gas Viscosity (μ_G)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {(nistCalculated.viscosity * 1e6).toFixed(2)} µPa·s
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Wilke Formulation</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Conductivity (λ_G)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistCalculated.thermalConductivity.toFixed(4)} W/(m·K)
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Mason & Saxena</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Reaction Enthalpy</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {(nistCalculated.reactionEnthalpy / 1000).toFixed(2)} kJ/mol
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Kirchhoff Integration</span>
@@ -423,9 +423,9 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           </div>
 
           {/* Detailed Species Database Table */}
-          <div className="border border-[#1E2533] overflow-x-auto">
+          <div className="border border-slate-200/80 overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0D121A] border-b border-[#1E2533] text-slate-400 uppercase text-[10px]">
+              <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px]">
                 <tr>
                   <th className="p-3">Species</th>
                   <th className="p-3">Formula & CAS</th>
@@ -437,14 +437,14 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                   <th className="p-3">NIST Source</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#171E2A] text-slate-200">
+              <tbody className="divide-y divide-[#171E2A] text-slate-800">
                 {allSpeciesKeys.map((k) => {
                   const sub = NIST_SPECIES_REGISTRY[k];
                   return (
                     <tr key={sub.casNumber} className="hover:bg-[#0E131A]">
-                      <td className="p-3 font-bold text-slate-100 font-sans">{sub.name}</td>
-                      <td className="p-3 text-slate-400">
-                        <span className="font-bold text-[#00D8F6]">{sub.chemicalFormula}</span> [{sub.casNumber}]
+                      <td className="p-3 font-bold text-slate-900 font-sans">{sub.name}</td>
+                      <td className="p-3 text-slate-500">
+                        <span className="font-bold text-blue-600">{sub.chemicalFormula}</span> [{sub.casNumber}]
                       </td>
                       <td className="p-3">{(sub.molarMass.value * 1000).toFixed(3)} g/mol</td>
                       <td className="p-3">{sub.criticalTemperature.value.toFixed(1)} K / {(sub.criticalPressure.value / 1e5).toFixed(1)} bar</td>
@@ -456,7 +456,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                           href={sub.webBookUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-[#00D8F6] hover:underline flex items-center gap-1"
+                          className="text-blue-600 hover:underline flex items-center gap-1"
                         >
                           <span>WebBook</span>
                           <ExternalLink className="w-3 h-3" />
@@ -475,47 +475,47 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {activeTab === 'kinetics' && (
         <div className="space-y-5">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono">
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Intrinsic Rate (r_m)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistKinetics.reactionRate.toExponential(3)}
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">mol/(kg-cat·s)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Activation Energy</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {(nistKinetics.activationEnergy / 1000).toFixed(1)} kJ/mol
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Promoted Fe Catalyst</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Apparent Order (n)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistKinetics.reactionOrder.toFixed(1)}
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">Temkin Pseudo-Order</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Synthesis Const (k₁)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistKinetics.rateConstantK1.toExponential(2)}
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">kmol/(m³·h·atm)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Equilibrium K_p(T)</span>
-              <span className="text-sm font-bold text-slate-100">
+              <span className="text-sm font-bold text-slate-900">
                 {nistKinetics.equilibriumConstantKp.toExponential(2)}
               </span>
               <span className="text-[9px] text-slate-500 block mt-0.5">atm⁻¹ (NIST Gibbs)</span>
             </div>
 
-            <div className="p-3 bg-[#080A0D] border border-[#1E2533]">
+            <div className="p-3 bg-[#080A0D] border border-slate-200/80">
               <span className="text-[10px] text-slate-500 block uppercase">Equilibrium X_eq</span>
               <span className="text-sm font-bold text-[#10B981]">
                 {(nistKinetics.equilibriumConversionXeq * 100).toFixed(1)}%
@@ -525,9 +525,9 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           </div>
 
           {/* Governing Equation Card */}
-          <div className="bg-[#080A0D] border border-[#1E2533] p-4 space-y-3">
-            <div className="flex items-center justify-between border-b border-[#1E2533] pb-2 text-xs font-mono">
-              <span className="font-bold text-slate-100 uppercase">
+          <div className="bg-[#080A0D] border border-slate-200/80 p-4 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-200/80 pb-2 text-xs font-mono">
+              <span className="font-bold text-slate-900 uppercase">
                 {nistKinetics.kineticModelName}
               </span>
               <span className="text-[10px] text-slate-500">
@@ -535,13 +535,13 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
               </span>
             </div>
 
-            <div className="p-3 bg-[#05070A] border border-[#171E2A] text-center font-mono text-slate-100 overflow-x-auto">
+            <div className="p-3 bg-[#05070A] border border-slate-200/60 text-center font-mono text-slate-900 overflow-x-auto">
               <MathView math={nistKinetics.rateEquationLatex} block />
             </div>
 
-            <div className="space-y-1 pt-1 text-xs font-mono text-slate-400">
-              <span className="text-slate-300 font-bold block">Model Parameters & Arrhenius Constants:</span>
-              <ul className="list-disc list-inside space-y-0.5 text-[11px] text-slate-400">
+            <div className="space-y-1 pt-1 text-xs font-mono text-slate-500">
+              <span className="text-slate-700 font-bold block">Model Parameters & Arrhenius Constants:</span>
+              <ul className="list-disc list-inside space-y-0.5 text-[11px] text-slate-500">
                 {nistKinetics.notes.map((note, idx) => (
                   <li key={idx}>{note}</li>
                 ))}
@@ -557,15 +557,15 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           {/* Provenance Filter Chips */}
           <div className="flex items-center justify-between flex-wrap gap-2 text-xs font-mono">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-slate-400 text-[11px] uppercase mr-1">Classification:</span>
+              <span className="text-slate-500 text-[11px] uppercase mr-1">Classification:</span>
               {(['all', 'evaluated', 'experimental', 'correlated', 'calculated'] as const).map((filter) => (
                 <button
                   key={filter}
                   onClick={() => setProvenanceFilter(filter)}
                   className={`px-2.5 py-1 uppercase text-[10px] font-bold border transition-colors ${
                     provenanceFilter === filter
-                      ? 'bg-[#00D8F6] text-[#080A0D] border-[#00D8F6]'
-                      : 'bg-[#141922] text-slate-400 border-[#1E2533] hover:text-slate-200'
+                      ? 'bg-[#00D8F6] text-[#080A0D] border-blue-600'
+                      : 'bg-[#141922] text-slate-500 border-slate-200/80 hover:text-slate-800'
                   }`}
                 >
                   {filter}
@@ -579,9 +579,9 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
           </div>
 
           {/* Full Audited Provenance Table */}
-          <div className="border border-[#1E2533] overflow-x-auto max-h-[500px]">
+          <div className="border border-slate-200/80 overflow-x-auto max-h-[500px]">
             <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-[#0D121A] border-b border-[#1E2533] text-slate-400 uppercase text-[10px] sticky top-0">
+              <thead className="bg-[#0D121A] border-b border-slate-200/80 text-slate-500 uppercase text-[10px] sticky top-0">
                 <tr>
                   <th className="p-2.5">Species</th>
                   <th className="p-2.5">Property</th>
@@ -593,30 +593,30 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                   <th className="p-2.5">Authoritative Source</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#171E2A] text-slate-200">
+              <tbody className="divide-y divide-[#171E2A] text-slate-800">
                 {filteredProvenance.map((row, idx) => (
                   <tr key={idx} className="hover:bg-[#0E131A]">
-                    <td className="p-2.5 font-bold text-slate-100">
+                    <td className="p-2.5 font-bold text-slate-900">
                       {row.formula} <span className="text-[10px] text-slate-500 font-normal">({row.species})</span>
                     </td>
                     <td className="p-2.5 font-sans">{row.propertyName}</td>
-                    <td className="p-2.5 text-[#00D8F6] font-bold">
+                    <td className="p-2.5 text-blue-600 font-bold">
                       <MathView math={row.symbol} />
                     </td>
-                    <td className="p-2.5 font-bold text-slate-100">{row.value}</td>
-                    <td className="p-2.5 text-slate-400">{row.units}</td>
+                    <td className="p-2.5 font-bold text-slate-900">{row.value}</td>
+                    <td className="p-2.5 text-slate-500">{row.units}</td>
                     <td className="p-2.5">
                       <span className={`px-2 py-0.5 text-[9px] uppercase font-bold border ${
                         row.status === 'evaluated'
                           ? 'bg-[#10B981]/10 text-[#10B981] border-[#10B981]/30'
                           : row.status === 'experimental'
-                          ? 'bg-[#00D8F6]/10 text-[#00D8F6] border-[#00D8F6]/30'
+                          ? 'bg-[#00D8F6]/10 text-blue-600 border-blue-600/30'
                           : 'bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30'
                       }`}>
                         {row.status}
                       </span>
                     </td>
-                    <td className="p-2.5 text-[11px] text-slate-400">
+                    <td className="p-2.5 text-[11px] text-slate-500">
                       {row.uncertainty || 'Evaluated standard'}
                     </td>
                     <td className="p-2.5">
@@ -624,7 +624,7 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
                         href={row.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#00D8F6] hover:underline flex items-center gap-1 text-[11px]"
+                        className="text-blue-600 hover:underline flex items-center gap-1 text-[11px]"
                       >
                         <span className="truncate max-w-[180px]">{row.source}</span>
                         <ExternalLink className="w-3 h-3 shrink-0" />

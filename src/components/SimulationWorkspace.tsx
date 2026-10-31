@@ -1,20 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { SimulationResult, SimulationStage, PlaybackState, ReactorInputs } from '../types/eurokin';
+import React, { useEffect, useRef } from 'react';
+import { SimulationResult, SimulationStage, PlaybackState } from '../types/eurokin';
 import {
   Play,
   Pause,
   RotateCcw,
-  FastForward,
   CheckCircle2,
-  AlertCircle,
   Cpu,
-  Layers,
-  Activity,
   Zap,
-  Flame,
-  Gauge,
-  Sliders,
-  Sparkles
 } from 'lucide-react';
 
 interface SimulationWorkspaceProps {
@@ -36,7 +28,7 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
   onPlaybackChange,
   onZNormalizedChange,
 }) => {
-  const { axialProfiles, inputs } = simulation;
+  const { inputs } = simulation;
   const timerRef = useRef<number | null>(null);
 
   // Playback timer animation loop
@@ -46,7 +38,7 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
         onPlaybackChange((prev) => {
           let nextZ = prev.currentZNormalized + 0.015 * prev.speed;
           if (nextZ > 1.0) {
-            nextZ = 0.0; // loop back to inlet
+            nextZ = 0.0;
           }
           onZNormalizedChange(nextZ);
           return { ...prev, currentZNormalized: nextZ };
@@ -75,62 +67,66 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
   };
 
   const stages: Array<{ id: SimulationStage; label: string; desc: string }> = [
-    { id: 'validating', label: '1. Input Validation', desc: 'Checking thermodynamic & mechanical validity' },
-    { id: 'initializing', label: '2. Model Initialization', desc: 'Allocating state vectors & axial mesh' },
-    { id: 'evaluating_properties', label: '3. NIST Property Evaluation', desc: 'Evaluating Shomate, Wilke & Fuller transport tensors' },
-    { id: 'integrating', label: '4. Reactor Integration (RK4)', desc: 'Integrating 1D mass, heat, and momentum balance along z' },
-    { id: 'checking_convergence', label: '5. Convergence Evaluation', desc: 'Verifying energy closure & continuity residuals' },
-    { id: 'generating_results', label: '6. Diagnostic Matrix', desc: 'Evaluating the 9 Eurokin criteria & suitability scores' },
+    { id: 'validating', label: '1. Validation', desc: 'Checking thermodynamic & mechanical validity' },
+    { id: 'initializing', label: '2. Initialization', desc: 'Allocating state vectors & axial mesh' },
+    { id: 'evaluating_properties', label: '3. Properties', desc: 'Evaluating transport tensors' },
+    { id: 'integrating', label: '4. Integration (RK4)', desc: 'Integrating 1D balance equations along z' },
+    { id: 'checking_convergence', label: '5. Convergence', desc: 'Verifying energy closure & continuity' },
+    { id: 'generating_results', label: '6. Diagnostics', desc: 'Evaluating Eurokin criteria & suitability' },
     { id: 'completed', label: '7. Completed', desc: 'Solution converged & synchronized' },
   ];
 
   const currentStageIndex = stages.findIndex((s) => s.id === simulationStage);
 
   return (
-    <div className="bg-[#0A0D12] border border-[#1E2533] p-5 space-y-5">
+    <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs p-5 lg:p-6 space-y-5">
       {/* Top Banner & Run Trigger */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#1E2533]">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200/80">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-xs font-bold uppercase tracking-wider text-slate-100 flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-[#00D8F6]" />
-              Industrial Simulation Engine & Numerical Playback
-            </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 bg-[#141A24] text-slate-300 border border-[#252E3E]">
-              Runge-Kutta 4th Order (RK4)
-            </span>
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-slate-900">
+                  Simulation Engine & Numerical Playback
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-slate-100 text-slate-700 rounded border border-slate-200">
+                  RK4 Integration
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5 font-sans">
+                Solves coupled differential equations for reactant conversion, temperature, and Ergun pressure drop across the bed.
+              </p>
+            </div>
           </div>
-          <p className="text-xs text-slate-400 mt-1 font-sans">
-            Solves the simultaneous coupled differential equations for reactant conversion $X_A(z)$, gas temperature $T(z)$, and Ergun pressure drop $P(z)$ across the packed catalyst bed.
-          </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onRunSimulation}
-            disabled={isSimulating}
-            className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider border transition-all flex items-center gap-2 shadow-sm ${
-              isSimulating
-                ? 'bg-[#141A24] text-slate-500 border-[#283244] cursor-not-allowed'
-                : 'bg-[#00D8F6] hover:bg-[#38BDF8] text-[#080A0D] border-[#00D8F6] active:translate-y-px'
-            }`}
-          >
-            <Zap className={`w-3.5 h-3.5 ${isSimulating ? 'animate-spin' : ''}`} />
-            <span>{isSimulating ? 'Executing Solver...' : 'Run Simulation'}</span>
-          </button>
-        </div>
+        <button
+          onClick={onRunSimulation}
+          disabled={isSimulating}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all flex items-center gap-2 shadow-xs cursor-pointer ${
+            isSimulating
+              ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/20 active:translate-y-px'
+          }`}
+        >
+          <Zap className={`w-4 h-4 ${isSimulating ? 'animate-spin' : ''}`} />
+          <span>{isSimulating ? 'Executing Solver...' : 'Run Simulation'}</span>
+        </button>
       </div>
 
       {/* Simulation Lifecycle Stage Pipeline */}
-      <div className="bg-[#080A0D] border border-[#1E2533] p-4">
-        <div className="text-[10px] font-mono uppercase text-slate-400 tracking-wider mb-2 flex items-center justify-between">
-          <span>Solver Lifecycle Execution Stages</span>
-          <span className="text-[#00D8F6]">
+      <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-4">
+        <div className="text-xs font-semibold text-slate-500 tracking-wider uppercase mb-3 flex items-center justify-between">
+          <span>Solver Execution Pipeline</span>
+          <span className="text-blue-700 font-mono text-[11px] font-bold">
             {isSimulating ? 'SOLVER ACTIVE' : 'STEADY-STATE CONVERGED'}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs font-mono">
           {stages.slice(0, 6).map((stage, idx) => {
             const isPast = !isSimulating || currentStageIndex > idx || simulationStage === 'completed';
             const isCurrent = isSimulating && currentStageIndex === idx;
@@ -138,27 +134,27 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
             return (
               <div
                 key={stage.id}
-                className={`p-2.5 border transition-all ${
+                className={`p-3 rounded-lg border transition-all ${
                   isCurrent
-                    ? 'bg-[#00D8F6]/10 border-[#00D8F6] text-slate-100 shadow-xs'
+                    ? 'bg-blue-50 border-blue-300 text-blue-900 shadow-xs'
                     : isPast
-                    ? 'bg-[#0E131A] border-[#1C2533] text-slate-300'
-                    : 'bg-[#080A0D] border-[#161D28] text-slate-600'
+                    ? 'bg-white border-slate-200/80 text-slate-800'
+                    : 'bg-slate-100/60 border-slate-200/50 text-slate-400'
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[10px] font-bold text-slate-500">
                     {stage.label.split('.')[0]}
                   </span>
                   {isPast ? (
-                    <CheckCircle2 className="w-3 h-3 text-[#10B981]" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                   ) : isCurrent ? (
-                    <span className="w-2 h-2 bg-[#00D8F6] animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
                   ) : (
-                    <span className="w-1.5 h-1.5 bg-[#252E3E]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
                   )}
                 </div>
-                <div className="text-[11px] font-semibold truncate">
+                <div className="text-xs font-semibold truncate font-sans">
                   {stage.label.split('. ')[1]}
                 </div>
               </div>
@@ -168,49 +164,49 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
       </div>
 
       {/* Numerical Playback & Axial Scrubber Controls */}
-      <div className="bg-[#080A0D] border border-[#1E2533] p-4 space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className="bg-slate-50/70 border border-slate-200/80 rounded-xl p-4 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-200 uppercase tracking-wide">
+            <span className="font-bold text-slate-900">
               Axial Position Scrubber
             </span>
-            <span className="text-slate-500 text-[11px]">
-              (Scrub to inspect local solution vectors)
+            <span className="text-slate-500 text-xs">
+              (Inspect local solution vectors along bed height)
             </span>
           </div>
 
           {/* Transport playback controls */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button
               onClick={togglePlay}
-              className={`px-3 py-1 text-xs border flex items-center gap-1.5 transition-colors ${
+              className={`px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
                 playbackState.isPlaying
-                  ? 'bg-[#F59E0B]/15 text-[#F59E0B] border-[#F59E0B]/60'
-                  : 'bg-[#141A24] text-slate-200 hover:text-[#00D8F6] border-[#283244]'
+                  ? 'bg-amber-600 text-white shadow-xs'
+                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 shadow-xs'
               }`}
             >
-              {playbackState.isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+              {playbackState.isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
               <span>{playbackState.isPlaying ? 'Pause' : 'Play'}</span>
             </button>
 
             <button
               onClick={handleResetPlayback}
-              className="p-1.5 bg-[#141A24] text-slate-400 hover:text-slate-100 border border-[#283244] transition-colors"
+              className="p-1.5 bg-white text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg shadow-xs transition-colors cursor-pointer"
               title="Reset scrubber to bed inlet (z = 0)"
             >
-              <RotateCcw className="w-3 h-3" />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
 
             {/* Speed buttons */}
-            <div className="flex items-center ml-2 border border-[#222B3A]">
+            <div className="flex items-center bg-white border border-slate-200 rounded-lg p-0.5 shadow-xs text-xs font-medium">
               {[0.5, 1.0, 2.0].map((s) => (
                 <button
                   key={s}
                   onClick={() => handleSpeedChange(s)}
-                  className={`px-2 py-0.5 text-[10px] ${
+                  className={`px-2 py-0.5 rounded cursor-pointer ${
                     playbackState.speed === s
-                      ? 'bg-[#00D8F6]/20 text-[#00D8F6] font-bold'
-                      : 'bg-[#0E131A] text-slate-400 hover:text-slate-200'
+                      ? 'bg-blue-600 text-white font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {s}x
@@ -221,7 +217,7 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
         </div>
 
         {/* Scrubber Range Slider */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <input
             type="range"
             min="0"
@@ -233,12 +229,12 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
               onPlaybackChange((prev) => ({ ...prev, currentZNormalized: val }));
               onZNormalizedChange(val);
             }}
-            className="w-full accent-[#00D8F6] cursor-pointer"
+            className="w-full accent-blue-600 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none"
           />
 
-          <div className="flex justify-between text-[10px] font-mono text-slate-500">
-            <span>Inlet z = 0.0 mm (Feed Syngas)</span>
-            <span className="text-[#00D8F6] font-bold">
+          <div className="flex justify-between text-xs font-mono text-slate-500">
+            <span>Inlet z = 0.0 mm (Syngas Feed)</span>
+            <span className="text-blue-700 font-bold">
               Current: z = {(playbackState.currentZNormalized * inputs.bedHeight * 1000).toFixed(1)} mm ({ (playbackState.currentZNormalized * 100).toFixed(0) }% L)
             </span>
             <span>Outlet z = {(inputs.bedHeight * 1000).toFixed(0)} mm (Effluent)</span>

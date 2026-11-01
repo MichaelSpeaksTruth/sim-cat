@@ -24,6 +24,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
   simulation,
 }) => {
   const [activeTab, setActiveTab] = useState<'matrix' | 'hydrodynamics' | 'mass_transfer' | 'heat_transfer' | 'diffusivity' | 'applicability' | 'provenance'>('matrix');
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   const { criteria, transportAssessment, hydrodynamics, transport, inputs } = simulation;
   const assessment = transportAssessment;
@@ -74,41 +75,51 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
         </div>
 
         {/* Status Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 my-2 text-center">
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
-            <div className="text-slate-500 text-[10px] uppercase">Passed Checks</div>
-            <div className="text-[#10B981] font-bold text-base">{passedCount}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 my-2 text-center">
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 py-1.5 px-2">
+            <div className="text-slate-500 text-[10px] uppercase font-semibold">Passed Checks</div>
+            <div className="text-[#10B981] font-bold text-sm mt-0.5">{passedCount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
-            <div className="text-slate-500 text-[10px] uppercase">Warnings</div>
-            <div className="text-amber-500 font-bold text-base">{warningCount}</div>
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 py-1.5 px-2">
+            <div className="text-slate-500 text-[10px] uppercase font-semibold">Warnings</div>
+            <div className="text-amber-500 font-bold text-sm mt-0.5">{warningCount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
-            <div className="text-slate-500 text-[10px] uppercase">Breaches (Fail)</div>
-            <div className="text-rose-500 font-bold text-base">{failedCount}</div>
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 py-1.5 px-2">
+            <div className="text-slate-500 text-[10px] uppercase font-semibold">Breaches (Fail)</div>
+            <div className="text-rose-500 font-bold text-sm mt-0.5">{failedCount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
-            <div className="text-slate-500 text-[10px] uppercase">Out of Correlation</div>
-            <div className="text-purple-600 font-bold text-base">{outOfRangeCount}</div>
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 py-1.5 px-2">
+            <div className="text-slate-500 text-[10px] uppercase font-semibold">Out of Correlation</div>
+            <div className="text-purple-600 font-bold text-sm mt-0.5">{outOfRangeCount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2 col-span-2 sm:col-span-1">
-            <div className="text-slate-500 text-[10px] uppercase">Not Evaluated</div>
-            <div className="text-slate-500 font-bold text-base">{notEvalCount}</div>
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 py-1.5 px-2 col-span-2 sm:col-span-1">
+            <div className="text-slate-500 text-[10px] uppercase font-semibold">Not Evaluated</div>
+            <div className="text-slate-500 font-bold text-sm mt-0.5">{notEvalCount}</div>
           </div>
         </div>
 
-        {/* Mandatory Scientific Integrity Disclaimer */}
-        <div className="mt-3 p-2.5 bg-slate-100 border border-slate-200 text-[11px] text-slate-700 leading-relaxed flex items-start gap-2">
-          <ShieldAlert className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-bold text-slate-900">EUROKIN Consortial Disclaimer & Acceptance Criterion:</span>{' '}
-            The EUROKIN guide serves strictly as an engineering screening assessment for verifying intrinsic kinetic measurements
-            (standard threshold: &lt; 5% perturbation on apparent conversion rate).
-            <span className="text-amber-300 font-semibold block mt-1">
-              Passing individual 1D screening criteria does NOT guarantee negligible combined 2D/3D transport limitations or commercial scale-up safety.
+        {/* Compact Scientific Integrity Disclaimer with Expandable Notes */}
+        <div className="mt-2.5 p-2 bg-slate-50 border border-slate-200/80 rounded-lg text-[11px] text-slate-600 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <ShieldAlert className="w-4 h-4 text-blue-600 shrink-0" />
+            <span className="truncate">
+              <strong className="text-slate-800">EUROKIN Acceptance Criterion:</strong> Intrinsic kinetics screening threshold &lt; 5% perturbation on apparent reaction rate.
             </span>
           </div>
+          <button
+            onClick={() => setShowDisclaimer(!showDisclaimer)}
+            className="text-blue-600 hover:text-blue-800 font-semibold shrink-0 cursor-pointer text-[10px] uppercase font-mono px-2 py-0.5 rounded hover:bg-blue-50 transition-colors"
+          >
+            {showDisclaimer ? 'Hide Details' : 'Consortial Notes'}
+          </button>
         </div>
+
+        {showDisclaimer && (
+          <div className="mt-1.5 p-2.5 bg-amber-50/70 border border-amber-200 rounded-lg text-[11px] text-amber-900 leading-relaxed font-sans animate-in fade-in duration-200">
+            <strong className="font-semibold text-amber-950">Notice & Scope:</strong> The EUROKIN guide serves strictly as an engineering screening assessment for verifying intrinsic kinetic measurements.
+            Passing individual 1D screening criteria does <em>not</em> guarantee negligible combined 2D/3D transport limitations or commercial scale-up safety.
+          </div>
+        )}
       </div>
 
       {/* NAVIGATION TABS */}
@@ -188,7 +199,12 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
       {/* TAB 1: DIAGNOSTIC MATRIX (CARDS) */}
       {activeTab === 'matrix' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          <div
+            className="grid gap-3.5"
+            style={{
+              gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))',
+            }}
+          >
             {criteria.map((c) => (
               <DiagnosticCard key={c.id} criterion={c} />
             ))}
@@ -219,7 +235,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
             Packed-Bed Hydrodynamics & Pressure Drop Analysis (Ergun 1952)
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="bg-slate-50 rounded-lg border border-slate-200/60 p-3 space-y-1">
               <span className="text-[10px] text-slate-500 uppercase">Superficial Velocity (u0)</span>
               <div className="text-base font-bold text-slate-900">{fmt(hydrodynamics.superficialVelocity)} m/s</div>
@@ -342,7 +358,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
             Thermal Gradient Analysis & Hotspot Diagnostics
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="bg-slate-50 rounded-lg border border-slate-200/60 p-3 space-y-1">
               <span className="text-[10px] text-slate-500 uppercase">Boundary Film Drop (Delta Tfilm)</span>
               <div className="text-base font-bold text-slate-900">

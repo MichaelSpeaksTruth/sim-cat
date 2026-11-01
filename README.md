@@ -153,6 +153,12 @@ npm run build
 npm run preview
 ```
 
+### Production Deployment (Vercel Frontend + Render Python Backend)
+SIM-CAT is configured for decoupled production deployment:
+- **Frontend on Vercel**: React single-page app deployed via [`vercel.json`](file:///c:/Superceed_vscode/classified/sim-cat/vercel.json) with edge caching and automatic reverse-proxying for `/api/*`.
+- **Backend on Render**: Python Flask API running via `gunicorn wsgi:app` with lightweight dependencies and CORS enabled.
+- See detailed deployment guide: [`docs/DEPLOYMENT_VERCEL_RENDER.md`](file:///c:/Superceed_vscode/classified/sim-cat/docs/DEPLOYMENT_VERCEL_RENDER.md).
+
 ---
 
 ## 8. Primary Literature & Citation Standards

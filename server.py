@@ -2,24 +2,29 @@ import os
 import sys
 from pathlib import Path
 from flask import Flask, send_from_directory, request, jsonify
+from flask_cors import CORS
 from simcat_engine import ReactorParameters, compute_simcat_assessment
 
 BASE_DIR = Path(__file__).resolve().parent
 DIST_DIR = BASE_DIR / "dist"
 
-app = Flask(__name__, static_folder=str(DIST_DIR), static_url_path="")
+app = Flask(__name__, static_folder=str(DIST_DIR) if DIST_DIR.exists() else None, static_url_path="")
+CORS(app, resources={r"/api/*": {"origins": "*"}, r"/health": {"origins": "*"}}, supports_credentials=True)
 application = app
 
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({
         "status": "healthy",
-        "service": "Sim-Cat Reaction Kinetics Suite",
+        "service": "Sim-Cat Reaction Kinetics Suite API",
+        "backend": "Python / Flask on Render",
         "version": "1.0.0"
     }), 200
 
-@app.route("/api/assess", methods=["POST"])
+@app.route("/api/assess", methods=["POST", "OPTIONS"])
 def assess_endpoint():
+    if request.method == "OPTIONS":
+        return jsonify({"status": "ok"}), 200
     try:
         data = request.get_json(force=True) or {}
         params = ReactorParameters(
@@ -58,14 +63,20 @@ def assess_endpoint():
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_frontend(path):
-    if path and (DIST_DIR / path).exists():
+    if path and DIST_DIR.exists() and (DIST_DIR / path).exists():
         return send_from_directory(str(DIST_DIR), path)
-    if (DIST_DIR / "index.html").exists():
+    if DIST_DIR.exists() and (DIST_DIR / "index.html").exists():
         return send_from_directory(str(DIST_DIR), "index.html")
-    return (
-        "Sim-Cat frontend assets not built yet. Run 'npm install && npm run build'.",
-        404
-    )
+    return jsonify({
+        "status": "online",
+        "service": "Sim-Cat Reaction Kinetics Suite API",
+        "platform": "Render Python Web Service",
+        "frontend": "Deployed on Vercel",
+        "endpoints": {
+            "health": "/health",
+            "assess": "/api/assess"
+        }
+    }), 200
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))

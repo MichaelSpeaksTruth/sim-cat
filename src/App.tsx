@@ -244,27 +244,7 @@ export function App() {
 
               {/* SECTION 3: CATALYST STUDIO */}
               {activeSection === 'catalyst' && (
-                <div className="space-y-6 max-w-7xl mx-auto">
-                  <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs p-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xs font-mono font-bold uppercase text-slate-800 flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-blue-600" />
-                        <span>Catalyst Studio & Pellet Morphology</span>
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Promoted Magnetite (K₂O-Al₂O₃-CaO) active iron crystallites.
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => setShowMicroscopyView(true)}
-                      className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-semibold rounded-lg shadow-xs flex items-center gap-1.5 transition-colors cursor-pointer"
-                    >
-                      <ZoomIn className="w-3.5 h-3.5" />
-                      <span>Inspect Microscopic Pore Cutaway</span>
-                    </button>
-                  </div>
-
+                <div className="space-y-4 max-w-7xl mx-auto">
                   <CatalystMicroscopy simulation={simulation} />
                 </div>
               )}

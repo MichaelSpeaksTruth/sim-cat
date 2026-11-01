@@ -70,3 +70,29 @@ An expandable **Metrics Guide** drawer is embedded directly into the axial chart
 - Physical definitions and differential equations for $z, T(z), P(z), X(z), y_{\mathrm{NH}_3}(z), r_{\mathrm{obs}}(z), \eta(z), \Phi$.
 - Eurokin Consortium benchmark acceptance criteria ($\eta \ge 0.95$, $\Phi < 1$, Ergun limits).
 - Units, thermodynamic foundations, and kinetic rate law interpretation.
+
+### 2.7 Catalyst Studio Dynamic Viewport Adaptation & LaTeX Rendering
+The Catalyst Studio interface (`CatalystStudioView.tsx`) features an adaptive, compact layout designed to minimize unnecessary vertical scrolling while preserving high-resolution microscopical inspection:
+- **Responsive Viewport Height Adaptation**: The 3D/2D microscopic pore cutaway canvas and intraparticle effectiveness summary cards adapt dynamically to screen height, allowing engineers on laptops ($1366 \times 768$ and $1920 \times 1080$) to view both the visual radial slice and effectiveness factors above the fold.
+- **Strict LaTeX & KaTeX Mathematical Rendering**: Replaced raw LaTeX strings in titles and descriptions with `MathView` components:
+  - Header radial cross-section: $\text{Pellet Radial Cross-Section Cutaway } (r = 0 \to R_p)$.
+  - Pore diffusion effectiveness descriptions: $\Phi < 0.08$ and $\eta > 95\%$.
+- **Integrated High-Magnification Transport Cards**: Compact Weisz-Prater and Thiele modulus tiles with inline formula definitions and qualitative effectiveness summaries.
+
+### 2.8 Transport Diagnostics Symmetrical Auto-Fill Matrix & Value Preservation
+The Transport Diagnostics suite (`TransportDiagnosticsView.tsx` & `DiagnosticCard.tsx`) resolves previous column cramping and text-wrapping issues:
+- **Container-Aware Auto-Fill Grid**:
+  ```css
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 0.875rem;
+  ```
+  - Adapts to container width rather than viewport width: renders 2 symmetrical $\sim 345\ \mathrm{px}$ columns when the $340\ \mathrm{px}$ inspector is open, 3 balanced $\sim 340\ \mathrm{px}$ columns when collapsed, and up to 4 columns on ultra-wide monitors.
+- **Single-Line Calculated & Threshold Limit Presentation**:
+  - Eliminated awkward multi-line number breaking (e.g. `127.634` on line 1, `7 Pa` on line 2). Values and units now sit on a single line with `whitespace-nowrap overflow-hidden text-ellipsis` and full-precision hover tooltips (`title`).
+- **Uniform Card Heights & Level Alignment**:
+  - Standardized cards with `h-full flex flex-col justify-between` to ensure identical heights and clean horizontal baselines across every grid row.
+- **LaTeX Symbol Badge Wrapping**:
+  - Encapsulated mathematical symbols in card titles (such as $\Delta_{\mathrm{dilution}}$ or $\Phi$) in `inline-flex whitespace-nowrap` badges to prevent brackets and subscripts from splitting across lines.
+- **Streamlined Top Assessment Banner & Expandable Notes**:
+  - Consolidated status counters into a sleek horizontal ribbon.
+  - Made the EUROKIN Consortial Disclaimer collapsible via a `Consortial Notes` toggle, saving $\approx 80\ \mathrm{px}$ of vertical height so diagnostic cards are immediately visible above the fold.

@@ -1,16 +1,26 @@
 import os
 import sys
 from pathlib import Path
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from simcat_engine import ReactorParameters, compute_simcat_assessment
 
-BASE_DIR = Path(__file__).resolve().parent
-DIST_DIR = BASE_DIR / "dist"
-
-app = Flask(__name__, static_folder=str(DIST_DIR) if DIST_DIR.exists() else None, static_url_path="")
-CORS(app, resources={r"/api/*": {"origins": "*"}, r"/health": {"origins": "*"}}, supports_credentials=True)
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}, r"/health": {"origins": "*"}, r"/": {"origins": "*"}}, supports_credentials=True)
 application = app
+
+@app.route("/", methods=["GET"])
+def api_root():
+    return jsonify({
+        "service": "Sim-Cat Reaction Kinetics Backend API",
+        "status": "online",
+        "platform": "Render Python Web Service",
+        "frontend": "Hosted separately on Vercel",
+        "endpoints": {
+            "health": "GET /health",
+            "assess": "POST /api/assess"
+        }
+    }), 200
 
 @app.route("/health", methods=["GET"])
 def health_check():
@@ -60,23 +70,12 @@ def assess_endpoint():
     except Exception as exc:
         return jsonify({"error": str(exc)}), 400
 
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def serve_frontend(path):
-    if path and DIST_DIR.exists() and (DIST_DIR / path).exists():
-        return send_from_directory(str(DIST_DIR), path)
-    if DIST_DIR.exists() and (DIST_DIR / "index.html").exists():
-        return send_from_directory(str(DIST_DIR), "index.html")
+@app.errorhandler(404)
+def not_found(e):
     return jsonify({
-        "status": "online",
-        "service": "Sim-Cat Reaction Kinetics Suite API",
-        "platform": "Render Python Web Service",
-        "frontend": "Deployed on Vercel",
-        "endpoints": {
-            "health": "/health",
-            "assess": "/api/assess"
-        }
-    }), 200
+        "error": "Endpoint not found on Render Python backend. The frontend application is hosted on Vercel.",
+        "valid_endpoints": ["/", "/health", "/api/assess"]
+    }), 404
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))

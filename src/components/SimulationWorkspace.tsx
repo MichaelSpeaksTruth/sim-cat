@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { SimulationResult, SimulationStage, PlaybackState } from '../types/eurokin';
 import {
   Play,
@@ -154,7 +154,10 @@ export const SimulationWorkspace: React.FC<SimulationWorkspaceProps> = ({
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-300" />
                   )}
                 </div>
-                <div className="text-xs font-semibold truncate font-sans">
+                <div
+                  className="text-xs font-semibold font-sans leading-tight line-clamp-2"
+                  title={stage.label.split('. ')[1]}
+                >
                   {stage.label.split('. ')[1]}
                 </div>
               </div>

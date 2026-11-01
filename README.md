@@ -109,6 +109,13 @@ The complete four-benchmark experimental reproduction matrix reflects canonical 
    - Reversible kinetics covering forward synthesis, chemical equilibrium, and ammonia decomposition ($Q > K_p$).
 4. **Eurokin Transport Screening Diagnostics** ([`src/lib/eurokinTransport.ts`](file:///c:/Superceed_vscode/classified/sim-cat/src/lib/eurokinTransport.ts)):
    - 9 core diagnostic screening criteria: Mears axial dispersion, Chu & Ng radial wall effect, canonical Carberry external film mass transfer, Weisz-Prater internal pore diffusion, Mears gas film heat transfer, radial bed heat transfer, intraparticle solid conduction, Ergun pressure drop, and Berger inert bed dilution.
+5. **UI Responsiveness & Data Visibility Architecture** ([`docs/UI_RESPONSIVENESS_AND_VISIBILITY.md`](file:///c:/Superceed_vscode/classified/sim-cat/docs/UI_RESPONSIVENESS_AND_VISIBILITY.md)):
+   - Container-aware auto-fill grids (`repeat(auto-fill, minmax(130px, 1fr))`) preventing multi-column squeeze on split-screen workstations.
+   - Zero-truncation design: complete metric labels, physical symbol badges, numerical values, and units preserved across all views.
+   - Global interactive viewport zoom controller ($70\%\text{ to }130\%$) with persistent `localStorage` support.
+   - Simulation & Playback Studio dual layout modes: *Stacked Full-Width* (default) and *Split Side-by-Side*.
+   - Results Explorer multi-view filtering (*Complete View*, *Axial Profile Only*, *Feasibility*, and *Numerical Slice Data Table*).
+   - Interactive Eurokin Metrics Guide explaining physical meanings, rate laws, and threshold criteria.
 
 ---
 

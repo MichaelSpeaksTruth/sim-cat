@@ -67,6 +67,25 @@ export function App() {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showMicroscopyView, setShowMicroscopyView] = useState(false);
   const [customCriteria, setCustomCriteria] = useState<CustomCriterionDefinition[]>([]);
+  const [resultsViewTab, setResultsViewTab] = useState<'all' | 'axial' | 'feasibility' | 'table'>('all');
+  const [simulationLayoutMode, setSimulationLayoutMode] = useState<'stacked' | 'split'>('stacked');
+  const [globalZoom, setGlobalZoom] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('simcat_global_zoom');
+      return saved ? parseInt(saved, 10) : 100;
+    } catch {
+      return 100;
+    }
+  });
+
+  const handleUpdateGlobalZoom = (zoom: number) => {
+    setGlobalZoom(zoom);
+    try {
+      localStorage.setItem('simcat_global_zoom', zoom.toString());
+    } catch {
+      // ignore
+    }
+  };
 
   // Calculate simulation result
   const simulation = useMemo(() => {
@@ -148,6 +167,8 @@ export function App() {
         onOpenExport={() => setShowExportModal(true)}
         onOpenInspector={() => setIsInspectorOpen(!isInspectorOpen)}
         isInspectorOpen={isInspectorOpen}
+        globalZoom={globalZoom}
+        onChangeGlobalZoom={handleUpdateGlobalZoom}
       />
 
       {/* 2. Main Workstation Body: Navigation Rail + Central Canvas + Right Inspector */}
@@ -167,8 +188,11 @@ export function App() {
           isDirty={isDirty}
         />
 
-        {/* Central Dynamic Scientific Workspace */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-slate-50 tech-grid-pattern">
+        {/* Central Dynamic Scientific Workspace with Global Zoom Scaler */}
+        <main
+          className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-slate-50 tech-grid-pattern transition-all duration-150"
+          style={globalZoom !== 100 ? { zoom: globalZoom / 100 } : undefined}
+        >
           {/* Modal / High-Magnification Pellet Inspection Override */}
           {showMicroscopyView ? (
             <CatalystMicroscopy
@@ -255,7 +279,50 @@ export function App() {
 
               {/* SECTION 5: SIMULATION & PLAYBACK */}
               {activeSection === 'simulation' && (
-                <div className="space-y-4">
+                <div className="space-y-4 max-w-7xl mx-auto">
+                  {/* Top Bar with Layout Switcher */}
+                  <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200/90 rounded-xl p-3 shadow-xs">
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                        <Activity className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold uppercase tracking-wider font-mono text-slate-800">
+                          Simulation Studio & Axial Synchronization
+                        </h3>
+                        <p className="text-xs text-slate-500 font-sans">
+                          Inspect finite difference solution vectors alongside the 3D fixed-bed reactor geometry.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Layout switcher: Stacked vs Split */}
+                    <div className="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-mono">
+                      <button
+                        onClick={() => setSimulationLayoutMode('stacked')}
+                        className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                          simulationLayoutMode === 'stacked'
+                            ? 'bg-white text-blue-700 font-bold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Stacked full-width layout for wide screens and maximum visibility"
+                      >
+                        Stacked (Full Width)
+                      </button>
+                      <button
+                        onClick={() => setSimulationLayoutMode('split')}
+                        className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
+                          simulationLayoutMode === 'split'
+                            ? 'bg-white text-blue-700 font-bold shadow-xs'
+                            : 'text-slate-600 hover:text-slate-900'
+                        }`}
+                        title="Side-by-side 3D reactor and axial profile"
+                      >
+                        Split (Side-by-Side)
+                      </button>
+                    </div>
+                  </div>
+
                   <SimulationWorkspace
                     simulation={simulation}
                     onRunSimulation={handleRunSimulation}
@@ -266,24 +333,41 @@ export function App() {
                     onZNormalizedChange={handleZNormalizedChange}
                   />
 
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    <div className="lg:col-span-6">
+                  {simulationLayoutMode === 'stacked' ? (
+                    <div className="space-y-5">
                       <Reactor3D
                         simulation={simulation}
                         currentZNormalized={playbackState.currentZNormalized}
                         onZNormalizedChange={handleZNormalizedChange}
                         onSelectPellet={() => setShowMicroscopyView(true)}
-                        className="h-[440px]"
+                        className="h-[460px]"
                       />
-                    </div>
-                    <div className="lg:col-span-6">
                       <AxialCharts
                         simulation={simulation}
                         currentZNormalized={playbackState.currentZNormalized}
                         onZNormalizedChange={handleZNormalizedChange}
                       />
                     </div>
-                  </div>
+                  ) : (
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
+                      <div className="xl:col-span-5">
+                        <Reactor3D
+                          simulation={simulation}
+                          currentZNormalized={playbackState.currentZNormalized}
+                          onZNormalizedChange={handleZNormalizedChange}
+                          onSelectPellet={() => setShowMicroscopyView(true)}
+                          className="h-[440px]"
+                        />
+                      </div>
+                      <div className="xl:col-span-7">
+                        <AxialCharts
+                          simulation={simulation}
+                          currentZNormalized={playbackState.currentZNormalized}
+                          onZNormalizedChange={handleZNormalizedChange}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -294,13 +378,200 @@ export function App() {
 
               {/* SECTION 7: RESULTS EXPLORER */}
               {activeSection === 'results' && (
-                <div className="space-y-4">
-                  <AxialCharts
-                    simulation={simulation}
-                    currentZNormalized={playbackState.currentZNormalized}
-                    onZNormalizedChange={handleZNormalizedChange}
-                  />
-                  <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
+                <div className="space-y-4 max-w-7xl mx-auto">
+                  {/* Results Top Control Bar */}
+                  <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2.5 bg-blue-50 text-blue-600 rounded-lg shrink-0">
+                        <LineChart className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">
+                            Results Explorer & Diagnostics
+                          </h2>
+                          <span
+                            className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded ${
+                              simulation.overallStatus === 'VALID_INTRINSIC'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}
+                          >
+                            {simulation.overallStatus === 'VALID_INTRINSIC'
+                              ? 'INTRINSIC REGIME (η ≥ 95%)'
+                              : 'MASS TRANSFER INFLUENCE'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 font-sans mt-0.5">
+                          Comprehensive Eurokin axial profile tracking, rate distribution, and mechanical reactor feasibility.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* View options & Canvas expander */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {/* View tab switcher */}
+                      <div className="flex items-center bg-slate-100 p-0.5 rounded-lg text-xs font-medium border border-slate-200/80">
+                        <button
+                          onClick={() => setResultsViewTab('all')}
+                          className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                            resultsViewTab === 'all'
+                              ? 'bg-white text-blue-700 font-bold shadow-xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Complete View
+                        </button>
+                        <button
+                          onClick={() => setResultsViewTab('axial')}
+                          className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                            resultsViewTab === 'axial'
+                              ? 'bg-white text-blue-700 font-bold shadow-xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Axial Profile
+                        </button>
+                        <button
+                          onClick={() => setResultsViewTab('feasibility')}
+                          className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                            resultsViewTab === 'feasibility'
+                              ? 'bg-white text-blue-700 font-bold shadow-xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Feasibility
+                        </button>
+                        <button
+                          onClick={() => setResultsViewTab('table')}
+                          className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                            resultsViewTab === 'table'
+                              ? 'bg-white text-blue-700 font-bold shadow-xs'
+                              : 'text-slate-600 hover:text-slate-900'
+                          }`}
+                        >
+                          Data Table
+                        </button>
+                      </div>
+
+                      {/* Expand / Collapse Inspector */}
+                      <button
+                        onClick={() => setIsInspectorOpen(!isInspectorOpen)}
+                        className={`px-3 py-1.5 text-xs font-semibold rounded-lg border flex items-center gap-1.5 transition-colors cursor-pointer ${
+                          !isInspectorOpen
+                            ? 'bg-blue-50 border-blue-200 text-blue-700'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                        title={isInspectorOpen ? "Collapse Inspector to widen Results Explorer" : "Restore Inspector panel"}
+                      >
+                        <span>{isInspectorOpen ? 'Maximize Width' : 'Show Inspector'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Summary Metric Ribbon */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2.5 text-xs">
+                    <div className="bg-white border border-slate-200/90 rounded-lg p-2.5 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-slate-400 block">Bed Length L</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm">{(inputs.bedHeight * 1000).toFixed(0)} mm</span>
+                      <span className="text-[10px] text-slate-500 block font-mono">D_tube = {(inputs.tubeDiameter * 1000).toFixed(1)} mm</span>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/90 rounded-lg p-2.5 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-amber-500 block">Hotspot Temperature</span>
+                      <span className="font-mono font-bold text-amber-700 text-sm">{simulation.maxTemperature.toFixed(1)} K</span>
+                      <span className="text-[10px] text-slate-500 block font-mono">at z = {(simulation.hotspotLocationZ * 1000).toFixed(1)} mm</span>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/90 rounded-lg p-2.5 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-sky-500 block">Total Pressure Drop</span>
+                      <span className="font-mono font-bold text-sky-700 text-sm">{(simulation.totalDeltaP / 1e3).toFixed(1)} kPa</span>
+                      <span className="text-[10px] text-slate-500 block font-mono">P_inlet = {(inputs.totalPressure / 1e5).toFixed(1)} bar</span>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/90 rounded-lg p-2.5 shadow-2xs">
+                      <span className="text-[10px] uppercase font-bold text-emerald-500 block">Outlet Conversion</span>
+                      <span className="font-mono font-bold text-emerald-700 text-sm">{(simulation.outletConversion * 100).toFixed(2)}%</span>
+                      <span className="text-[10px] text-slate-500 block font-mono">N₂ reacted single-pass</span>
+                    </div>
+
+                    <div className="bg-white border border-slate-200/90 rounded-lg p-2.5 shadow-2xs col-span-2 sm:col-span-4 lg:col-span-1">
+                      <span className="text-[10px] uppercase font-bold text-purple-500 block">Commercial Rate</span>
+                      <span className="font-mono font-bold text-purple-700 text-sm">{simulation.ammoniaProductionRateKgH.toFixed(2)} kg/h</span>
+                      <span className="text-[10px] text-slate-500 block font-mono">pure NH₃ synthesized</span>
+                    </div>
+                  </div>
+
+                  {/* Main Explorer Content based on View Tab */}
+                  {(resultsViewTab === 'all' || resultsViewTab === 'axial') && (
+                    <AxialCharts
+                      simulation={simulation}
+                      currentZNormalized={playbackState.currentZNormalized}
+                      onZNormalizedChange={handleZNormalizedChange}
+                    />
+                  )}
+
+                  {(resultsViewTab === 'all' || resultsViewTab === 'feasibility') && (
+                    <ReactorSuggestionCard suitability={simulation.reactorSuitability} />
+                  )}
+
+                  {resultsViewTab === 'table' && (
+                    <div className="bg-white border border-slate-200/90 rounded-xl shadow-xs overflow-hidden">
+                      <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900">Numerical Axial Profile Discretization Table</h3>
+                          <p className="text-xs text-slate-500">1D Finite difference solution slices along the packed bed depth.</p>
+                        </div>
+                        <span className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                          {simulation.axialProfiles.length} grid nodes
+                        </span>
+                      </div>
+                      <div className="overflow-x-auto max-h-[460px]">
+                        <table className="w-full text-left text-xs font-mono">
+                          <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 sticky top-0">
+                            <tr>
+                              <th className="p-2.5">z [mm]</th>
+                              <th className="p-2.5">z/L [%]</th>
+                              <th className="p-2.5">T [K]</th>
+                              <th className="p-2.5">T [°C]</th>
+                              <th className="p-2.5">P [bar]</th>
+                              <th className="p-2.5">X_N₂ [%]</th>
+                              <th className="p-2.5">y_NH₃ [%]</th>
+                              <th className="p-2.5">r_obs [mol/(kg·s)]</th>
+                              <th className="p-2.5">η [-]</th>
+                              <th className="p-2.5">Φ [-]</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 text-slate-800">
+                            {simulation.axialProfiles.map((pt, idx) => (
+                              <tr
+                                key={idx}
+                                onClick={() => handleZNormalizedChange(pt.zNormalized)}
+                                className={`cursor-pointer transition-colors hover:bg-blue-50/60 ${
+                                  Math.abs(pt.zNormalized - playbackState.currentZNormalized) < 0.02
+                                    ? 'bg-blue-100/70 font-bold text-blue-900'
+                                    : ''
+                                }`}
+                              >
+                                <td className="p-2.5">{(pt.z * 1000).toFixed(1)}</td>
+                                <td className="p-2.5">{(pt.zNormalized * 100).toFixed(0)}%</td>
+                                <td className="p-2.5 text-amber-700">{pt.temperature.toFixed(1)}</td>
+                                <td className="p-2.5 text-slate-600">{(pt.temperature - 273.15).toFixed(1)}</td>
+                                <td className="p-2.5 text-sky-700">{(pt.pressure / 1e5).toFixed(2)}</td>
+                                <td className="p-2.5 text-emerald-700">{(pt.conversion * 100).toFixed(2)}%</td>
+                                <td className="p-2.5 text-orange-700">{(pt.yNH3 * 100).toFixed(2)}%</td>
+                                <td className="p-2.5">{pt.reactionRate < 0.001 ? pt.reactionRate.toExponential(2) : pt.reactionRate.toFixed(4)}</td>
+                                <td className={`p-2.5 ${pt.effectiveness >= 0.95 ? 'text-emerald-700' : 'text-rose-700'}`}>
+                                  {(pt.effectiveness * 100).toFixed(1)}%
+                                </td>
+                                <td className="p-2.5">{pt.weiszPrater.toFixed(3)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

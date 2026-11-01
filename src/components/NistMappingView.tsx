@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   BULK_GAS_CONFIGS,
   BulkGasType,
@@ -347,53 +347,53 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {activeTab === 'thermophysics' && (
         <div className="space-y-5">
           {/* Calculated Output Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Mean Molar Mass</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Mean Molar Mass</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {(nistCalculated.molarMassKgMol * 1000).toFixed(3)} g/mol
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">NIST SRD 69</span>
+              <span className="text-[11px] font-mono text-slate-400 block">NIST SRD 69</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Real Gas Density</span>
-              <span className="text-base font-bold font-mono text-blue-700 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Real Gas Density</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-blue-700 my-0.5">
                 {prState.densityKgM3.toFixed(3)} kg/m³
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">PR-EOS (Z={prState.compressibilityFactorZ.toFixed(3)})</span>
+              <span className="text-[11px] font-mono text-slate-400 block">PR-EOS (Z={prState.compressibilityFactorZ.toFixed(3)})</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Heat Capacity (c_p)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Heat Capacity (c_p)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistCalculated.heatCapacity.toFixed(1)} J/(kg·K)
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Shomate Polynomial</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Shomate Polynomial</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Gas Viscosity (μ_G)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Gas Viscosity (μ_G)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {(nistCalculated.viscosity * 1e6).toFixed(2)} µPa·s
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Wilke Formulation</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Wilke Formulation</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Conductivity (λ_G)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Conductivity (λ_G)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistCalculated.thermalConductivity.toFixed(4)} W/(m·K)
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Mason & Saxena</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Mason & Saxena</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Reaction Enthalpy</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Reaction Enthalpy</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {(nistCalculated.reactionEnthalpy / 1000).toFixed(2)} kJ/mol
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Kirchhoff Integral</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Kirchhoff Integral</span>
             </div>
           </div>
 
@@ -457,53 +457,53 @@ export const NistMappingView: React.FC<NistMappingViewProps> = ({ currentInputs,
       {/* TAB 2: AMMONIA REACTION KINETICS */}
       {activeTab === 'kinetics' && (
         <div className="space-y-5">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Intrinsic Rate</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Intrinsic Rate</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistKinetics.reactionRate.toExponential(3)}
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">mol/(kg-cat·s)</span>
+              <span className="text-[11px] font-mono text-slate-400 block">mol/(kg-cat·s)</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Activation Energy</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Activation Energy</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {(nistKinetics.activationEnergy / 1000).toFixed(1)} kJ/mol
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Promoted Fe Catalyst</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Promoted Fe Catalyst</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Apparent Order (n)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Apparent Order (n)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistKinetics.reactionOrder.toFixed(1)}
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Temkin Pseudo-Order</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Temkin Pseudo-Order</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Synthesis Const (k₁)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Synthesis Const (k₁)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistKinetics.rateConstantK1.toExponential(2)}
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">kmol/(m³·h·atm)</span>
+              <span className="text-[11px] font-mono text-slate-400 block">kmol/(m³·h·atm)</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Equilibrium K_p(T)</span>
-              <span className="text-base font-bold font-mono text-slate-900 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Equilibrium K_p(T)</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-slate-900 my-0.5">
                 {nistKinetics.equilibriumConstantKp.toExponential(2)}
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">atm⁻¹ (NIST Gibbs)</span>
+              <span className="text-[11px] font-mono text-slate-400 block">atm⁻¹ (NIST Gibbs)</span>
             </div>
 
-            <div className="p-3.5 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
-              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider truncate">Equilibrium X_eq</span>
-              <span className="text-base font-bold font-mono text-emerald-700 my-0.5 truncate">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/80 shadow-xs flex flex-col justify-between">
+              <span className="text-[11px] text-slate-500 block font-semibold uppercase tracking-wider">Equilibrium X_eq</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-emerald-700 my-0.5">
                 {(nistKinetics.equilibriumConversionXeq * 100).toFixed(1)}%
               </span>
-              <span className="text-[11px] font-mono text-slate-400 block truncate">Max Thermodynamic Cap</span>
+              <span className="text-[11px] font-mono text-slate-400 block">Max Thermodynamic Cap</span>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { SimulationResult, SimulationStage } from '../types/eurokin';
 import { PRESET_SCENARIOS } from '../lib/presets';
 import {
@@ -8,7 +8,9 @@ import {
   AlertTriangle,
   Zap,
   Sliders,
-  ChevronDown
+  ChevronDown,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react';
 
 interface WorkstationHeaderProps {
@@ -23,6 +25,8 @@ interface WorkstationHeaderProps {
   onOpenExport: () => void;
   onOpenInspector: () => void;
   isInspectorOpen: boolean;
+  globalZoom?: number;
+  onChangeGlobalZoom?: (zoom: number) => void;
 }
 
 export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
@@ -37,6 +41,8 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
   onOpenExport,
   onOpenInspector,
   isInspectorOpen,
+  globalZoom = 100,
+  onChangeGlobalZoom,
 }) => {
   const { overallStatus, passedCount, totalCount } = simulation;
 
@@ -138,6 +144,35 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
             </>
           )}
         </div>
+
+        {/* Global Workspace View Zoom Controller */}
+        {onChangeGlobalZoom && (
+          <div className="flex items-center bg-slate-100 border border-slate-200/90 rounded-lg p-0.5 text-xs font-mono">
+            <button
+              onClick={() => onChangeGlobalZoom(Math.max(70, globalZoom - 10))}
+              className="p-1 hover:bg-white text-slate-600 hover:text-slate-900 rounded transition-colors cursor-pointer"
+              title="Zoom Out entire workspace (Fit more on screen)"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={() => onChangeGlobalZoom(100)}
+              className="px-1.5 py-0.5 text-[11px] font-bold text-slate-700 hover:bg-white rounded transition-colors cursor-pointer"
+              title="Current scale. Click to reset to 100%"
+            >
+              {globalZoom}%
+            </button>
+
+            <button
+              onClick={() => onChangeGlobalZoom(Math.min(130, globalZoom + 10))}
+              className="p-1 hover:bg-white text-slate-600 hover:text-slate-900 rounded transition-colors cursor-pointer"
+              title="Zoom In"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
         {/* Toggle Right Inspector */}
         <button

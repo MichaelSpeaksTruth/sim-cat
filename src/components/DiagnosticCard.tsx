@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { DiagnosticCriterion } from '../types/eurokin';
 import { CheckCircle2, XCircle, ChevronDown, ChevronUp, BookOpen, AlertTriangle } from 'lucide-react';
 import { MathView } from './MathView';
@@ -143,14 +143,14 @@ export const DiagnosticCard: React.FC<DiagnosticCardProps> = ({ criterion }) => 
         <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200/60 text-xs font-mono my-3">
           <div>
             <span className="text-[10px] text-slate-500 uppercase font-semibold block">Calculated</span>
-            <div className="font-bold text-slate-900 text-sm mt-0.5 truncate">
+            <div className="font-bold text-slate-900 text-sm mt-0.5 break-words">
               {fmt(calculatedValue)} <span className="text-xs text-slate-500 font-normal">{unit}</span>
             </div>
           </div>
 
           <div>
             <span className="text-[10px] text-slate-500 uppercase font-semibold block">Threshold Limit</span>
-            <div className="font-bold text-slate-700 text-sm mt-0.5 truncate">
+            <div className="font-bold text-slate-700 text-sm mt-0.5 break-words">
               {operator} {fmt(limitValue)} <span className="text-xs text-slate-500 font-normal">{unit}</span>
             </div>
           </div>

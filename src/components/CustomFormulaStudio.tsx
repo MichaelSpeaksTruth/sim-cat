@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { CustomCriterionDefinition, SimulationResult } from '../types/eurokin';
 import { MathView } from './MathView';
 import {
@@ -405,7 +405,7 @@ export const CustomFormulaStudio: React.FC<CustomFormulaStudioProps> = ({
                 {availableVariables.map((v) => (
                   <div key={v.name} className="p-1.5 bg-slate-50 rounded-md border border-slate-200">
                     <span className="font-bold text-blue-700">{v.name}</span>
-                    <span className="text-slate-500 block text-[10px] truncate">{v.desc}</span>
+                    <span className="text-slate-500 block text-[10px] leading-tight" title={v.desc}>{v.desc}</span>
                   </div>
                 ))}
               </div>

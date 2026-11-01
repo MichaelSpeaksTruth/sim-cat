@@ -74,24 +74,24 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
         </div>
 
         {/* Status Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 my-2 text-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 my-2 text-center">
           <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
             <div className="text-slate-500 text-[10px] uppercase">Passed Checks</div>
             <div className="text-[#10B981] font-bold text-base">{passedCount}</div>
           </div>
           <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
             <div className="text-slate-500 text-[10px] uppercase">Warnings</div>
-            <div className="text-amber-400 font-bold text-base">{warningCount}</div>
+            <div className="text-amber-500 font-bold text-base">{warningCount}</div>
           </div>
           <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
             <div className="text-slate-500 text-[10px] uppercase">Breaches (Fail)</div>
-            <div className="text-rose-400 font-bold text-base">{failedCount}</div>
+            <div className="text-rose-500 font-bold text-base">{failedCount}</div>
           </div>
           <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
             <div className="text-slate-500 text-[10px] uppercase">Out of Correlation</div>
-            <div className="text-purple-300 font-bold text-base">{outOfRangeCount}</div>
+            <div className="text-purple-600 font-bold text-base">{outOfRangeCount}</div>
           </div>
-          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2">
+          <div className="bg-slate-50 rounded-lg border border-slate-200/80 p-2 col-span-2 sm:col-span-1">
             <div className="text-slate-500 text-[10px] uppercase">Not Evaluated</div>
             <div className="text-slate-500 font-bold text-base">{notEvalCount}</div>
           </div>
@@ -188,7 +188,7 @@ export const TransportDiagnosticsView: React.FC<TransportDiagnosticsViewProps> =
       {/* TAB 1: DIAGNOSTIC MATRIX (CARDS) */}
       {activeTab === 'matrix' && (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
             {criteria.map((c) => (
               <DiagnosticCard key={c.id} criterion={c} />
             ))}
